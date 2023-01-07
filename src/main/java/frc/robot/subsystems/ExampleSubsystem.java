@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.DebugValue;
 
 public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -19,6 +20,13 @@ public class ExampleSubsystem extends SubsystemBase {
   public CommandBase exampleMethodCommand() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
+
+    String DataName = "TestValue";
+    System.out.print(DebugValue.Get(DataName));
+
+    DebugValue.Set(DataName, 2);
+    System.out.print(DebugValue.Get(DataName));
+
     return runOnce(
         () -> {
           /* one-time action goes here */

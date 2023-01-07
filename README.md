@@ -9,6 +9,8 @@ This is [The Metal Jackets](https://www.metaljackets.org/) robot code for the 20
 * [REV Robotics Analog Pressure Sensor](https://www.revrobotics.com/rev-11-1107/)
 * [LimeLight](https://docs.limelightvision.io/en/latest/)
 * [REV Robotics Color Sensor](https://www.revrobotics.com/rev-31-1557/)
+* [PathPlanner](https://github.com/mjansen4857/pathplanner)
+* [PhotonVision](https://docs.photonvision.org/en/latest/)
 
 ## Coding Style
 

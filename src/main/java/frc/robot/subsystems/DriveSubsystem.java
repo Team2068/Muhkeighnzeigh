@@ -39,7 +39,7 @@ public class DriveSubsystem {
     // FIXME: implement SwerveModulePositions
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
             DriveKinematics, getGyroscopeRotation(), null, new Pose2d(0, 0, new Rotation2d()));
-    
+
     private final SwerveModule frontLeftModule;
     private final SwerveModule backLeftModule;
     private final SwerveModule frontRightModule;
@@ -106,5 +106,27 @@ public class DriveSubsystem {
 
     public void drive(ChassisSpeeds chassisSpeeds) {
         this.chassisSpeeds = chassisSpeeds;
+    }
+
+    private SwerveModulePosition getModulePosition(SwerveModule module) {
+        return new SwerveModulePosition(module.getDrivePosition(), Rotation2d.fromRadians(module.getSteerAngle()));
+    }
+
+    public SwerveModulePosition[] getModulePositions() {
+        SwerveModulePosition[] pos = new SwerveModulePosition[4];
+        pos[0] = getModulePosition(frontLeftModule);
+        pos[1] = getModulePosition(backLeftModule);
+        pos[2] = getModulePosition(frontRightModule);
+        pos[3] = getModulePosition(backRightModule);
+        return pos;
+    }
+
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public void resetOdometry() {
+        ZeroGyro();
+        odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), getPose());
     }
 }

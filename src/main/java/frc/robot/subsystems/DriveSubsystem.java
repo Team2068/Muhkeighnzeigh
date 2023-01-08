@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -15,29 +17,29 @@ package frc.robot;
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .5;
   public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .5;
-  public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.495;
-  public static final double DRIVETRAIN_WHEELBASE_METERS = 0.5461;
+  public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
+  public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
   public static int CURRENT_LIMIT = 30;
   public static final class DriveConstants{
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 1;
-    public static final int FRONT_RIGHT_TURN_MOTOR = 2;
-    public static final int FRONT_RIGHT_ENCODER = 9;
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 2;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 3;
+    public static final int FRONT_RIGHT_ENCODER = 10;
     public static final double FRONT_RIGHT_ENCODER_OFFSET = Math.toRadians(0);
 
-    public static final int BACK_RIGHT_DRIVE_MOTOR = 3;
-    public static final int BACK_RIGHT_TURN_MOTOR = 4;
-    public static final int BACK_RIGHT_ENCODER = 10;
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 4;
+    public static final int BACK_RIGHT_TURN_MOTOR = 5;
+    public static final int BACK_RIGHT_ENCODER = 11;
     public static final double BACK_RIGHT_ENCODER_OFFSET = Math.toRadians(0);
 
-    public static final int FRONT_LEFT_DRIVE_MOTOR = 5;
-    public static final int FRONT_LEFT_TURN_MOTOR = 6;
-    public static final int FRONT_LEFT_ENCODER = 11;
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 6;
+    public static final int FRONT_LEFT_TURN_MOTOR = 7;
+    public static final int FRONT_LEFT_ENCODER = 12;
     public static final double  FRONT_LEFT_ENCODER_OFFSET = Math.toRadians(0);
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 7;
-    public static final int BACK_LEFT_TURN_MOTOR = 8;
-    public static final int BACK_LEFT_ENCODER = 12;
+    public static final int BACK_LEFT_DRIVE_MOTOR = 8;
+    public static final int BACK_LEFT_TURN_MOTOR = 9;
+    public static final int BACK_LEFT_ENCODER = 13;
     public static final double BACK_LEFT_ENCODER_OFFSET = Math.toRadians(0);
 
   }

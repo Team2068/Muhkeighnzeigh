@@ -13,7 +13,32 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+  public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .5;
+  public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .5;
+  public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.495;
+  public static final double DRIVETRAIN_WHEELBASE_METERS = 0.5461;
+  public static int CURRENT_LIMIT = 30;
+  public static final class DriveConstants{
+
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 1;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 2;
+    public static final int FRONT_RIGHT_ENCODER = 9;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = Math.toRadians(0);
+
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 3;
+    public static final int BACK_RIGHT_TURN_MOTOR = 4;
+    public static final int BACK_RIGHT_ENCODER = 10;
+    public static final double BACK_RIGHT_ENCODER_OFFSET = Math.toRadians(0);
+
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 5;
+    public static final int FRONT_LEFT_TURN_MOTOR = 6;
+    public static final int FRONT_LEFT_ENCODER = 11;
+    public static final double  FRONT_LEFT_ENCODER_OFFSET = Math.toRadians(0);
+
+    public static final int BACK_LEFT_DRIVE_MOTOR = 7;
+    public static final int BACK_LEFT_TURN_MOTOR = 8;
+    public static final int BACK_LEFT_ENCODER = 12;
+    public static final double BACK_LEFT_ENCODER_OFFSET = Math.toRadians(0);
+
   }
 }

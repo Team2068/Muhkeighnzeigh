@@ -21,12 +21,6 @@ public class ExampleSubsystem extends SubsystemBase {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
 
-    String DataName = "TestValue";
-    System.out.print(DebugValue.Get(DataName));
-
-    DebugValue.Set(DataName, 2);
-    System.out.print(DebugValue.Get(DataName));
-
     return runOnce(
         () -> {
           /* one-time action goes here */

@@ -1,19 +1,15 @@
 package frc.robot.commands;
 
-import edu.wpi.first.networktables.NetworkTable;
+import java.lang.Object;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableValue;
 
 public class DebugValue {
-
-    public static java.lang.Object Get(String DataName) {
-        NetworkTable Table = NetworkTableInstance.getDefault().getTable(DataName);
-        NetworkTableValue tabEntry = Table.getValue(DataName);
-        return tabEntry.getValue();
+    static NetworkTableInstance NetTabInst = NetworkTableInstance.getDefault();
+    public static Object get(String DataName) {
+        return NetTabInst.getTable(DataName).getValue(DataName);
     };
 
-    public static void Set(String DataName, double Data) {
-        NetworkTable Table = NetworkTableInstance.getDefault().getTable(DataName);
-        Table.putValue(DataName, NetworkTableValue.makeDouble(Data));
+    public static void set(String DataName, Object Data) {
+        NetTabInst.getEntry(DataName).setValue(Data);
     };
 }

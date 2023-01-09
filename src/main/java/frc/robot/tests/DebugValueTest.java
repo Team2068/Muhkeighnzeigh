@@ -7,7 +7,7 @@ public class DebugValueTest {
         String DataName = "TestValue";
         System.out.println(DebugValue.get(DataName));
     
-        DebugValue.set(DataName, 2.0);
+        DebugValue.set(DataName, 2);
         System.out.println(DebugValue.get(DataName));
     }
 }

@@ -6,10 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -28,6 +26,7 @@ public class Photonvision extends SubsystemBase {
 
   PhotonCamera camera = new PhotonCamera("photonvision");
   AprilTagFieldLayout aprilTagFieldLayout;
+  DriveSubsystem drive = new DriveSubsystem();
 
   /** Creates a new Photonvision. */
   public Photonvision() {
@@ -49,19 +48,26 @@ public class Photonvision extends SubsystemBase {
   }
   
   public class AprilTagData {
-    public boolean hasTargets;
-    public double targetPitch;
-    public double targetYaw;
-    public double targetArea;
     public int targetId;
     public double poseAmbiguity;
-    public Optional<Pose3d> targetPose;
-    public Transform3d bestCameraToTarget;
+    public Optional<Pose3d> tagPose;
     public Transform3d alternateCameraToTarget;
   }
 
   private CameraData data = new CameraData();
   private AprilTagData tagData = new AprilTagData();
+
+  public CameraData getData () {
+    return data;
+  }
+
+  public AprilTagData getAprilTagData () {
+    return tagData;
+  }
+
+  public int getPipelineIndex() {
+    return camera.getPipelineIndex();
+  }
 
   public void togglePipeline () {
       if (camera.getPipelineIndex() == 1) {
@@ -73,25 +79,18 @@ public class Photonvision extends SubsystemBase {
   }
 
   public void updateData (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
-    
+    data.hasTargets = results.hasTargets();
+    data.targetPitch = bestTarget.getPitch();
+    data.targetYaw = bestTarget.getYaw();
+    data.targetArea = bestTarget.getArea();
+    data.targetSkew = bestTarget.getSkew();
+    data.targetPose = bestTarget.getBestCameraToTarget();
+
     if (camera.getPipelineIndex() == 1) { //if target is an apriltag target
-      tagData.hasTargets = results.hasTargets();
-      tagData.targetPitch = bestTarget.getPitch();
-      tagData.targetYaw = bestTarget.getYaw();
-      tagData.targetArea = bestTarget.getArea();
       tagData.targetId = bestTarget.getFiducialId();
       tagData.poseAmbiguity = bestTarget.getPoseAmbiguity();
-      tagData.targetPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
-      tagData.bestCameraToTarget = bestTarget.getBestCameraToTarget();
+      tagData.tagPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
-    }
-    else {
-      data.hasTargets = results.hasTargets();
-      data.targetPitch = bestTarget.getPitch();
-      data.targetYaw = bestTarget.getYaw();
-      data.targetArea = bestTarget.getArea();
-      data.targetSkew = bestTarget.getSkew();
-      data.targetPose = bestTarget.getBestCameraToTarget();
     }
   }
 
@@ -113,15 +112,6 @@ public class Photonvision extends SubsystemBase {
 
   // public Pose3d getFieldPose (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
   //   return PhotonUtils.estimateFieldToRobotAprilTag(tagData.bestCameraToTarget, targetData.targetPose, null);
-  // }
-
-  // public Rotation2d getXOffset (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
-  //   if (camera.getPipelineIndex() == 1) {
-  //     return PhotonUtils.getYawToPose(robotPose, tagData.targetPose);
-  //   }
-  //   else {
-  //     return PhotonUtils.getYawToPose(robotPose, targetPose);
-  //   }
   // }
 
   @Override

@@ -52,4 +52,13 @@ public final class Constants {
   public static class GameConstants {
     public static final double aprilTagHeight = 69; //replace w actual height
   }
+  
+  public static class AimbotConstants {
+    public static final double kP = 1.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double speed = 0.1;
+    public static final double minimumAdjustment = 0.5;
+  }
+ 
 }

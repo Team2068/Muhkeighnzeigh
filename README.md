@@ -9,6 +9,8 @@ This is [The Metal Jackets](https://www.metaljackets.org/) robot code for the 20
 * [REV Robotics Analog Pressure Sensor](https://www.revrobotics.com/rev-11-1107/)
 * [LimeLight](https://docs.limelightvision.io/en/latest/)
 * [REV Robotics Color Sensor](https://www.revrobotics.com/rev-31-1557/)
+* [PathPlanner](https://github.com/mjansen4857/pathplanner)
+* [PhotonVision](https://docs.photonvision.org/en/latest/)
 
 ## Coding Style
 
@@ -43,7 +45,7 @@ You should've already set the location of your JDK installation in the above tut
 
 ### Opening Projects
 
-It's pretty easy. `File -> Open Folder...`, then navigate to the repository you have cloned (The folder named `2020CommandCode` this year). 
+It's pretty easy. `File -> Open Folder...`, then navigate to the repository you have cloned (The folder named `Muhkeignzeigh` this year). 
 
 ### Want to learn more?
 
@@ -71,7 +73,7 @@ Here's how to get your code into the main robot repository:
 
 ### If it's the first time you've contributed to this repo:
 
-- Clone the repo to your computer using the current URL.
+- Clone the repo to your computer using the current URL, `git clone https://github.com/Team2068/Muhkeighzeigh.git`
 
 ### Any time you want to make a change:
 
@@ -111,5 +113,5 @@ Code reviews are one of the hardest things to get right.  There's a lot of discu
     1. Does it pass CI?
     2. Does it have Tests?
     3. Does it perform well?
-    4. Is it readible?
+    4. Is it readable?
     5. ~~You should probably check this before making a PR~~ Has it actually been tested on the robot?

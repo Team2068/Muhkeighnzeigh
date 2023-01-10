@@ -15,8 +15,33 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+  public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .5;
+  public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .5;
+  public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
+  public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
+  public static int CURRENT_LIMIT = 30;
+  public static final class DriveConstants{
+
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 2;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 3;
+    public static final int FRONT_RIGHT_ENCODER = 10;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = Math.toRadians(0);
+
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 4;
+    public static final int BACK_RIGHT_TURN_MOTOR = 5;
+    public static final int BACK_RIGHT_ENCODER = 11;
+    public static final double BACK_RIGHT_ENCODER_OFFSET = Math.toRadians(0);
+
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 6;
+    public static final int FRONT_LEFT_TURN_MOTOR = 7;
+    public static final int FRONT_LEFT_ENCODER = 12;
+    public static final double  FRONT_LEFT_ENCODER_OFFSET = Math.toRadians(0);
+
+    public static final int BACK_LEFT_DRIVE_MOTOR = 8;
+    public static final int BACK_LEFT_TURN_MOTOR = 9;
+    public static final int BACK_LEFT_ENCODER = 13;
+    public static final double BACK_LEFT_ENCODER_OFFSET = Math.toRadians(0);
+
   }
 
   public static class RobotConstants {
@@ -27,4 +52,13 @@ public final class Constants {
   public static class GameConstants {
     public static final double aprilTagHeight = 20; // CM
   }
+  
+  public static class AimbotConstants {
+    public static final double kP = 1.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double speed = 0.1;
+    public static final double minimumAdjustment = 0.5;
+  }
+ 
 }

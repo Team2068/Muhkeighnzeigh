@@ -9,8 +9,6 @@ This is [The Metal Jackets](https://www.metaljackets.org/) robot code for the 20
 * [REV Robotics Analog Pressure Sensor](https://www.revrobotics.com/rev-11-1107/)
 * [LimeLight](https://docs.limelightvision.io/en/latest/)
 * [REV Robotics Color Sensor](https://www.revrobotics.com/rev-31-1557/)
-* [PathPlanner](https://github.com/mjansen4857/pathplanner)
-* [PhotonVision](https://docs.photonvision.org/en/latest/)
 
 ## Coding Style
 
@@ -73,87 +71,45 @@ Here's how to get your code into the main robot repository:
 
 ### If it's the first time you've contributed to this repo:
 
-1. Clone the repo to your computer - `git clone https://github.com/Team2068/2020CommandCode.git`
+- Clone the repo to your computer using the current URL.
 
 ### Any time you want to make a change:
 
 We use a feature branch workflow. You can read more about that [here](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow).
 
 1. Create and checkout a new branch.
-  * `git checkout -b <your_branch_name>`, where <your_branch_name> is a descriptive name for your branch. For example `fix-shooter-wheel`, `two-ball-auto`, or `climbing`. Use dashes in the branch name, not underscores.
+  - `git checkout -b <your_branch_name>`, where <your_branch_name> is a descriptive name for your branch. For example `fix-shooter-wheel`. Use dashes in the branch name, not underscores.
 2. Make whatever code changes you want/need/ to make. Be sure to write tests for your changes!
 3. Commit your work locally.
-  * If you're on a shared laptop set the author of the commit message by: `git commit --author="Author Name <email@address.com>"`
-  * Try to make your commits as atomic (small) as possible. For example, moving functions around should be different from adding features, and changes to one subsystem should be in a different commit than changes to another subsystem.
-  * Follow [these](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html) conventions for commit messages. Or else.
-  * If your change is anything more than a few lines or small fixes, don't skip the extended description. If you are always using `git commit` with the `-m` option, stop doing that.
+  - If you're on a shared laptop set the author of the commit message by: `git commit --author="Author Name <email@address.com>"`
+  - Try to make your commits small, like example. For example, moving functions around should be different from adding features, and changes to one subsystem should be in a different commit than changes to another subsystem.
+  - Just give a short summary. or follow [these](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html) for conventions.
+  - If your change is anything more than a few lines or small fixes, don't skip the extended description. If you are always using `git commit` with the `-m` option, stop doing that.
 4. Push to your branch.
-  * `git push origin <your_branch_name>`.
+  - `git push origin <your_branch_name>`.
 5. Submit a pull request.
-  1. Log into Github.
-  1. Go to our repo.
   1. Select the branch that you just pushed from the "Branch" dropdown menu.
-  1. Click "New Pull Request".
-  1. Review the changes that you made.
-  1. Explain what and why you did the things you're trying to commit.  Make the reviewer's life easier.
-  1. If you are happy with your changes, click "Create Pull Request".
+  2. Click "New Pull Request".
+  3. Review the changes that you made.
+  4. Explain what and why you did the things you're trying to commit.  Make the reviewer's life easier.
+  5. If you are happy with your changes, click "Create Pull Request".
 6. Wait
-  * People must review (and approve of) your changes before they are merged - master is locked to any pull requests that don't have at least 2 reviews.
-    * Specifically, the rules are that one of the following two conditions must be true for it to get merged:
-      1. 1 mentor and 1 other person have approved
-      1. 2 experienced students and one other person have approved
-  * If there are any concerns about your pull request, fix them. Depending on how severe the concerns are, the pull request may be merged without it, but everyone will be happier if you fix your code. 
+ - People must review (and approve of) your changes before they are merged - master is locked to any pull requests that don't have at least 2 reviews.
+ - If there are any concerns about your pull request, fix them; just do it bro;
 To update your PR, just push to the branch you made before.
   * Don't dismiss someone's review when you make changes - instead, ask them to re-review it.
 7. Merge your changes into master
   * If there are no conflicts, push the "merge" button.
   * If there are conflicts, fix them locally on your branch, push them, wait for Travis CI to pass, and then merge.
-8. ???
-9. Profit
 
 ### Code Review
 
-Code reviews are one of the hardest things to get right.  There's a lot of discussion about this online, just [ddg](https://duckduckgo.com/?q=code+review+best+practices&t=brave&ia=web) it.  
-
-You're putting yourself out there and asking your peers if your code is ready to be merged into master.  It feels like you're asking your peers to tell you if you're good enough or smart enough.  Trust that everyone feels this way, even your mentors with decades of programming experience.  Remember this when you're reviewing someone elses **CODE**.
-
-There will be zero tolerance for attacking anyone in a code review.
-
-#### Why
-
-I think this list from [ProgrammerFriend](https://programmerfriend.com/code-review-best-practices/) sums it up nicely:
-
-* Improve code quality
-* Consistency in your projects
-* Finding bugs when they're fresh
-* Learning (by getting code reviewed) and Teaching (by reviewing other’s code)
-* Creating a sense of mutual responsibility
-* Being aware of changes to the code
-* Keeping everyone honest to maintain the highest quality of code
-* In general finding way better solutions to problems
-
-#### What
-
-* Correctness - Does the code do what the commit message suggest it does?
-* Readability - Prefer **clarity** over **cleverness**, on variable and method names that are unambiguous and convey intent.
-* Maintainability - Is code written, or commented, in such a way that someone else (or yourself a week or two later) understands why you did things the way you did?
-
-#### How
-
-Again, this list from [ProgrammerFriend](https://programmerfriend.com/code-review-best-practices/) sums it up nicely:
-
-* Be friendly
-* Review the code not the coder
-* Give short and precise comments about your findings.  Make suggestions, link to documentation, generally be helpful.
-
-Prefer:
-
-"WDYT about `reverse` instead of `blah` here?  It might make it easier to remember"
-
-Over:
-
-"`blah` sucks, let's make this `reverse`"
-
-## Credits
-
-* [ILITE robotics](https://github.com/iliterobotics/FRC-Robot-2019) and by extension [FRC Team 1678: Citrus Circuits](https://github.com/frc1678) for their efforts in writing outstanding contributing guidelines
+Code reviews are one of the hardest things to get right.  There's a lot of discussion about this online, and those before us said [ddg](https://duckduckgo.com/?q=code+review+best+practices&t=brave&ia=web) i-
+- Why:  So code breakyless.
+- How: Give short and precise comments about your findings.  Make suggestions, link to documentation, generally be helpful.
+- What are you looking for:
+    1. Does it pass CI?
+    2. Does it have Tests?
+    3. Does it perform well?
+    4. Is it readible?
+    5. ~~You should probably check this before making a PR~~ Has it actually been tested on the robot?

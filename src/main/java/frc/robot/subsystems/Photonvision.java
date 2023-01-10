@@ -6,10 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -29,7 +27,6 @@ public class Photonvision extends SubsystemBase {
   PhotonCamera camera = new PhotonCamera("photonvision");
   AprilTagFieldLayout aprilTagFieldLayout;
 
-  /** Creates a new Photonvision. */
   public Photonvision() {
     try {
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.kDefaultField.m_resourceFile);
@@ -111,9 +108,9 @@ public class Photonvision extends SubsystemBase {
     return PhotonUtils.estimateCameraToTargetTranslation(this.getDistance(results, bestTarget), Rotation2d.fromDegrees(-data.targetYaw));
   }
 
-  // public Pose3d getFieldPose (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
-  //   return PhotonUtils.estimateFieldToRobotAprilTag(tagData.bestCameraToTarget, targetData.targetPose, null);
-  // }
+  public Pose3d getFieldPose (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
+    return PhotonUtils.estimateFieldToRobotAprilTag(tagData.bestCameraToTarget, tagData.targetPose.get(), null);
+  }
 
   // public Rotation2d getXOffset (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
   //   if (camera.getPipelineIndex() == 1) {

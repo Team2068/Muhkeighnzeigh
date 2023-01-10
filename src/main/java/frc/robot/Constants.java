@@ -25,6 +25,6 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    public static final double aprilTagHeight = 69; //replace w actual height
+    public static final double aprilTagHeight = 20; // CM
   }
 }

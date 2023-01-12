@@ -94,5 +94,15 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
         public double getDrivePosition() {
             return driveController.getDrivePosition();
         }
+
+        @Override
+        public void resetDrivePosition() {
+            driveController.resetPosition();
+        }
+
+        @Override
+        public void resetSteerPosition() {
+            steerController.resetSteerPosition();
+        }
     }
 }

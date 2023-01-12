@@ -33,7 +33,7 @@ public class DefaultDriveCommand extends CommandBase {
 
         double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble());
         double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble());
-        double rotationSpeed = m_rotationSupplier.getAsDouble();
+        double rotationSpeed = m_rotationSupplier.getAsDouble() * 0.7;
 
 
         if(driveSubsystem.isFieldOriented()) {

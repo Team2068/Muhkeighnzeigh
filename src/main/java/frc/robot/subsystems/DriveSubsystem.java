@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
-import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;
 
@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,14 +37,14 @@ public class DriveSubsystem extends SubsystemBase {
                     DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2));
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-            new Translation2d(DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2,
-                    DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2),
-            new Translation2d(DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2,
-                    -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2),
-            new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2,
-                    DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2),
-            new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2,
-                    -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2));
+            new Translation2d(DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            new Translation2d(DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
     private final Pigeon2 pigeon2 = new Pigeon2(15);
 
@@ -102,6 +103,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     }
 
+    public void resetPosition() {
+        frontLeftModule.resetDrivePosition();
+        frontRightModule.resetDrivePosition();
+        backLeftModule.resetDrivePosition();
+        backRightModule.resetDrivePosition();
+    }
+
     public void zeroGyro() {
         pigeon2.setYaw(0);
     }
@@ -111,7 +119,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        return Rotation2d.fromDegrees(Math.IEEEremainder(pigeon2.getYaw(), 360));
+        // return Rotation2d.fromDegrees(Math.IEEEremainder(pigeon2.getYaw(), 360));
+        return Rotation2d.fromDegrees(pigeon2.getYaw());
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -123,11 +132,16 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public SwerveModulePosition[] getModulePositions() {
-        SwerveModulePosition[] pos = new SwerveModulePosition[4];
-        pos[0] = getModulePosition(frontLeftModule);
-        pos[1] = getModulePosition(frontRightModule);
-        pos[2] = getModulePosition(backLeftModule);
-        pos[3] = getModulePosition(backRightModule);
+        SwerveModulePosition[] pos = {
+                getModulePosition(frontLeftModule),
+                getModulePosition(frontRightModule),
+                getModulePosition(backLeftModule),
+                getModulePosition(backRightModule)
+        };
+        SmartDashboard.putNumber("FL Distance", pos[0].distanceMeters);
+        SmartDashboard.putNumber("FR Distance", pos[1].distanceMeters);
+        SmartDashboard.putNumber("BL Distance", pos[2].distanceMeters);
+        SmartDashboard.putNumber("BR Distance", pos[3].distanceMeters);
         return pos;
     }
 
@@ -137,15 +151,19 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void resetOdometry() {
         zeroGyro();
+        resetPosition();
         odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), getPose());
     }
 
     public void resetOdometry(Pose2d pose) {
         zeroGyro();
+        resetPosition();
         odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), pose);
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+
         frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
                 states[0].angle.getRadians());
         frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
@@ -171,33 +189,17 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void normalSpeed() {
         MAX_VOLTAGE = 9;
-
     }
 
     public void minSpeed() {
         MAX_VOLTAGE = 5;
     }
 
-    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> {
-                    // Reset odometry for the first path you run during auto
-                    if (isFirstPath) {
-                        this.resetOdometry(traj.getInitialHolonomicPose());
-                    }
-                }),
-                new PPSwerveControllerCommand(
-                        traj,
-                        this::getPose, // Pose supplier
-                        this.kinematics, // Swervekinematics
-                        new PIDController(4, 0, 0), // X controller. Tune these values for your robot. Leaving them 0
-                                                      // will only use feedforwards.
-                        new PIDController(4, 0, 0), // Y controller (usually the same values as X controller)
-                        new PIDController(4, 0, 0), // Rotation controller. Tune these values for your robot. Leaving
-                                                    // them 0 will only use feedforwards.
-                        this::setModuleStates, // Module states consumer
-                        this // Requires this drive subsystem
-                ));
+    public void resetSteerPositions() {
+        frontLeftModule.resetSteerPosition();
+        frontRightModule.resetSteerPosition();
+        backLeftModule.resetSteerPosition();
+        backRightModule.resetSteerPosition();
     }
 
     public void periodic() {

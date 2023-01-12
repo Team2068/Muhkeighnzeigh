@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -22,8 +24,8 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .5;
-  public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .5;
+  public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .2;
+  public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .2;
 
   public static int CURRENT_LIMIT = 30;
 
@@ -52,7 +54,21 @@ public final class Constants {
     public static final double BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(228);
   }
 
+  public static final class AutoConstants {
+    public static final double MAX_Speed_MetersPerSecond = 0.2;
+    public static final double MAX_Acceleration_MetersPerSecondSquared = 0.2;
+    public static final double MAX_AngularSpeed_RadiansPerSecond = Math.PI / 2;
+    public static final double Max_AngularSpeed_RadiansPerSecondSquared = Math.PI / 2;
+
+    public static final double kPXController = 4.4558;
+    public static final double kPYController = 4.4558;
+    public static final double kPThetaController = 0.4;
+
+    // Constraint for the motion profilied robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(MAX_AngularSpeed_RadiansPerSecond, Max_AngularSpeed_RadiansPerSecondSquared);
+}
+
   public static class Paths {
-    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", 0.5, 0.5);
+    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(DRIVE_MAX_VELOCITY_METERS_PER_SECOND, DRIVE_MAX_VELOCITY_METERS_PER_SECOND));
   }
 }

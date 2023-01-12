@@ -1,6 +1,6 @@
 package frc.robot.tests;
 
-import frc.robot.commands.DebugTable;
+import frc.robot.utilities.DebugTable;
 // Optional Test for DebugValue located in commands directory. (Can be removed as well as the directory if not wanted)
 public class DebugTest {
     public void Test() {

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.utilities;
 
 import java.lang.Object;
 import edu.wpi.first.networktables.NetworkTable;

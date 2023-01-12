@@ -162,5 +162,3 @@ public void periodic(){
     SmartDashboard.putNumber("Odometry rotation", pose.getRotation().getDegrees());
     SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
 }
-
-}

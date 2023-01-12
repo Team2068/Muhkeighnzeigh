@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathPlanner;
+
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -43,4 +46,15 @@ public final class Constants {
     public static final double BACK_LEFT_ENCODER_OFFSET = Math.toRadians(0);
 
   }
-}
+  public static final Trajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", 1, 1);
+  public static final Trajectory Step2_4Cargo = PathPlanner.loadPath("Step 2_4Cargo", 1, 1);
+  public static final Trajectory Step3_4Cargo = PathPlanner.loadPath("Step 3_4cargo", 1,1);
+  public static final Trajectory Step4_4Cargo = PathPlanner.loadPath("Step 4_4Cargo", 1, 1);
+  public static final Trajectory Step5_4Cargo = PathPlanner.loadPath("Step 5_4Cargo", 1,1 );
+  public static final Trajectory Step6_4Cargo = PathPlanner.loadPath("Step 6_4Cargo", 1, 1);
+  public static final Trajectory Step7_4Cargo = PathPlanner.loadPath("Step 7_4Cargo", 1, 1);
+  public static final Trajectory Step8_4Cargo = PathPlanner.loadPath("Step 8_4Cargo", 1, 1);
+  public static final Trajectory Step9_4Cargo = PathPlanner.loadPath("Step 9_4Cargo", 1,1);
+
+
+

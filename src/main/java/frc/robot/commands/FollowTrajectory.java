@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
@@ -39,7 +41,7 @@ import frc.robot.subsystems.DriveSubsystem;
 //@SuppressWarnings("MemberName")
 public class FollowTrajectory extends CommandBase {
     private final Timer m_timer = new Timer();
-    private final Trajectory m_trajectory;
+    private final PathPlannerTrajectory m_trajectory;
     private final Pose2d m_pose;
     private final SwerveDriveKinematics m_kinematics;
     private final HolonomicDriveController m_controller;
@@ -76,7 +78,7 @@ public class FollowTrajectory extends CommandBase {
      */
 
     @SuppressWarnings("ParameterName")
-    public FollowTrajectory(Trajectory trajectory, DriveSubsystem drivetrainSubsystem){
+    public FollowTrajectory(PathPlannerTrajectory trajectory, DriveSubsystem drivetrainSubsystem){
         this.m_drivetrain = drivetrainSubsystem;
         this.m_trajectory = trajectory;
         this.m_kinematics = drivetrainSubsystem.getKinematics();
@@ -94,6 +96,7 @@ public class FollowTrajectory extends CommandBase {
     }
     @Override
     public void initialize() {
+        PathPlannerServer.sendActivePath(m_trajectory.getStates());
         m_drivetrain.resetOdometry(m_trajectory.getInitialPose());
         m_timer.reset();
         m_timer.start();

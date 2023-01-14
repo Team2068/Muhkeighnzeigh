@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
-import com.ctre.phoenix.sensors.Pigeon2Configuration;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,19 +14,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 9;
+    public static double MAX_VOLTAGE = 8;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -46,7 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
             new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    private final Pigeon2 pigeon2 = new Pigeon2(15);
+    private final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(15);
 
     private final SwerveDriveOdometry odometry;
     private final SwerveModule frontLeftModule;
@@ -101,6 +94,9 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
+        pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.PositiveZ);
+        pigeon2.calibrate();
+        zeroGyro();
     }
 
     public void resetPosition() {
@@ -119,8 +115,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        // return Rotation2d.fromDegrees(Math.IEEEremainder(pigeon2.getYaw(), 360));
-        return Rotation2d.fromDegrees(pigeon2.getYaw());
+        return pigeon2.getRotation2d();
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -138,6 +133,7 @@ public class DriveSubsystem extends SubsystemBase {
                 getModulePosition(backLeftModule),
                 getModulePosition(backRightModule)
         };
+        // TODO: remove once we know the distances are correct
         SmartDashboard.putNumber("FL Distance", pos[0].distanceMeters);
         SmartDashboard.putNumber("FR Distance", pos[1].distanceMeters);
         SmartDashboard.putNumber("BL Distance", pos[2].distanceMeters);
@@ -152,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void resetOdometry() {
         zeroGyro();
         resetPosition();
-        odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), getPose());
+        odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), new Pose2d());
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -164,13 +160,13 @@ public class DriveSubsystem extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] states) {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
-        frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        frontLeftModule.set((states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
                 states[0].angle.getRadians());
-        frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        frontRightModule.set((states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
                 states[1].angle.getRadians());
-        backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        backLeftModule.set((states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
                 states[2].angle.getRadians());
-        backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        backRightModule.set((states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
                 states[3].angle.getRadians());
     }
 
@@ -196,22 +192,27 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void resetSteerPositions() {
-        frontLeftModule.resetSteerPosition();
-        frontRightModule.resetSteerPosition();
-        backLeftModule.resetSteerPosition();
-        backRightModule.resetSteerPosition();
+        frontLeftModule.set(0, 0);
+        frontRightModule.set(0, 0);
+        backLeftModule.set(0, 0);
+        backRightModule.set(0, 0);
     }
 
     public void periodic() {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
         setModuleStates(states);
         odometry.update(getGyroscopeRotation(), getModulePositions());
         Pose2d pose = getPose();
-        SmartDashboard.putNumber("Pigeon", pigeon2.getYaw());
+        SmartDashboard.putData(pigeon2);
         SmartDashboard.putNumber("X position", pose.getX());
         SmartDashboard.putNumber("Y position", pose.getX());
-        SmartDashboard.putNumber("Odometry rotation", pose.getRotation().getDegrees());
+
+        double[] ypr = new double[3];
+        pigeon2.getYawPitchRoll(ypr);
+        SmartDashboard.putNumber("ypr rotation", ypr[0]);
+        SmartDashboard.putNumber("Odometry rotation", getGyroscopeRotation().getDegrees());
+        SmartDashboard.putNumber("Pigeon rotation", pigeon2.getYaw());
+
         SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
     }
 

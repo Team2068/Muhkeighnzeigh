@@ -8,6 +8,12 @@ import frc.robot.Constants.Paths;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.server.PathPlannerServer;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,10 +41,12 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
-      () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
+        () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+
+    PathPlannerServer.startServer(5811);
   }
 
   /**
@@ -61,7 +69,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
     // pressed,
     // cancelling on release.
-    driverController.a().onTrue(new InstantCommand(() -> driveSubsystem.resetSteerPositions()));
+    driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
+    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+    driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
   }
 
   /**
@@ -70,8 +81,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new FollowTrajectory(Paths.bounce, driveSubsystem);
-    // return driveSubsystem.followTrajectoryCommand(Paths.bounce, true);
+    return new FollowTrajectory(Paths.funny, driveSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

@@ -109,8 +109,6 @@ public final class NeoSteerControllerFactoryBuilder {
 
         private double referenceAngleRadians = 0;
 
-        private double currentAngleRadians = 0.0;
-
         private double resetIteration = 0;
 
         public ControllerImplementation(CANSparkMax motor, AbsoluteEncoder absoluteEncoder) {
@@ -127,14 +125,17 @@ public final class NeoSteerControllerFactoryBuilder {
 
         @Override
         public void setReferenceAngle(double referenceAngleRadians) {
-            currentAngleRadians = motorEncoder.getPosition();
+            double currentAngleRadians = motorEncoder.getPosition();
+            // double currentAngleRadians = absoluteEncoder.getAbsoluteAngle();
 
             // Reset the NEO's encoder periodically when the module is not rotating.
             // Sometimes (~5% of the time) when we initialize, the absolute encoder isn't fully set up, and we don't
             // end up getting a good reading. If we reset periodically this won't matter anymore.
             if (motorEncoder.getVelocity() < ENCODER_RESET_MAX_ANGULAR_VELOCITY) {
                 if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
-                    resetSteerPosition();
+                    double absoluteAngle = absoluteEncoder.getAbsoluteAngle();
+                    motorEncoder.setPosition(absoluteAngle);
+                    currentAngleRadians = absoluteAngle;
                 }
             } else {
                 resetIteration = 0;
@@ -154,7 +155,7 @@ public final class NeoSteerControllerFactoryBuilder {
             }
 
             this.referenceAngleRadians = referenceAngleRadians;
-
+            
             controller.setReference(adjustedReferenceAngleRadians, CANSparkMax.ControlType.kPosition);
         }
 
@@ -171,10 +172,7 @@ public final class NeoSteerControllerFactoryBuilder {
 
         @Override
         public void resetSteerPosition() {
-            resetIteration = 0;
-            double absoluteAngle = absoluteEncoder.getAbsoluteAngle();
-            motorEncoder.setPosition(absoluteAngle);
-            currentAngleRadians = absoluteAngle;
+            setReferenceAngle(0);
         }
     }
 }

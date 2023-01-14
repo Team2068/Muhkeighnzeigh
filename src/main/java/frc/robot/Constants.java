@@ -57,18 +57,19 @@ public final class Constants {
   public static final class AutoConstants {
     public static final double MAX_Speed_MetersPerSecond = 0.2;
     public static final double MAX_Acceleration_MetersPerSecondSquared = 0.2;
-    public static final double MAX_AngularSpeed_RadiansPerSecond = Math.PI / 2;
-    public static final double Max_AngularSpeed_RadiansPerSecondSquared = Math.PI / 2;
+    public static final double MAX_AngularSpeed_RadiansPerSecond = Math.PI;
+    public static final double Max_AngularSpeed_RadiansPerSecondSquared = Math.PI;
 
-    public static final double kPXController = 4.4558;
-    public static final double kPYController = 4.4558;
-    public static final double kPThetaController = 0.4;
+    public static final double kPXController = 4;
+    public static final double kPYController = 4;
+    public static final double kPThetaController = 2;
 
     // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(MAX_AngularSpeed_RadiansPerSecond, Max_AngularSpeed_RadiansPerSecondSquared);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1, 1);
 }
 
   public static class Paths {
-    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(DRIVE_MAX_VELOCITY_METERS_PER_SECOND, DRIVE_MAX_VELOCITY_METERS_PER_SECOND));
+    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
+    public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
   }
 }

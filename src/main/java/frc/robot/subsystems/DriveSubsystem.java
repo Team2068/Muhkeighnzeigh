@@ -6,6 +6,7 @@ import com.swervedrivespecialties.swervelib.SwerveModule;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -102,6 +103,12 @@ public class DriveSubsystem extends SubsystemBase{
 
     public Rotation2d getGyroscopeRotation() {
         return Rotation2d.fromDegrees(Math.IEEEremainder(pigeon2.getYaw(), 360));
+    }
+
+    public Rotation3d getGyroRotation(){
+        double ypr[] = {0,0,0};
+        pigeon2.getYawPitchRoll(ypr);
+        return new Rotation3d(ypr[2], ypr[1], ypr[0]);
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {

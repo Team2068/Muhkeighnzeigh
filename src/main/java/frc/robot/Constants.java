@@ -36,22 +36,22 @@ public final class Constants {
     public static final int FRONT_LEFT_DRIVE_MOTOR = 4;
     public static final int FRONT_LEFT_TURN_MOTOR = 5;
     public static final int FRONT_LEFT_ENCODER = 10;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(166);
+    public static final double FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
 
     public static final int FRONT_RIGHT_DRIVE_MOTOR = 6;
     public static final int FRONT_RIGHT_TURN_MOTOR = 7;
     public static final int FRONT_RIGHT_ENCODER = 11;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(248);
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
 
     public static final int BACK_LEFT_DRIVE_MOTOR = 2;
     public static final int BACK_LEFT_TURN_MOTOR = 3;
     public static final int BACK_LEFT_ENCODER = 12;
-    public static final double BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(43);
+    public static final double BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(223);
 
     public static final int BACK_RIGHT_DRIVE_MOTOR = 8;
     public static final int BACK_RIGHT_TURN_MOTOR = 9;
     public static final int BACK_RIGHT_ENCODER = 13;
-    public static final double BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(228);
+    public static final double BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(48);
   }
 
   public static final class AutoConstants {

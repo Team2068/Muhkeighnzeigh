@@ -46,15 +46,40 @@ public final class Constants {
     public static final double BACK_LEFT_ENCODER_OFFSET = Math.toRadians(0);
 
   }
+  // Scenario 1
   public static final Trajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", 1, 1);
   public static final Trajectory Step2_4Cargo = PathPlanner.loadPath("Step 2_4Cargo", 1, 1);
-  public static final Trajectory Step3_4Cargo = PathPlanner.loadPath("Step 3_4cargo", 1,1);
+  public static final Trajectory Step3_4Cargo = PathPlanner.loadPath("Step 3_4cargo", 1, 1);
   public static final Trajectory Step4_4Cargo = PathPlanner.loadPath("Step 4_4Cargo", 1, 1);
-  public static final Trajectory Step5_4Cargo = PathPlanner.loadPath("Step 5_4Cargo", 1,1 );
+  public static final Trajectory Step5_4Cargo = PathPlanner.loadPath("Step 5_4Cargo", 1, 1);
   public static final Trajectory Step6_4Cargo = PathPlanner.loadPath("Step 6_4Cargo", 1, 1);
   public static final Trajectory Step7_4Cargo = PathPlanner.loadPath("Step 7_4Cargo", 1, 1);
   public static final Trajectory Step8_4Cargo = PathPlanner.loadPath("Step 8_4Cargo", 1, 1);
-  public static final Trajectory Step9_4Cargo = PathPlanner.loadPath("Step 9_4Cargo", 1,1);
+  public static final Trajectory Step9_4Cargo = PathPlanner.loadPath("Step 9_4Cargo", 1, 1);
+  // Scenario 2
+  public static final Trajectory Step1_2CargoCandB = PathPlanner. loadPath("Step 1_  2 Cargo C and B",1, 1 );
+  public static final Trajectory Step2_2CargoCandB = PathPlanner. loadPath("Step 2_  2 Cargo C and B",1, 1 );
+  public static final Trajectory Step3_2CargoCandB = PathPlanner. loadPath("Step 3_  2 Cargo C and B",1, 1 );
+  public static final Trajectory Step4_2CargoCandB = PathPlanner. loadPath("Step 4_  2 Cargo C and B",1, 1 );
+  public static final Trajectory Step5_2CargoCandB = PathPlanner. loadPath("Step 5_  2 Cargo C and B",1, 1 );
+  // Scenario 3
+  public static final Trajectory Step1_2BlockCargo = PathPlanner. loadPath("Step 1_ 2 Block Cargo", 1, 1 );
+  public static final Trajectory Step2_2BlockCargo = PathPlanner. loadPath("Step 2_ 2 Block Cargo", 1, 1 );
+  public static final Trajectory Step3_2BlockCargo = PathPlanner. loadPath("Step 3_ 2 Block Cargo", 1, 1 );
+  public static final Trajectory Step4_2BlockCargo = PathPlanner. loadPath("Step 4_ 2 Block Cargo", 1, 1 );
+  public static final Trajectory Step5_2BlockCargo = PathPlanner. loadPath("Step 5_ 2 Block Cargo", 1, 1 );
+  // Scenario 4
+  public static final Trajectory Step1_2ConeCargo = PathPlanner. loadPath("Step 1_ 2 Cone Cargo", 1, 1 );
+  public static final Trajectory Step2_2ConeCargo = PathPlanner. loadPath("Step 2_ 2 Cone Cargo", 1, 1 );
+  public static final Trajectory Step3_2ConeCargo = PathPlanner. loadPath("Step 3_ 2 Cone Cargo", 1, 1 );
+  public static final Trajectory Step4_2ConeCargo = PathPlanner. loadPath("Step 4_ 2 Cone Cargo", 1, 1 );
+  public static final Trajectory Step5_2ConeCargo = PathPlanner. loadPath("Step 5_ 2 Cone Cargo", 1, 1 );
+  // Scenario 5
+  public static final Trajectory Step1_1ConeCargo = PathPlanner. loadPath("Step 1_ 1 Cone Cargo", 1, 1);
+  public static final Trajectory Step2_1ConeCargo = PathPlanner. loadPath("Step 2_ 1 Cone Cargo", 1, 1);
+  public static final Trajectory Step3_1ConeCargo = PathPlanner. loadPath("Step 2_ 1 Cone Cargo", 1, 1);
+}
+
 
 
 

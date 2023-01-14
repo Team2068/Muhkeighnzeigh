@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DriveSubsystem extends SubsystemBase{
+public class DriveSubsystem extends SubsystemBase {
     public static double MAX_VOLTAGE = 9;
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -129,36 +129,49 @@ public class DriveSubsystem extends SubsystemBase{
         ZeroGyro();
         odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), getPose());
     }
-    public void setModuleStates(SwerveModuleState[] states){
-        frontLeftModule.set(states[0].speedMetersPerSecond/MAX_VELOCITY_METERS_PER_SECOND*MAX_VOLTAGE,states[0].angle.getRadians());
-        frontRightModule.set(states[1].speedMetersPerSecond/MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND*MAX_VOLTAGE,states[1].angle.getRadians());
-        backLeftModule.set(states[2].speedMetersPerSecond/MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND*MAX_VOLTAGE,states[2].angle.getRadians());
-       backRightModule.set(states[3].speedMetersPerSecond/MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND*MAX_VOLTAGE,states[3].angle.getRadians());
+
+    public void setModuleStates(SwerveModuleState[] states) {
+        frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[0].angle.getRadians());
+        frontRightModule.set(states[1].speedMetersPerSecond / MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * MAX_VOLTAGE,
+                states[1].angle.getRadians());
+        backLeftModule.set(states[2].speedMetersPerSecond / MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * MAX_VOLTAGE,
+                states[2].angle.getRadians());
+        backRightModule.set(states[3].speedMetersPerSecond / MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * MAX_VOLTAGE,
+                states[3].angle.getRadians());
     }
+
     public boolean isFieldOriented() {
         return isFieldOriented();
     }
-    public void toggleFieldOriented(){
+
+    public void toggleFieldOriented() {
         fieldOriented = !isFieldOriented();
     }
-  public void MaxSpeed(){
-    MAX_VOLTAGE = 12;
 
-  }
-  public void NormalSpeed(){
-    MAX_VOLTAGE = 9;
+    public void MaxSpeed() {
+        MAX_VOLTAGE = 12;
 
-  }
-  public void MinSpeed(){
-    MAX_VOLTAGE = 5;
-  }
-public void periodic(){
-    SwerveModuleState[] states = DriveKinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, chassisSpeeds, MAX_VOLTAGE, MAX_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
-    setModuleStates(states);
-    Pose2d pose = getPose();
-    SmartDashboard.putNumber("X position", pose.getX());
-    SmartDashboard.putNumber("Y position", pose.getX());
-    SmartDashboard.putNumber("Odometry rotation", pose.getRotation().getDegrees());
-    SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
+    }
+
+    public void NormalSpeed() {
+        MAX_VOLTAGE = 9;
+
+    }
+
+    public void MinSpeed() {
+        MAX_VOLTAGE = 5;
+    }
+
+    public void periodic() {
+        SwerveModuleState[] states = DriveKinematics.toSwerveModuleStates(chassisSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, chassisSpeeds, MAX_VOLTAGE, MAX_VELOCITY_METERS_PER_SECOND,
+                MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        setModuleStates(states);
+        Pose2d pose = getPose();
+        SmartDashboard.putNumber("X position", pose.getX());
+        SmartDashboard.putNumber("Y position", pose.getX());
+        SmartDashboard.putNumber("Odometry rotation", pose.getRotation().getDegrees());
+        SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
+    }
 }

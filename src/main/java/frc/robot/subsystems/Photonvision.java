@@ -106,12 +106,12 @@ public class Photonvision extends SubsystemBase {
   }
 
   public Translation2d getTranslationFromTarget (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
-    return PhotonUtils.estimateCameraToTargetTranslation(this.getDistance(results, bestTarget), Rotation2d.fromDegrees(-data.targetYaw));
+    return PhotonUtils.estimateCameraToTargetTranslation(getDistance(results, bestTarget), Rotation2d.fromDegrees(-getData().targetYaw));
   }
 
-  public Pose3d getFieldPose (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
-    return PhotonUtils.estimateFieldToRobotAprilTag(tagData.bestCameraToTarget, tagData.targetPose.get(), null);
-  }
+  // public Pose3d getFieldPose (PhotonPipelineResult results, PhotonTrackedTarget bestTarget) {
+  //   return PhotonUtils.estimateFieldToRobotAprilTag(getData().targetPose, aprilTagFieldLayout.getTagPose(getAprilTagData().targetId), null);
+  // }
 
   @Override
   public void periodic() {

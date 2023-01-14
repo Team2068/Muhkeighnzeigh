@@ -21,7 +21,7 @@ public class Aimbot extends PIDCommand {
         // The controller that the command will use
         new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
         // This should return the measurement
-        () -> photonvision.getData().targetYaw,
+        () -> photonvision.data.targetYaw,
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output

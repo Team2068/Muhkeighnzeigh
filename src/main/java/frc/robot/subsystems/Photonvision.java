@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,10 +18,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.RobotConstants;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
+import org.photonvision.RobotPoseEstimator;
+import org.photonvision.RobotPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -29,12 +33,16 @@ public class Photonvision extends SubsystemBase {
   PhotonCamera camera = new PhotonCamera("photonvision");
   AprilTagFieldLayout aprilTagFieldLayout;
 
+  ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
+  RobotPoseEstimator poseEstimation = new RobotPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camList);
+
   public Photonvision() {
     try {
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.kDefaultField.m_resourceFile);
     } catch (Exception e) {
       System.out.println(e);
     }
+    camList.add(new Pair<PhotonCamera, Transform3d>(camera, RobotConstants.robotToCam));
   }
 
   public class CameraData {

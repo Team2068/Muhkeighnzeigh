@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.RobotConstants;
@@ -43,6 +44,15 @@ public class Photonvision extends SubsystemBase {
       System.out.println(e);
     }
     camList.add(new Pair<PhotonCamera, Transform3d>(camera, RobotConstants.robotToCam));
+    GameConstants.tagMap.put(1, new Double[]{1551.35, 107.16, 46.27, 180.0});
+    GameConstants.tagMap.put(2, new Double[]{1551.35, 274.80, 46.27, 180.0});
+    GameConstants.tagMap.put(3, new Double[]{1551.35, 442.44, 46.27, 180.0});
+    GameConstants.tagMap.put(4, new Double[]{1617.87, 674.97, 69.54, 180.0});
+    GameConstants.tagMap.put(5, new Double[]{36.19, 674.97, 69.54, 0.0});
+    GameConstants.tagMap.put(6, new Double[]{102.743, 442.44, 46.27, 0.0});
+    GameConstants.tagMap.put(7, new Double[]{102.743, 274.80, 46.27, 0.0});
+    GameConstants.tagMap.put(8, new Double[]{102.743, 107.16, 46.27, 0.0});
+
   }
 
   public class CameraData {
@@ -111,5 +121,12 @@ public class Photonvision extends SubsystemBase {
   @Override
   public void periodic() {
     updateData();
+    SmartDashboard.putNumber("target pitch", data.targetPitch);
+    SmartDashboard.putNumber("target yaw", data.targetYaw);
+    SmartDashboard.putNumber("target area", data.targetArea);
+    SmartDashboard.putNumber("target skew", data.targetSkew);
+
+    SmartDashboard.putNumber("apriltag id", tagData.targetId);
+    SmartDashboard.putNumber("apriltag pose ambiguity", tagData.poseAmbiguity);
   }
 }

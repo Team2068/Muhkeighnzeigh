@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -44,7 +46,6 @@ public final class Constants {
     public static final int BACK_LEFT_TURN_MOTOR = 9;
     public static final int BACK_LEFT_ENCODER = 13;
     public static final double BACK_LEFT_ENCODER_OFFSET = Math.toRadians(0);
-
   }
 
   public static class RobotConstants {
@@ -58,6 +59,7 @@ public final class Constants {
 
   public static class GameConstants {
     public static final double aprilTagHeight = 20; // CM
+    public static final HashMap<Integer, Double[]> hashTable = new HashMap<Integer, Double[]>(8);
   }
   
   public static class AimbotConstants {

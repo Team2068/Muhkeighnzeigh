@@ -41,37 +41,52 @@ public final class Constants {
     public static final int FRONT_LEFT_DRIVE_MOTOR = 4;
     public static final int FRONT_LEFT_TURN_MOTOR = 5;
     public static final int FRONT_LEFT_ENCODER = 10;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
+    public static double FRONT_LEFT_ENCODER_OFFSET;
 
     public static final int FRONT_RIGHT_DRIVE_MOTOR = 6;
     public static final int FRONT_RIGHT_TURN_MOTOR = 7;
     public static final int FRONT_RIGHT_ENCODER = 11;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
+    public static double FRONT_RIGHT_ENCODER_OFFSET;
 
     public static final int BACK_LEFT_DRIVE_MOTOR = 2;
     public static final int BACK_LEFT_TURN_MOTOR = 3;
     public static final int BACK_LEFT_ENCODER = 12;
-    public static final double BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(223);
+    public static double BACK_LEFT_ENCODER_OFFSET;
 
     public static final int BACK_RIGHT_DRIVE_MOTOR = 8;
     public static final int BACK_RIGHT_TURN_MOTOR = 9;
     public static final int BACK_RIGHT_ENCODER = 13;
-    public static final double BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(48);
+    public static double BACK_RIGHT_ENCODER_OFFSET;
+
+    public static final void setOffsets(boolean mainRobot) {
+      if (mainRobot) {
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(189);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
+      } else {
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(223);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(48);
+      }
+    }
   }
 
   public static final class AutoConstants {
-    public static final double MAX_Speed_MetersPerSecond = 0.2;
-    public static final double MAX_Acceleration_MetersPerSecondSquared = 0.2;
-    public static final double MAX_AngularSpeed_RadiansPerSecond = Math.PI;
-    public static final double Max_AngularSpeed_RadiansPerSecondSquared = Math.PI;
+    public static final double kMaxSpeedMetersPerSecond = 0.2;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final double kPXController = 4;
     public static final double kPYController = 4;
     public static final double kPThetaController = 2;
 
     // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1, 1);
-}
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
+        1);
+  }
 
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));

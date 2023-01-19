@@ -33,10 +33,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final Photonvision photonvision = new Photonvision();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(true);
   private final CommandXboxController driverController = new CommandXboxController(0);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

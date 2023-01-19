@@ -52,7 +52,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = false;
 
-    public DriveSubsystem() {
+    public DriveSubsystem(boolean mainRobot) {
+        DriveConstants.setOffsets(mainRobot);
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
         frontLeftModule = Mk4SwerveModuleHelper.createNeo(

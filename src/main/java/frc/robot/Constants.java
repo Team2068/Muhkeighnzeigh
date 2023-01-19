@@ -69,10 +69,10 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double MAX_Speed_MetersPerSecond = 0.2;
-    public static final double MAX_Acceleration_MetersPerSecondSquared = 0.2;
-    public static final double MAX_AngularSpeed_RadiansPerSecond = Math.PI;
-    public static final double Max_AngularSpeed_RadiansPerSecondSquared = Math.PI;
+    public static final double kMaxSpeedMetersPerSecond = 0.2;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final double kPXController = 4;
     public static final double kPYController = 4;

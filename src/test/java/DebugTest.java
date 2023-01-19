@@ -1,6 +1,3 @@
-package frc.robot.tests;
-
-import edu.wpi.first.hal.HAL;
 import frc.robot.utilities.DebugTable;
 // Optional Test for DebugValue located in commands directory. (Can be removed as well as the directory if not wanted)
 public class DebugTest {

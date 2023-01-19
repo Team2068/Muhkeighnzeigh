@@ -4,11 +4,20 @@
 
 package frc.robot;
 
+import frc.robot.Constants.Paths;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 import edu.wpi.first.wpilibj.XboxController;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.server.PathPlannerServer;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -26,8 +35,7 @@ public class RobotContainer {
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final Photonvision photonvision = new Photonvision();
-
-  private final XboxController driverController = new XboxController(0);
+  private final CommandXboxController driverController = new CommandXboxController(0);
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /**
@@ -36,9 +44,13 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, () -> -driverController.getLeftX(),
-        () -> -driverController.getLeftY(), () -> -driverController.getRightX()));
- }
+    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
+        () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+
+    PathPlannerServer.startServer(5811);
+  }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
@@ -60,7 +72,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
     // pressed,
     // cancelling on release.
-
+    driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
+    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+    driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
   }
 
   /**
@@ -69,7 +84,21 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    return new FollowTrajectory(Paths.funny, driveSubsystem);
+  }
+
+  private static double deadband(double value, double deadband) {
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0)
+        return (value - deadband) / (1.0 - deadband);
+      return (value + deadband) / (1.0 - deadband);
+    }
+    return 0.0;
+  }
+
+  private static double modifyAxis(double value) {
+    value = deadband(value, 0.05); // Deadband
+    value = Math.copySign(value * value, value); // Square the axis
+    return value;
   }
 }

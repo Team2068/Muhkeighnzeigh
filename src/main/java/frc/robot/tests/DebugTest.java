@@ -1,13 +1,13 @@
 package frc.robot.tests;
 
-import frc.robot.commands.DebugValue;
+import frc.robot.utilities.DebugTable;
 // Optional Test for DebugValue located in commands directory. (Can be removed as well as the directory if not wanted)
-public class DebugValueTest {
+public class DebugTest {
     public void Test() {
         String DataName = "TestValue";
-        System.out.println(DebugValue.get(DataName));
+        System.out.println(DebugTable.get(DataName));
     
-        DebugValue.set(DataName, 2);
-        System.out.println(DebugValue.get(DataName));
+        DebugTable.set(DataName, 2);
+        System.out.println(DebugTable.get(DataName));
     }
 }

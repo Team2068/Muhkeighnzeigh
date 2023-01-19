@@ -59,7 +59,7 @@ public final class Constants {
 
   public static class GameConstants {
     public static final double aprilTagHeight = 20; // CM
-    public static final HashMap<Integer, Double[]> hashTable = new HashMap<Integer, Double[]>(8);
+    public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
   }
   
   public static class AimbotConstants {

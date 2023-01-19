@@ -32,7 +32,6 @@ public class DriveSubsystem extends SubsystemBase{
             new Translation2d(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2),
             new Translation2d(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2, Constants.DRIVETRAIN_WHEELBASE_METERS / 2),
             new Translation2d(Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2, -Constants.DRIVETRAIN_WHEELBASE_METERS / 2)
-
     );
 
     private final Pigeon2 pigeon2 = new Pigeon2(14);

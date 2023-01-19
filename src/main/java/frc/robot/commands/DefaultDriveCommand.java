@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
@@ -14,8 +13,8 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(5.5);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(5.5);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(7);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(7);
 
     public DefaultDriveCommand(DriveSubsystem driveSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -38,7 +37,7 @@ public class DefaultDriveCommand extends CommandBase {
 
 
         if(driveSubsystem.isFieldOriented()) {
-            driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, Rotation2d.fromDegrees(driveSubsystem.getGyroscopeRotation().getDegrees())));
+            driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, driveSubsystem.getGyroscopeRotation()));
         } else {
             driveSubsystem.drive(new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed));
         }

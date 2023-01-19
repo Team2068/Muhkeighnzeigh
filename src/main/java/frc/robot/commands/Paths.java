@@ -7,13 +7,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Constants.Trajectories;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class Paths extends CommandBase {
@@ -23,11 +21,11 @@ public class Paths extends CommandBase {
     private final Pose2d m_pose;
     private final SwerveDriveKinematics m_kinematics;
     private final HolonomicDriveController m_controller;
-    private final DriveSubsystem m_drivet;
+    private final DriveSubsystem m_drivetrain;
 
     @SuppressWarnings("ParameterName")
     public Paths(Trajectory trajectory, DriveSubsystem drivetrainSubsystem){
-        this.m_drivet = drivetrainSubsystem;
+        this.m_drivetrain = drivetrainSubsystem;
         this.m_trajectory = trajectory;
         this.m_kinematics = drivetrainSubsystem.getKinematics();
         this.m_pose = drivetrainSubsystem.getPose();
@@ -40,11 +38,11 @@ public class Paths extends CommandBase {
                 thetaController
         );
         
-        addRequirements(m_drivet);
+        addRequirements(m_drivetrain);
     }
     @Override
     public void initialize() {
-        m_drivetrain.resetOdometryWithPose2d(m_trajectory.getInitialPose());
+        m_drivetrain.resetOdometry(m_trajectory.getInitialPose());
         m_timer.reset();
         m_timer.start();
     }

@@ -1,0 +1,20 @@
+package frc.robot.commands;
+
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.Trajectories;
+import frc.robot.subsystems.DriveSubsystem;
+
+public class Auto1 extends SequentialCommandGroup {
+    public Auto1(DriveSubsystem driveSubsystem) {
+        addCommands(
+            new Paths(Trajectories.Step1_2CargoCandB, driveSubsystem), 
+            new Paths(Trajectories.Step2_2CargoCandB, driveSubsystem),
+            new Paths(Trajectories.Step3_2CargoCandB, driveSubsystem),
+            new Paths(Trajectories.Step4_2CargoCandB, driveSubsystem),
+            new Paths(Trajectories.Step5_2CargoCandB, driveSubsystem),
+            new Paths(Trajectories.Step5_2CargoCandB, driveSubsystem),
+            new Paths(Trajectories.Step6_2CargoCandB, driveSubsystem)
+            
+    );
+}
+}

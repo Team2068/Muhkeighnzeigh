@@ -14,7 +14,7 @@ public class Auto1 extends SequentialCommandGroup {
             new Paths(Trajectories.Step5_4Cargo, driveSubsystem),
             new Paths(Trajectories.Step5_4Cargo, driveSubsystem),
             new Paths(Trajectories.Step6_4Cargo, driveSubsystem)
-            //Scenario 2 
+            
     );
 }
 }

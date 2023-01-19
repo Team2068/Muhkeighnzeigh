@@ -54,10 +54,10 @@ public final class Constants {
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
     public static final void setOffsets(boolean mainRobot) {
-      if (mainRobot) { // TODO: change main offsets
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(9);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(223);
+      if (mainRobot) {
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(189);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);

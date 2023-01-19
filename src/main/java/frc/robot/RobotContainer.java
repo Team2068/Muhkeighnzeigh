@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.Paths;
+import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
@@ -75,6 +76,7 @@ public class RobotContainer {
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   }
 
   /**

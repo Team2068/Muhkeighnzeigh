@@ -121,6 +121,8 @@ public class Photonvision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(!camera.getLatestResult().hasTargets())
+      return;
     updateData();
     SmartDashboard.putNumber("target pitch", data.targetPitch);
     SmartDashboard.putNumber("target yaw", data.targetYaw);

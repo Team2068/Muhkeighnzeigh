@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants.Chassis;
+import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -52,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = false;
 
-    public DriveSubsystem(Chassis chassis) {
+    public DriveSubsystem(ChassisConfiguration chassis) {
         DriveConstants.setOffsets(chassis);
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 

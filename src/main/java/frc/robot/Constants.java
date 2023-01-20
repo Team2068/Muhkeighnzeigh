@@ -29,7 +29,7 @@ public final class Constants {
 
   public static int CURRENT_LIMIT = 30;
 
-  public enum Chassis {
+  public enum ChassisConfiguration {
     MAIN,
     PRACTICE
   }
@@ -58,8 +58,8 @@ public final class Constants {
     public static final int BACK_RIGHT_ENCODER = 13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-    public static final void setOffsets(Chassis chassis) {
-      if (chassis == Chassis.MAIN) {
+    public static final void setOffsets(ChassisConfiguration chassis) {
+      if (chassis == ChassisConfiguration.MAIN) {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(189);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);

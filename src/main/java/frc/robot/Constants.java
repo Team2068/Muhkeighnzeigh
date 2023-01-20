@@ -29,6 +29,11 @@ public final class Constants {
 
   public static int CURRENT_LIMIT = 30;
 
+  public enum Chassis {
+    MAIN,
+    PRACTICE
+  }
+
   public static final class DriveConstants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
@@ -53,8 +58,8 @@ public final class Constants {
     public static final int BACK_RIGHT_ENCODER = 13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-    public static final void setOffsets(boolean mainRobot) {
-      if (mainRobot) {
+    public static final void setOffsets(Chassis chassis) {
+      if (chassis == Chassis.MAIN) {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(189);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);

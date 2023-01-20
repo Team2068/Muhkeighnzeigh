@@ -1,12 +1,26 @@
-import frc.robot.utilities.DebugTable;
-// Optional Test for DebugValue located in commands directory. (Can be removed as well as the directory if not wanted)
-public class DebugTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-    public void Test() {
-        String DataName = "TestValue";
-        System.out.println(DebugTable.get(DataName));
-    
-        DebugTable.set(DataName, 2);
-        System.out.println(DebugTable.get(DataName));
+import org.junit.jupiter.api.Test;
+
+import frc.robot.utilities.DebugTable;
+
+public class DebugTest {
+    @Test
+    public void createDoubleTest() {
+        DebugTable.set("AAA", 1.1);
+        assertEquals(DebugTable.get("AAA").getDouble(), 1.1);
+    }
+
+    @Test
+    public void getNoSetTest() {
+        assertNull(DebugTable.get("BBB").getValue());
+    }
+
+    @Test
+    public void getSetGetTest() {
+        assertNull(DebugTable.get("CCC").getValue());
+        DebugTable.set("CCC", "test");
+        assertEquals(DebugTable.get("CCC").getString(), "test");
     }
 }

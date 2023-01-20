@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -51,7 +52,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = false;
 
-    public DriveSubsystem() {
+    public DriveSubsystem(ChassisConfiguration chassis) {
+        DriveConstants.setOffsets(chassis);
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
         frontLeftModule = Mk4SwerveModuleHelper.createNeo(
@@ -133,7 +135,6 @@ public class DriveSubsystem extends SubsystemBase {
                 getModulePosition(backLeftModule),
                 getModulePosition(backRightModule)
         };
-        // TODO: remove once we know the distances are correct
         SmartDashboard.putNumber("FL Distance", pos[0].distanceMeters);
         SmartDashboard.putNumber("FR Distance", pos[1].distanceMeters);
         SmartDashboard.putNumber("BL Distance", pos[2].distanceMeters);

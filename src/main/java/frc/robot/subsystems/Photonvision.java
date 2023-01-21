@@ -31,7 +31,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Photonvision extends SubsystemBase {
 
-  PhotonCamera camera = new PhotonCamera("photonvision");
+  PhotonCamera camera = new PhotonCamera("OV5647");
   AprilTagFieldLayout aprilTagFieldLayout;
 
   ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();

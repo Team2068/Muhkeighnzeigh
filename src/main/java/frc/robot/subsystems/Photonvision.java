@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -68,7 +67,8 @@ public class Photonvision extends SubsystemBase {
   public class AprilTagData {
     public int targetId;
     public double poseAmbiguity;
-    public Optional<Pose3d> tagPose;
+    //public Optional<Pose3d> tagPose;
+    public Double[] tagPose2;
     public Transform3d alternateCameraToTarget;
   }
 
@@ -80,7 +80,7 @@ public class Photonvision extends SubsystemBase {
   }
 
   public void togglePipeline() {
-    camera.setPipelineIndex( (camera.getPipelineIndex() == 1) ? 2 : 1);
+    camera.setPipelineIndex( (getPipelineIndex() == 1) ? 2 : 1);
   }
 
   public void updateData() {
@@ -94,10 +94,11 @@ public class Photonvision extends SubsystemBase {
     data.targetSkew = bestTarget.getSkew();
     data.targetPose = bestTarget.getBestCameraToTarget();
 
-    if (camera.getPipelineIndex() == 1) { // if target is an apriltag target
+    if (getPipelineIndex() == 1) { // if target is an apriltag target
       tagData.targetId = bestTarget.getFiducialId();
       tagData.poseAmbiguity = bestTarget.getPoseAmbiguity();
-      tagData.tagPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
+      //tagData.tagPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
+      tagData.tagPose2 = GameConstants.tagMap.get(tagData.targetId);
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
   }
@@ -123,13 +124,27 @@ public class Photonvision extends SubsystemBase {
   public void periodic() {
     if(!camera.getLatestResult().hasTargets())
       return;
+      
     updateData();
+
     SmartDashboard.putNumber("target pitch", data.targetPitch);
     SmartDashboard.putNumber("target yaw", data.targetYaw);
     SmartDashboard.putNumber("target area", data.targetArea);
     SmartDashboard.putNumber("target skew", data.targetSkew);
 
+    SmartDashboard.putNumber("target x", data.targetPose.getX());
+    SmartDashboard.putNumber("target y", data.targetPose.getY());
+    SmartDashboard.putNumber("target z", data.targetPose.getZ());
+    SmartDashboard.putNumber("target rotation", data.targetPose.getRotation().getAngle());
+
     SmartDashboard.putNumber("apriltag id", tagData.targetId);
     SmartDashboard.putNumber("apriltag pose ambiguity", tagData.poseAmbiguity);
+
+    SmartDashboard.putNumber("apriltag x pos", tagData.tagPose2[0]);
+    SmartDashboard.putNumber("apriltag y pos", tagData.tagPose2[1]);
+    SmartDashboard.putNumber("apriltag z pos", tagData.tagPose2[2]);
+    SmartDashboard.putNumber("apriltag rotation", tagData.tagPose2[3]);
+
+    
   }
 }

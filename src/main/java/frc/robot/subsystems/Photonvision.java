@@ -20,7 +20,6 @@ import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.RobotConstants;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -85,7 +84,20 @@ public class Photonvision extends SubsystemBase {
 
   public void updateData() {
     PhotonPipelineResult results = camera.getLatestResult();
+
+    if (results == null) {
+      return;
+    }
+
     PhotonTrackedTarget bestTarget = results.getBestTarget();
+
+    if (!results.hasTargets()) {
+      return;
+    }
+
+    if (bestTarget == null) {
+      return;
+    }
 
     data.hasTargets = results.hasTargets();
     data.targetPitch = bestTarget.getPitch();
@@ -122,8 +134,9 @@ public class Photonvision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(!camera.getLatestResult().hasTargets())
-      return;
+    if(camera.getLatestResult() == null)
+      if (!camera.getLatestResult().hasTargets())
+        return;
       
     updateData();
 

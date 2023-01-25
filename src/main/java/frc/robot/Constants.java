@@ -34,6 +34,12 @@ public final class Constants {
     PRACTICE
   }
 
+  public static ChassisConfiguration getChassisConfiguration() {
+    if (!System.getenv("ROBOT_TYPE").isEmpty() && System.getenv("ROBOT_TYPE").equals("PRACTICE"))
+      return ChassisConfiguration.PRACTICE;
+    return ChassisConfiguration.MAIN;
+  }
+
   public static final class DriveConstants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);

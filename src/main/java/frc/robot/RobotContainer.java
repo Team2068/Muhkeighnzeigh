@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
@@ -30,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem(ChassisConfiguration.MAIN);
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(Constants.getChassisConfiguration());
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   /**

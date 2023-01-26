@@ -106,5 +106,10 @@ public final class Constants {
   public static final PathPlannerTrajectory Step1_1ConeCargo = PathPlanner.loadPath("Step 1_ 1 Cone Cargo", 1, 1);
   public static final PathPlannerTrajectory Step2_1ConeCargo = PathPlanner.loadPath("Step 2_ 1 Cone Cargo", 1, 1);
   public static final PathPlannerTrajectory Step3_1ConeCargo = PathPlanner.loadPath("Step 2_ 1 Cone Cargo", 1, 1);
-  }
+  // Scenario 6
+  public static final PathPlannerTrajectory Step1_1BlockCargo = PathPlanner.loadPath("Step 1_1 Block Cargo",1,1);
+  public static final PathPlannerTrajectory Step2_1BlockCargo = PathPlanner.loadPath("Step 2_1 Block Cargo", 1,1);
+  //Scenario 7 
+   public static final PathPlannerTrajectory Step1_Park = PathPlanner.loadPath("Step 1_ Park", 1, 1);
+}
 }

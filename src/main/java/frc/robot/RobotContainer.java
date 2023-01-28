@@ -76,6 +76,7 @@ public class RobotContainer {
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    driverController.leftBumper().whileTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   }
 

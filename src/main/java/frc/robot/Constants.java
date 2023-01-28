@@ -60,15 +60,15 @@ public final class Constants {
 
     public static final void setOffsets(boolean mainRobot) {
       if (mainRobot) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(189);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(360); //189
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(0);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(90); //288
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(270);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(223);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(48);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(230);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(84);
       }
     }
   }
@@ -94,8 +94,8 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 9.0; //replace w actual height
-    public static final double camAngle = Units.degreesToRadians(69); //replace with actual angle of the camera
+    public static final double camHeight = 6.875; //replace w actual height in cm
+    public static final double camAngle = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final Transform3d robotToCam = new Transform3d(
       new Translation3d(0, 0, 0),
       new Rotation3d(0, camAngle, 0)
@@ -103,7 +103,8 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    public static final double aprilTagHeight = 20; // CM
+    public static final double aprilTagHeight = 48; // CM
+    public static final double reflectiveTapeHeight = 49; //cm
     public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
   }
   
@@ -111,7 +112,7 @@ public final class Constants {
     public static final double kP = 1.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double speed = 0.1;
+    public static final double speed = 0.5;
     public static final double minimumAdjustment = 0.5;
   }
  

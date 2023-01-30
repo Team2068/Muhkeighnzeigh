@@ -35,9 +35,7 @@ public final class Constants {
   }
 
   public static ChassisConfiguration getChassisConfiguration() {
-    if (!System.getenv("ROBOT_TYPE").isEmpty() && System.getenv("ROBOT_TYPE").equals("PRACTICE"))
-      return ChassisConfiguration.PRACTICE;
-    return ChassisConfiguration.MAIN;
+    return System.getenv("PRACTICE_ROBOT") != null ? ChassisConfiguration.PRACTICE : ChassisConfiguration.MAIN;
   }
 
   public static final class DriveConstants {

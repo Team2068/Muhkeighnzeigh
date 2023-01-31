@@ -91,7 +91,18 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
         1);
   }
-
+  public static final class ArmConstants{
+    public static final int ArmMotor1 = 15;
+    public static final int ArmMotor2 = 16;
+    public static final double ArmLiftSpeed = .25;
+    public static final double ArmLowerSpeed = -.25;
+  }
+  public static final class ClawConstants{
+    public static final int IntakeMotor = 17;
+    public static final int Claw = 18;
+    public static final double IntakeSpeed = .75;
+    public static final double ClawSpeed = .5;
+  }
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));

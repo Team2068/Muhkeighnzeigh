@@ -113,9 +113,8 @@ public class Photonvision extends SubsystemBase {
       tagData.tagPose2 = GameConstants.tagMap.get(tagData.targetId);
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
-    else {
-      return;
-    }
+    return;
+    
   }
 
   public double getDistance(PhotonPipelineResult results) {

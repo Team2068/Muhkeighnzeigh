@@ -34,6 +34,10 @@ public final class Constants {
     PRACTICE
   }
 
+  public static ChassisConfiguration getChassisConfiguration() {
+    return System.getenv("PRACTICE_ROBOT") != null ? ChassisConfiguration.PRACTICE : ChassisConfiguration.MAIN;
+  }
+
   public static final class DriveConstants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
@@ -58,8 +62,8 @@ public final class Constants {
     public static final int BACK_RIGHT_ENCODER = 13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-    public static final void setOffsets(ChassisConfiguration chassis) {
-      if (chassis == ChassisConfiguration.MAIN) {
+    public static final void setOffsets() {
+      if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(9);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);

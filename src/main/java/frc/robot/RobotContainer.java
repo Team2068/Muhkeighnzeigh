@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;

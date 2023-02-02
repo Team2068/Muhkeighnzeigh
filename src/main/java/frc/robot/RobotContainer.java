@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;
@@ -13,6 +15,7 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -78,7 +81,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     //return new FollowTrajectory(Paths.funny, driveSubsystem);
-    return new AutonBalance(driveSubsystem);
+    return new SequentialCommandGroup(
+      new FollowTrajectory(Paths.park, driveSubsystem),
+      new AutonBalance(driveSubsystem));
   }
 
   private static double deadband(double value, double deadband) {

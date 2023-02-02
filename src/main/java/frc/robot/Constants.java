@@ -95,5 +95,6 @@ public final class Constants {
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
+    public static final PathPlannerTrajectory park = PathPlanner.loadPath("Park NOW! (lowtiergod)", new PathConstraints(1, 0.75));
   }
 }

@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
-        pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.NegativeZ);
+        pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
         pigeon2.calibrate();
         zeroGyro();
     }
@@ -117,7 +117,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        return pigeon2.getRotation2d();
+        return Rotation2d.fromDegrees(pigeon2.getYaw() % 360);
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {

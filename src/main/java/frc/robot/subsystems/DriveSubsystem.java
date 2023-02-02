@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
             new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    private final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(15);
+    public final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(15);
 
     private final SwerveDriveOdometry odometry;
     private final SwerveModule frontLeftModule;
@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
-        pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.PositiveZ);
+        pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.NegativeZ);
         pigeon2.calibrate();
         zeroGyro();
     }
@@ -213,6 +213,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("ypr rotation", ypr[0]);
         SmartDashboard.putNumber("Odometry rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putNumber("Pigeon rotation", pigeon2.getYaw());
+        SmartDashboard.putNumber("Pigeon Pitch", pigeon2.getPitch());
 
         SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
     }

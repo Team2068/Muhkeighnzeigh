@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.Paths;
+import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
@@ -78,7 +79,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new FollowTrajectory(Paths.funny, driveSubsystem);
+    //return new FollowTrajectory(Paths.funny, driveSubsystem);
+    return new AutonBalance(driveSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

@@ -110,7 +110,7 @@ public class Photonvision extends SubsystemBase {
     data.targetSkew = bestTarget.getSkew();
     data.targetPose = bestTarget.getBestCameraToTarget();
 
-    if (camera.getPipelineIndex() == 1) { // if target is an apriltag target
+    if (camera.getPipelineIndex() == 2) { // if target is an apriltag target
       tagData.targetId = bestTarget.getFiducialId();
       tagData.poseAmbiguity = bestTarget.getPoseAmbiguity();
       //tagData.tagPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
@@ -118,6 +118,8 @@ public class Photonvision extends SubsystemBase {
       tagData.tagPose2 = GameConstants.tagArray[tagData.targetId-1];
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
+    return;
+    
   }
 
   public double getDistance(PhotonPipelineResult results) {
@@ -140,6 +142,7 @@ public class Photonvision extends SubsystemBase {
   @Override
   public void periodic() {
     if(camera.getLatestResult() == null)
+      return;
       if (!camera.getLatestResult().hasTargets())
         return;
       
@@ -155,13 +158,15 @@ public class Photonvision extends SubsystemBase {
     SmartDashboard.putNumber("target z", data.targetPose.getZ());
     SmartDashboard.putNumber("target rotation", data.targetPose.getRotation().getAngle());
 
-    SmartDashboard.putNumber("apriltag id", tagData.targetId);
-    SmartDashboard.putNumber("apriltag pose ambiguity", tagData.poseAmbiguity);
+    // SmartDashboard.putNumber("apriltag id", tagData.targetId);
+    // SmartDashboard.putNumber("apriltag pose ambiguity", tagData.poseAmbiguity);
 
-    SmartDashboard.putNumber("apriltag x pos", tagData.tagPose2[0]);
-    SmartDashboard.putNumber("apriltag y pos", tagData.tagPose2[1]);
-    SmartDashboard.putNumber("apriltag z pos", tagData.tagPose2[2]);
-    SmartDashboard.putNumber("apriltag rotation", tagData.tagPose2[3]);
+    // SmartDashboard.putNumber("apriltag x pos", tagData.tagPose2[0]);
+    // SmartDashboard.putNumber("apriltag y pos", tagData.tagPose2[1]);
+    // SmartDashboard.putNumber("apriltag z pos", tagData.tagPose2[2]);
+    // SmartDashboard.putNumber("apriltag rotation", tagData.tagPose2[3]);
 
+    SmartDashboard.putNumber("distance", getDistance(camera.getLatestResult()));
+    
   }
 }

@@ -72,8 +72,8 @@ public final class Constants {
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(223);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(48);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(230);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(84);
       }
     }
   }
@@ -99,8 +99,8 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 9.0; // replace w actual height in cm
-    public static final double camAngle = Units.degreesToRadians(69); //replace with actual angle of the camera
+    public static final double camHeight = 6.875; //replace w actual height in cm
+    public static final double camAngle = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final Transform3d robotToCam = new Transform3d(
       new Translation3d(0, 0, 0),
       new Rotation3d(0, camAngle, 0)
@@ -108,7 +108,6 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    public static final double aprilTagHeight = 20; // replace w actual height in cm
     //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final Double[][] tagArray = {
       {1551.35, 107.16, 46.27, 180.0}, 
@@ -119,13 +118,16 @@ public final class Constants {
       {102.743, 442.44, 46.27, 0.0}, 
       {102.743, 274.80, 46.27, 0.0}, 
       {102.743, 107.16, 46.27, 0.0}};
+    public static final double aprilTagHeight = 48; // CM
+    public static final double reflectiveTapeHeight = 49; //cm
+    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
   }
   
   public static class AimbotConstants {
     public static final double kP = 1.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double speed = 0.1;
+    public static final double speed = 0.5;
     public static final double minimumAdjustment = 0.5;
   }
  

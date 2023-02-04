@@ -64,9 +64,9 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(9);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(1);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(78);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
@@ -95,6 +95,6 @@ public final class Constants {
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
-    public static final PathPlannerTrajectory park = PathPlanner.loadPath("Park NOW! (lowtiergod)", new PathConstraints(1, 0.75));
+    public static final PathPlannerTrajectory park = PathPlanner.loadPath("Hitler", new PathConstraints(1, 0.75));
   }
 }

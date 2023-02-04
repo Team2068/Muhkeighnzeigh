@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 8;
+    public static double MAX_VOLTAGE = 5;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -97,6 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
+        // pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
         pigeon2.calibrate();
         zeroGyro();
     }
@@ -117,7 +118,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        return Rotation2d.fromDegrees(pigeon2.getYaw() % 360);
+        double rot = Math.abs(pigeon2.getYaw()) % 360 * ( (pigeon2.getYaw() < 0) ? -1 : 1);
+        if (rot<0) rot += 360;
+        return Rotation2d.fromDegrees(rot);
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {

@@ -34,6 +34,11 @@ public final class Constants {
 
   public static int CURRENT_LIMIT = 30;
 
+  public enum ChassisConfiguration {
+    MAIN,
+    PRACTICE
+  }
+
   public static final class DriveConstants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
@@ -58,9 +63,9 @@ public final class Constants {
     public static final int BACK_RIGHT_ENCODER = 13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-    public static final void setOffsets(boolean mainRobot) {
-      if (mainRobot) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(189);
+    public static final void setOffsets(ChassisConfiguration chassis) {
+      if (chassis == ChassisConfiguration.MAIN) {
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(9);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(128);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
@@ -94,7 +99,7 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 9.0; //replace w actual height
+    public static final double camHeight = 9.0; // replace w actual height in cm
     public static final double camAngle = Units.degreesToRadians(69); //replace with actual angle of the camera
     public static final Transform3d robotToCam = new Transform3d(
       new Translation3d(0, 0, 0),
@@ -103,8 +108,17 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    public static final double aprilTagHeight = 20; // CM
-    public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
+    public static final double aprilTagHeight = 20; // replace w actual height in cm
+    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
+    public static final Double[][] tagArray = {
+      {1551.35, 107.16, 46.27, 180.0}, 
+      {1551.35, 274.80, 46.27, 180.0}, 
+      {1551.35, 442.44, 46.27, 180.0}, 
+      {1617.87, 674.97, 69.54, 180.0}, 
+      {36.19, 674.97, 69.54, 0.0}, 
+      {102.743, 442.44, 46.27, 0.0}, 
+      {102.743, 274.80, 46.27, 0.0}, 
+      {102.743, 107.16, 46.27, 0.0}};
   }
   
   public static class AimbotConstants {

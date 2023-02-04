@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
@@ -12,11 +13,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 import edu.wpi.first.wpilibj.XboxController;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Photonvision photonvision = new Photonvision();
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem(true);
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(ChassisConfiguration.MAIN);
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   /**

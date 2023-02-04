@@ -42,15 +42,17 @@ public class Photonvision extends SubsystemBase {
     } catch (Exception e) {
       System.out.println(e);
     }
+    
     camList.add(new Pair<PhotonCamera, Transform3d>(camera, RobotConstants.robotToCam));
-    GameConstants.tagMap.put(1, new Double[]{1551.35, 107.16, 46.27, 180.0});
-    GameConstants.tagMap.put(2, new Double[]{1551.35, 274.80, 46.27, 180.0});
-    GameConstants.tagMap.put(3, new Double[]{1551.35, 442.44, 46.27, 180.0});
-    GameConstants.tagMap.put(4, new Double[]{1617.87, 674.97, 69.54, 180.0});
-    GameConstants.tagMap.put(5, new Double[]{36.19, 674.97, 69.54, 0.0});
-    GameConstants.tagMap.put(6, new Double[]{102.743, 442.44, 46.27, 0.0});
-    GameConstants.tagMap.put(7, new Double[]{102.743, 274.80, 46.27, 0.0});
-    GameConstants.tagMap.put(8, new Double[]{102.743, 107.16, 46.27, 0.0});
+
+    // GameConstants.tagMap.put(1, new Double[]{1551.35, 107.16, 46.27, 180.0});
+    // GameConstants.tagMap.put(2, new Double[]{1551.35, 274.80, 46.27, 180.0});
+    // GameConstants.tagMap.put(3, new Double[]{1551.35, 442.44, 46.27, 180.0});
+    // GameConstants.tagMap.put(4, new Double[]{1617.87, 674.97, 69.54, 180.0});
+    // GameConstants.tagMap.put(5, new Double[]{36.19, 674.97, 69.54, 0.0});
+    // GameConstants.tagMap.put(6, new Double[]{102.743, 442.44, 46.27, 0.0});
+    // GameConstants.tagMap.put(7, new Double[]{102.743, 274.80, 46.27, 0.0});
+    // GameConstants.tagMap.put(8, new Double[]{102.743, 107.16, 46.27, 0.0});
 
   }
 
@@ -74,12 +76,14 @@ public class Photonvision extends SubsystemBase {
   public CameraData data = new CameraData();
   public AprilTagData tagData = new AprilTagData();
 
-  public int getPipelineIndex() {
-    return camera.getPipelineIndex();
-  }
-
   public void togglePipeline() {
-    camera.setPipelineIndex( (getPipelineIndex() == 1) ? 2 : 1);
+    //camera.setPipelineIndex( (getPipelineIndex() == 1) ? 2 : 1);
+    if (camera.getPipelineIndex() == 1) {
+      camera.setPipelineIndex(2);
+    }
+    else if (camera.getPipelineIndex() == 2) {
+      camera.setPipelineIndex(1);
+    }
   }
 
   public void updateData() {
@@ -106,11 +110,12 @@ public class Photonvision extends SubsystemBase {
     data.targetSkew = bestTarget.getSkew();
     data.targetPose = bestTarget.getBestCameraToTarget();
 
-    if (getPipelineIndex() == 1) { // if target is an apriltag target
+    if (camera.getPipelineIndex() == 1) { // if target is an apriltag target
       tagData.targetId = bestTarget.getFiducialId();
       tagData.poseAmbiguity = bestTarget.getPoseAmbiguity();
       //tagData.tagPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
-      tagData.tagPose2 = GameConstants.tagMap.get(tagData.targetId);
+      //tagData.tagPose2 = GameConstants.tagMap.get(tagData.targetId);
+      tagData.tagPose2 = GameConstants.tagArray[tagData.targetId-1];
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
   }
@@ -158,6 +163,5 @@ public class Photonvision extends SubsystemBase {
     SmartDashboard.putNumber("apriltag z pos", tagData.tagPose2[2]);
     SmartDashboard.putNumber("apriltag rotation", tagData.tagPose2[3]);
 
-    
   }
 }

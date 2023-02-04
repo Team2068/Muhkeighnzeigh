@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -52,8 +54,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = false;
 
-    public DriveSubsystem(boolean mainRobot) {
-        DriveConstants.setOffsets(mainRobot);
+    public DriveSubsystem(ChassisConfiguration chassis) {
+        DriveConstants.setOffsets(chassis);
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
         frontLeftModule = Mk4SwerveModuleHelper.createNeo(
@@ -123,7 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
     public Rotation3d getGyroRotation(){
         double ypr[] = {0,0,0};
         pigeon2.getYawPitchRoll(ypr);
-        return new Rotation3d(ypr[2], ypr[1], ypr[0]);
+        return new Rotation3d(Units.degreesToRadians(ypr[2]), Units.degreesToRadians(ypr[1]), Units.degreesToRadians(ypr[0]));
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -141,7 +143,6 @@ public class DriveSubsystem extends SubsystemBase {
                 getModulePosition(backLeftModule),
                 getModulePosition(backRightModule)
         };
-        // TODO: remove once we know the distances are correct
         SmartDashboard.putNumber("FL Distance", pos[0].distanceMeters);
         SmartDashboard.putNumber("FR Distance", pos[1].distanceMeters);
         SmartDashboard.putNumber("BL Distance", pos[2].distanceMeters);

@@ -20,7 +20,7 @@ public class AutonBalance extends SequentialCommandGroup {
     DriveSubsystem driveSubsystem;
 
     public Balance(DriveSubsystem driveSubsystem) {
-      super(new PIDController(0.3, 0, 0.01), driveSubsystem.pigeon2::getPitch, 0, output -> {
+      super(new PIDController(0.3, 0, 0), driveSubsystem.pigeon2::getRoll, 0, output -> {
         driveSubsystem.drive(new ChassisSpeeds(output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0,0));
       }, driveSubsystem);
       this.driveSubsystem = driveSubsystem;
@@ -29,7 +29,6 @@ public class AutonBalance extends SequentialCommandGroup {
     @Override
     public void execute() {
         super.execute();
-        System.out.println("RUNNING PIDBALANCE!!!");
     }
 
     @Override
@@ -39,14 +38,12 @@ public class AutonBalance extends SequentialCommandGroup {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        System.out.println("Ending Autonbalance");
         driveSubsystem.drive(new ChassisSpeeds());
     }
   }
 
-  /** Creates a new AutonBalance. */
   public AutonBalance(DriveSubsystem driveSubsystem) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new DefaultDriveCommand(driveSubsystem, ()->1, ()->0, ()->0).withTimeout(1),
       new Balance(driveSubsystem)

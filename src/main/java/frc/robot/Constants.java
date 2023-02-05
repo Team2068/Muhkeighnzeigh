@@ -64,9 +64,9 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(9);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(78);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(286);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
@@ -80,8 +80,8 @@ public final class Constants {
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 0.2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2*Math.PI;
 
     public static final double kPXController = 4;
     public static final double kPYController = 4;
@@ -95,5 +95,6 @@ public final class Constants {
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
+    public static final PathPlannerTrajectory park = PathPlanner.loadPath("Hitler", new PathConstraints(10, 2));
   }
 }

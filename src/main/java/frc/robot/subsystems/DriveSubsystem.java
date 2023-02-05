@@ -96,7 +96,8 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
-        pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.NegativeZ);
+        // pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.NegativeZ);
+        pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
         pigeon2.calibrate();
         zeroGyro();
     }
@@ -214,6 +215,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Odometry rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putNumber("Pigeon rotation", pigeon2.getYaw());
         SmartDashboard.putNumber("Pigeon Pitch", pigeon2.getPitch());
+        SmartDashboard.putNumber("Pigeon Roll", pigeon2.getRoll());
 
         SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
     }

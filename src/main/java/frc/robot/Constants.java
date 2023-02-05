@@ -42,25 +42,27 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
 
-    public static final int FRONT_LEFT_DRIVE_MOTOR = 4;
-    public static final int FRONT_LEFT_TURN_MOTOR = 5;
-    public static final int FRONT_LEFT_ENCODER = 10;
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 8;
+    public static final int FRONT_LEFT_TURN_MOTOR = 9;
+    public static final int FRONT_LEFT_ENCODER = 2;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 6;
-    public static final int FRONT_RIGHT_TURN_MOTOR = 7;
-    public static final int FRONT_RIGHT_ENCODER = 11;
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 10;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 11;
+    public static final int FRONT_RIGHT_ENCODER = 3;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 2;
-    public static final int BACK_LEFT_TURN_MOTOR = 3;
-    public static final int BACK_LEFT_ENCODER = 12;
+    public static final int BACK_LEFT_DRIVE_MOTOR = 12;
+    public static final int BACK_LEFT_TURN_MOTOR = 13;
+    public static final int BACK_LEFT_ENCODER = 4;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
-    public static final int BACK_RIGHT_DRIVE_MOTOR = 8;
-    public static final int BACK_RIGHT_TURN_MOTOR = 9;
-    public static final int BACK_RIGHT_ENCODER = 13;
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 14;
+    public static final int BACK_RIGHT_TURN_MOTOR = 15;
+    public static final int BACK_RIGHT_ENCODER = 5;
     public static double BACK_RIGHT_ENCODER_OFFSET;
+
+
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
@@ -76,7 +78,14 @@ public final class Constants {
       }
     }
   }
-
+  public static final class ArmConstants{
+    public static final int ARM_1_MOTOR = 6;
+    public static final int ARM_2_MOTOR = 7;
+  }
+  public static final class ClawConstants{
+public static final int CLAW_MOTOR = 16;
+public static final int INTAKE_MOTOR = 17;
+  }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 0.2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;

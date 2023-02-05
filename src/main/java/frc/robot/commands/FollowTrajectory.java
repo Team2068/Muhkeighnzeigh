@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.AutoConstants;
@@ -41,8 +42,6 @@ import frc.robot.subsystems.DriveSubsystem;
 public class FollowTrajectory extends CommandBase {
     private final Timer m_timer = new Timer();
     private final PathPlannerTrajectory m_trajectory;
-    private final Pose2d m_pose;
-    private final SwerveDriveKinematics m_kinematics;
     private final HolonomicDriveController m_controller;
     private final DriveSubsystem m_drivetrain;
     
@@ -80,14 +79,12 @@ public class FollowTrajectory extends CommandBase {
     public FollowTrajectory(PathPlannerTrajectory trajectory, DriveSubsystem drivetrainSubsystem){
         this.m_drivetrain = drivetrainSubsystem;
         this.m_trajectory = trajectory;
-        this.m_kinematics = drivetrainSubsystem.getKinematics();
-        this.m_pose = drivetrainSubsystem.getPose();
 
-        ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        ProfiledPIDController thetaController = new ProfiledPIDController(0, 0, 0, AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
         m_controller = new HolonomicDriveController(
-                new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
+                new PIDController(0, 0, 0),
+                new PIDController(0, 0, 0),
                 thetaController
         );
         
@@ -108,9 +105,8 @@ public class FollowTrajectory extends CommandBase {
         var desiredState = (PathPlannerState) m_trajectory.sample(curTime);
 
         var targetChassisSpeeds = m_controller.calculate(m_drivetrain.getPose(), desiredState, desiredState.holonomicRotation);
-        // var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
         m_drivetrain.drive(targetChassisSpeeds);
-        // m_drivetrain.setModuleStates(targetModuleStates);
+        PathPlannerServer.sendPathFollowingData(desiredState.poseMeters, m_drivetrain.getPose());
     }
 
     @Override

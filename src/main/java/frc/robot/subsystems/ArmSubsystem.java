@@ -17,7 +17,8 @@ import frc.robot.Constants.ArmConstants;
 public class ArmSubsystem extends ProfiledPIDSubsystem{
     private CANSparkMax ArmMotor1 = new CANSparkMax(ArmConstants.ArmMotor1, MotorType.kBrushless);
     private CANSparkMax ArmMotor2 = new CANSparkMax(ArmConstants.ArmMotor2, MotorType.kBrushless);
-
+    private Encoder Arm1encoder;
+    private Encoder arm2Encoder;
     private final ArmFeedforward armFeedforward = 
     new ArmFeedforward(0, 0, 0, 0);
     public ArmSubsystem(){
@@ -25,17 +26,20 @@ public class ArmSubsystem extends ProfiledPIDSubsystem{
     new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0))
    );
 
-   
+Arm1encoder.setDistancePerPulse(0);
+arm2Encoder.setDistancePerPulse(0);
+setGoal(0);
 }
     @Override
     protected void useOutput(double output, State setpoint) {
         double feedforward =  feedforward.calculate(setpoint.position, setpoint.velocity);
         ArmMotor1.setVoltage(output + feedforward);
-        ArmMotor2.set(output + feedforward);
+        ArmMotor2.setVoltage(output + feedforward);
     }
     @Override
     protected double getMeasurement() {
         // TODO Auto-generated method stub
-        return 0;
+        return arm2Encoder.getDistance() + ARMOFFSET;
+        return Arm1encoder.getDistance() + ARMOFFSET;
     }
 }

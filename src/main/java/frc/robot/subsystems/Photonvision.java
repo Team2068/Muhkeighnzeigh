@@ -78,11 +78,11 @@ public class Photonvision extends SubsystemBase {
 
   public void togglePipeline() {
     //camera.setPipelineIndex( (getPipelineIndex() == 1) ? 2 : 1);
-    if (camera.getPipelineIndex() == 1) {
-      camera.setPipelineIndex(2);
-    }
-    else if (camera.getPipelineIndex() == 2) {
+    if (camera.getPipelineIndex() == 0) {
       camera.setPipelineIndex(1);
+    }
+    else if (camera.getPipelineIndex() == 1) {
+      camera.setPipelineIndex(0);
     }
   }
 

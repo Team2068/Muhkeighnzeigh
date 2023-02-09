@@ -7,15 +7,14 @@ package frc.robot;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -80,9 +79,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return new FollowTrajectory(Paths.funny, driveSubsystem);
+    // return driveSubsystem.followPath(Paths.hitler);
+    // return new FollowTrajectory(Paths.bounce, driveSubsystem);
     return new SequentialCommandGroup(
-      new FollowTrajectory(Paths.park, driveSubsystem),
+      driveSubsystem.followPath(Paths.hitler),
       new AutonBalance(driveSubsystem));
   }
 

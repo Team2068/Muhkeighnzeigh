@@ -5,9 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.Paths;
+import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Photonvision;
+import edu.wpi.first.wpilibj.XboxController;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
@@ -29,7 +32,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private final Photonvision photonvision = new Photonvision();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(ChassisConfiguration.MAIN);
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   /**
@@ -70,6 +74,8 @@ public class RobotContainer {
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
+    driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   }
 
   /**

@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;
@@ -31,7 +33,9 @@ public class RobotContainer {
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(0);
-
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final CommandXboxController mechController = new CommandXboxController(1);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -66,6 +70,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
     // pressed,
     // cancelling on release.
+    mechController.a().whileTrue(new InstantCommand(() -> armSubsystem.goToLowerGoal(0)));
+    mechController.b().whileTrue(new InstantCommand(() -> armSubsystem.goToUpperGoal(0)));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));

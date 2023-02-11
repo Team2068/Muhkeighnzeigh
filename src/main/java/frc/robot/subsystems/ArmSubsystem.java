@@ -14,7 +14,9 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase{
     private static double kDt = 0;
-    SimpleMotorFeedforward feedforward = new 
+    double lastSpeed = 0;
+    double lastTime = Timer.getFPGATimestamp();
+    SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(kDt, kDt, kDt);
     private final Encoder armEncoder = new Encoder(1, 2);
     private final CANSparkMax arm1Motor = new CANSparkMax(ArmConstants.ArmMotor1, MotorType.kBrushless);
     private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ArmMotor2, MotorType.kBrushless);
@@ -30,16 +32,16 @@ public void robotInit(){
 }
 public void goToLowerGoal(double lowerGoalPosition){
     double lowerPidVal = controller.calculate(armEncoder.getDistance(), lowerGoalPosition);
-    double lowerAcceleration = (controller.getSetpoint().velocity - lastSpeed)/ (Timer.getFPGATimestamp()-lastTime);
+    double lowerAcceleration = (controller.getSetpoint().velocity - lastSpeed)/ (Timer.getFPGATimestamp()- lastTime);
     arm1Motor.setVoltage(lowerPidVal + feedForward.calculate(controller.getSetpoint().velocity,lowerAcceleration));
     arm2Motor.setVoltage(lowerPidVal + feedForward.calculate(controller.getSetpoint().velocity, lowerAcceleration));
 
 }
 public void goToUpperGoal(double upperGoalPosition){
     double upperPidVal = controller.calculate(armEncoder.getDistance(), upperGoalPosition);
-    double upperAcceleration = (controller.getSetpoint().velocity - lastSpeed)/ (Timer.getFPGATimestamp() - lastSpeed);
+    double upperAcceleration = (controller.getSetpoint().velocity - lastSpeed)/ (Timer.getFPGATimestamp() - lastTime);
     arm2Motor.setVoltage(upperPidVal + feedForward.calculate(controller.getSetpoint().velocity, upperAcceleration));
-    arm1Motor.setVoltage(upperPidVal + feedForward.calculate );
+    arm1Motor.setVoltage(upperPidVal + feedForward.calculate(controller.getSetpoint().velocity, upperAcceleration));
 
 
 }

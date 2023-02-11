@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Pair;
+//import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,12 +19,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.RobotConstants;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -33,17 +34,17 @@ public class Photonvision extends SubsystemBase {
   PhotonCamera camera = new PhotonCamera("OV5647");
   AprilTagFieldLayout aprilTagFieldLayout;
 
-  ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
+  //ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   PhotonPoseEstimator poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, camera, RobotConstants.robotToCam);
 
   public Photonvision() {
     try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.kDefaultField.m_resourceFile);
+      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (Exception e) {
       System.out.println(e);
     }
     
-    camList.add(new Pair<PhotonCamera, Transform3d>(camera, RobotConstants.robotToCam));
+    //camList.add(new Pair<PhotonCamera, Transform3d>(camera, RobotConstants.robotToCam));
 
     // GameConstants.tagMap.put(1, new Double[]{1551.35, 107.16, 46.27, 180.0});
     // GameConstants.tagMap.put(2, new Double[]{1551.35, 274.80, 46.27, 180.0});
@@ -69,7 +70,7 @@ public class Photonvision extends SubsystemBase {
     public int targetId;
     public double poseAmbiguity;
     //public Optional<Pose3d> tagPose;
-    public Double[] tagPose2;
+    public Pose3d tagPose2;
     public Transform3d alternateCameraToTarget;
   }
 
@@ -80,9 +81,13 @@ public class Photonvision extends SubsystemBase {
     //camera.setPipelineIndex( (getPipelineIndex() == 1) ? 2 : 1);
     if (camera.getPipelineIndex() == 0) {
       camera.setPipelineIndex(1);
+      camera.setLED(VisionLEDMode.kOn);
+      //System.out.println(camera.getLEDMode());
     }
     else if (camera.getPipelineIndex() == 1) {
       camera.setPipelineIndex(0);
+      camera.setLED(VisionLEDMode.kOff);
+      //System.out.println(camera.getLEDMode());
     }
   }
 
@@ -110,12 +115,18 @@ public class Photonvision extends SubsystemBase {
     data.targetSkew = bestTarget.getSkew();
     data.targetPose = bestTarget.getBestCameraToTarget();
 
-    if (camera.getPipelineIndex() == 2) { // if target is an apriltag target
+    if (camera.getPipelineIndex() == 1) { // if target is an apriltag target
       tagData.targetId = bestTarget.getFiducialId();
       tagData.poseAmbiguity = bestTarget.getPoseAmbiguity();
       //tagData.tagPose = aprilTagFieldLayout.getTagPose(tagData.targetId);
       //tagData.tagPose2 = GameConstants.tagMap.get(tagData.targetId);
-      tagData.tagPose2 = GameConstants.tagArray[tagData.targetId-1];
+      //tagData.tagPose2 = GameConstants.tagArray[tagData.targetId-1];
+      // tagData.tagPose2 = new Pose3d(
+      //                       new Translation3d(
+      //                           GameConstants.tagArray[tagData.targetId-1][0], 
+      //                           GameConstants.tagArray[tagData.targetId-1][1], 
+      //                           GameConstants.tagArray[tagData.targetId-1][2]),
+      //                    0.0);
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
     return;
@@ -123,10 +134,24 @@ public class Photonvision extends SubsystemBase {
   }
 
   public double getDistance(PhotonPipelineResult results) {
-    return (!results.hasTargets()) ? 0
-        : PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.camHeight,
-            GameConstants.aprilTagHeight, RobotConstants.camAngle,
-            Units.degreesToRadians(results.getBestTarget().getPitch()));
+    // return (!results.hasTargets()) ? 0
+    //     : PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.camHeight,
+    //         GameConstants.aprilTagHeight, RobotConstants.camAngle,
+    //         Units.degreesToRadians(results.getBestTarget().getPitch()));
+
+    if (!results.hasTargets()) {
+      return 0;
+    }
+    else if(camera.getPipelineIndex() == 0) {
+      return PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.camHeight,
+              GameConstants.reflectiveTapeHeightUpper, RobotConstants.camAngle,
+              Units.degreesToRadians(data.targetPitch));
+    }
+    else {
+      return PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.camHeight,
+              GameConstants.aprilTagHeight, RobotConstants.camAngle,
+              Units.degreesToRadians(data.targetPitch));
+    }
   }
 
   public Translation2d getTranslationFromTarget(PhotonPipelineResult results) {
@@ -166,7 +191,7 @@ public class Photonvision extends SubsystemBase {
     // SmartDashboard.putNumber("apriltag z pos", tagData.tagPose2[2]);
     // SmartDashboard.putNumber("apriltag rotation", tagData.tagPose2[3]);
 
-    SmartDashboard.putNumber("distance", getDistance(camera.getLatestResult()));
+    SmartDashboard.putNumber("distance", Units.metersToInches(getDistance(camera.getLatestResult())));
     
   }
 }

@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -100,7 +99,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.PositiveZ);
         pigeon2.calibrate();
-        zeroGyro();
+        zeroGyro(); 
     }
 
     public void resetPosition() {
@@ -122,7 +121,7 @@ public class DriveSubsystem extends SubsystemBase {
         return pigeon2.getRotation2d();
     }
 
-    public Rotation3d getGyroRotation(){
+    public Rotation3d getGyro3d(){
         double ypr[] = {0,0,0};
         pigeon2.getYawPitchRoll(ypr);
         return new Rotation3d(Units.degreesToRadians(ypr[2]), Units.degreesToRadians(ypr[1]), Units.degreesToRadians(ypr[0]));

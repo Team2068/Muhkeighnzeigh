@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-//import java.util.HashMap;
-
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -16,18 +14,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .2;
   public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .2;
@@ -47,24 +33,24 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
 
-    public static final int FRONT_LEFT_DRIVE_MOTOR = 8;
-    public static final int FRONT_LEFT_TURN_MOTOR = 9;
-    public static final int FRONT_LEFT_ENCODER = 2;
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 4;  // 8
+    public static final int FRONT_LEFT_TURN_MOTOR = 5;   // 9
+    public static final int FRONT_LEFT_ENCODER = 10;     // 2
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 10;
-    public static final int FRONT_RIGHT_TURN_MOTOR = 11;
-    public static final int FRONT_RIGHT_ENCODER = 3;
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 6; // 10
+    public static final int FRONT_RIGHT_TURN_MOTOR = 7;  // 11
+    public static final int FRONT_RIGHT_ENCODER = 11;    // 3
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 12;
-    public static final int BACK_LEFT_TURN_MOTOR = 13;
-    public static final int BACK_LEFT_ENCODER = 4;
+    public static final int BACK_LEFT_DRIVE_MOTOR = 2;   // 12
+    public static final int BACK_LEFT_TURN_MOTOR = 3;    // 13
+    public static final int BACK_LEFT_ENCODER = 12;      // 4
     public static double BACK_LEFT_ENCODER_OFFSET;
 
-    public static final int BACK_RIGHT_DRIVE_MOTOR = 14;
-    public static final int BACK_RIGHT_TURN_MOTOR = 15;
-    public static final int BACK_RIGHT_ENCODER = 5;
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 8;  // 14
+    public static final int BACK_RIGHT_TURN_MOTOR = 9;   // 15
+    public static final int BACK_RIGHT_ENCODER =  13;    // 5
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
 
@@ -73,7 +59,7 @@ public final class Constants {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(9);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(45);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(0);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(291);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
@@ -131,18 +117,18 @@ public static final int INTAKE_MOTOR = 17;
       {102.743, 442.44, 46.27, 0.0}, 
       {102.743, 274.80, 46.27, 0.0}, 
       {102.743, 107.16, 46.27, 0.0}};
-    public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
-    public static final double reflectiveTapeHeightLower = 0.6096; //meters
-    public static final double reflectiveTapeHeightUpper = 1.0668; //meters
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
-  }
+      public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
+      public static final double reflectiveTapeHeightLower = 0.6096; //meters
+      public static final double reflectiveTapeHeightUpper = 1.0668; //meters
+      //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
+    }
+    
+    public static class AimbotConstants {
+      public static final double kP = 1.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double speed = 0.5;
+      public static final double minimumAdjustment = 0.5;
+    }
   
-  public static class AimbotConstants {
-    public static final double kP = 1.0;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double speed = 0.5;
-    public static final double minimumAdjustment = 0.5;
   }
- 
-}

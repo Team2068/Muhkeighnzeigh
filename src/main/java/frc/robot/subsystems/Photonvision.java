@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GameConstants;
@@ -163,7 +162,7 @@ public class Photonvision extends SubsystemBase {
 
   public Pose3d getFieldPose(PhotonPipelineResult results, PhotonTrackedTarget bestTarget, DriveSubsystem drive) {
     Pose2d p = drive.getPose();
-    Transform3d val = new Transform3d(new Translation3d(p.getX(), RobotConstants.camHeight, p.getY()), drive.getGyroRotation());
+    Transform3d val = new Transform3d(new Translation3d(p.getX(), RobotConstants.camHeight, p.getY()), drive.getGyro3d());
     return PhotonUtils.estimateFieldToRobotAprilTag(data.targetPose, aprilTagFieldLayout.getTagPose(tagData.targetId).get(), val);
   }
 

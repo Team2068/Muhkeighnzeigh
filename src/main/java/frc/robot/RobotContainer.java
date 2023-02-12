@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
@@ -33,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Photonvision photonvision = new Photonvision();
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem(ChassisConfiguration.MAIN);
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   /**

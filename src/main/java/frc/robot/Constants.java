@@ -123,14 +123,14 @@ public static final int INTAKE_MOTOR = 17;
   public static class GameConstants {
     //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final double[][] tagArray = {
-      {1551.35, 107.16, 46.27, 180.0}, 
-      {1551.35, 274.80, 46.27, 180.0}, 
-      {1551.35, 442.44, 46.27, 180.0}, 
-      {1617.87, 674.97, 69.54, 180.0}, 
-      {36.19, 674.97, 69.54, 0.0}, 
-      {102.743, 442.44, 46.27, 0.0}, 
-      {102.743, 274.80, 46.27, 0.0}, 
-      {102.743, 107.16, 46.27, 0.0}};
+      {15.5135, 1.0716, .4627, 180.0}, 
+      {15.5135, 2.7480, .4627, 180.0}, 
+      {15.5135, 4.4244, .4627, 180.0}, 
+      {16.1787, 6.7497, .6954, 180.0}, 
+      {.3619, 6.7497, .6954, 0.0}, 
+      {1.02743, 4.4244, .4627, 0.0}, 
+      {1.02743, 2.7480, .4627, 0.0}, 
+      {1.02743, 1.0716, .4627, 0.0}};
     public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
     public static final double reflectiveTapeHeightLower = 0.6096; //meters
     public static final double reflectiveTapeHeightUpper = 1.0668; //meters

@@ -94,7 +94,7 @@ public static final int INTAKE_MOTOR = 17;
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
-    public static final PathPlannerTrajectory hitler = PathPlanner.loadPath("Hitler", new PathConstraints(1, 0.75));
+    public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
   }
 
   public static class RobotConstants {

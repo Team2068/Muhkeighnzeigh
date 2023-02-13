@@ -44,10 +44,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return driveSubsystem.followPath(Paths.hitler);
-    // return new FollowTrajectory(Paths.bounce, driveSubsystem);
     return new SequentialCommandGroup(
-      driveSubsystem.followPath(Paths.hitler),
+      driveSubsystem.followPath(Paths.loop),
       new AutonBalance(driveSubsystem));
   }
 

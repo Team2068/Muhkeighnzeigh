@@ -11,6 +11,7 @@ import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.AutoConstants;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -105,7 +107,7 @@ public class DriveSubsystem extends SubsystemBase {
         // pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.NegativeZ);
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
         pigeon2.calibrate();
-        zeroGyro();
+        zeroGyro(); 
     }
 
     public void resetPosition() {
@@ -128,6 +130,12 @@ public class DriveSubsystem extends SubsystemBase {
         // if (rot<0) rot += 360;
         // return Rotation2d.fromDegrees(rot);
         return pigeon2.getRotation2d();
+    }
+
+    public Rotation3d getGyro3d(){
+        double ypr[] = {0,0,0};
+        pigeon2.getYawPitchRoll(ypr);
+        return new Rotation3d(Units.degreesToRadians(ypr[2]), Units.degreesToRadians(ypr[1]), Units.degreesToRadians(ypr[0]));
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {

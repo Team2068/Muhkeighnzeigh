@@ -6,44 +6,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonBalance extends SequentialCommandGroup {
-
-  private class Balance extends PIDCommand {
-    DriveSubsystem driveSubsystem;
-
-    public Balance(DriveSubsystem driveSubsystem) {
-      super(new PIDController(0.3, 0, 0), driveSubsystem.pigeon2::getRoll, 0, output -> {
-        driveSubsystem.drive(new ChassisSpeeds(output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0,0));
-      }, driveSubsystem);
-      this.driveSubsystem = driveSubsystem;
-    }
-
-    @Override
-    public void execute() {
-        super.execute();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return Math.abs(m_controller.getPositionError()) < 1;
-    }
-    @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
-        System.out.println("Ending Autonbalance");
-        driveSubsystem.drive(new ChassisSpeeds());
-    }
-  }
+  private final double kP = 0.3;
 
   public AutonBalance(DriveSubsystem driveSubsystem) {
     addCommands(
-      new DefaultDriveCommand(driveSubsystem, ()->1, ()->0, ()->0).withTimeout(1),
-      new Balance(driveSubsystem)
+      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds(1, 0, 0)).withTimeout(1),
+      new PIDCommand(
+        new PIDController(kP, 0, 0),
+        driveSubsystem.pigeon2::getPitch, 0, output -> {
+          driveSubsystem.drive(new ChassisSpeeds(output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0, 0));
+        },
+        driveSubsystem).until(() -> Math.abs(driveSubsystem.pigeon2.getPitch()) < 1),
+      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds()),
+      new InstantCommand(() -> System.out.println("Robot Balanced"))
     );
   }
 }

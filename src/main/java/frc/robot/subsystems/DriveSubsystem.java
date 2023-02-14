@@ -26,8 +26,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -59,7 +57,7 @@ public class DriveSubsystem extends SubsystemBase {
     private ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
     private boolean fieldOriented = false;
-    private Pose2d mPose;
+    private Pose2d pose;
 
     public DriveSubsystem() {
         DriveConstants.setOffsets();
@@ -104,7 +102,6 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
-        // pigeon2.configMountPose(AxisDirection.PositiveY, AxisDirection.NegativeZ);
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
         pigeon2.calibrate();
         zeroGyro(); 
@@ -126,10 +123,12 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getGyroscopeRotation() {
-        // double rot = Math.abs(pigeon2.getYaw()) % 360 * ( (pigeon2.getYaw() < 0) ? -1 : 1);
-        // if (rot<0) rot += 360;
-        // return Rotation2d.fromDegrees(rot);
         return pigeon2.getRotation2d();
+    }
+
+    public double getAbsoluteRotation() {
+        double rot = Math.abs(pigeon2.getYaw()) % 360 * ( (pigeon2.getYaw() < 0) ? -1 : 1);
+        return (rot < 0) ? rot += 360 : rot;
     }
 
     public Rotation3d getGyro3d(){
@@ -161,7 +160,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return mPose;
+        return pose;
     }
 
     public void resetOdometry() {
@@ -218,26 +217,25 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command followPath(PathPlannerTrajectory path){
-        return new SequentialCommandGroup(
-            new InstantCommand(this::resetOdometry)
-            .andThen(() -> resetOdometry(path.getInitialHolonomicPose())),
-            new PPSwerveControllerCommand(path, this::getPose,
+        return new PPSwerveControllerCommand(
+            path, 
+            this::getPose,
             new PIDController(AutoConstants.kPXController, 0, 0.01),
             new PIDController(AutoConstants.kPYController, 0, 0.01),
             new PIDController(AutoConstants.kPThetaController, 0, 0.01),
             this::drive,
-            this)
-        );
+            this
+        ).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
     }
 
     public void periodic() {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
         setModuleStates(states);
-        mPose = odometry.update(getGyroscopeRotation(), getModulePositions());
-        // Pose2d pose = getPose();
+        pose = odometry.update(getGyroscopeRotation(), getModulePositions());
+        
         SmartDashboard.putData(pigeon2);
-        SmartDashboard.putNumber("X position", mPose.getX());
-        SmartDashboard.putNumber("Y position", mPose.getY());
+        SmartDashboard.putNumber("X position", pose.getX());
+        SmartDashboard.putNumber("Y position", pose.getY());
 
         double[] ypr = new double[3];
         pigeon2.getYawPitchRoll(ypr);
@@ -250,7 +248,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
     }
 
-    public ChassisSpeeds getChassisSpeed() {
+    public ChassisSpeeds getChassisSpeeds() {
         return chassisSpeeds;
     }
 

@@ -16,6 +16,10 @@ public class DefaultDriveCommand extends CommandBase {
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(7);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(7);
 
+    public DefaultDriveCommand(DriveSubsystem driveSubsystem, ChassisSpeeds chassisSpeeds) {
+        this(driveSubsystem, () -> chassisSpeeds.vxMetersPerSecond, () -> chassisSpeeds.vyMetersPerSecond, () -> chassisSpeeds.omegaRadiansPerSecond);
+    }
+
     public DefaultDriveCommand(DriveSubsystem driveSubsystem,
                                DoubleSupplier translationXSupplier,
                                DoubleSupplier translationYSupplier,

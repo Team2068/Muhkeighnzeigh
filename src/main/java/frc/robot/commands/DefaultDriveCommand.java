@@ -16,6 +16,10 @@ public class DefaultDriveCommand extends CommandBase {
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(7);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(7);
 
+    public DefaultDriveCommand(DriveSubsystem driveSubsystem, ChassisSpeeds chassisSpeeds) {
+        this(driveSubsystem, () -> chassisSpeeds.vxMetersPerSecond, () -> chassisSpeeds.vyMetersPerSecond, () -> chassisSpeeds.omegaRadiansPerSecond);
+    }
+
     public DefaultDriveCommand(DriveSubsystem driveSubsystem,
                                DoubleSupplier translationXSupplier,
                                DoubleSupplier translationYSupplier,
@@ -30,11 +34,9 @@ public class DefaultDriveCommand extends CommandBase {
    
     @Override
     public void execute() {
-
         double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble());
         double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble());
         double rotationSpeed = m_rotationSupplier.getAsDouble() * 0.7;
-
 
         if(driveSubsystem.isFieldOriented()) {
             driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, driveSubsystem.getGyroscopeRotation()));

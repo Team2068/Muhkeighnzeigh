@@ -103,8 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
-        pigeon2.calibrate();
-        zeroGyro(); 
+        zeroGyro();
     }
 
     public void resetPosition() {

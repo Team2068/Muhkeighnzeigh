@@ -15,8 +15,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-  public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = .2;
-  public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .2;
+  public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
+  public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.2;
 
   public static int CURRENT_LIMIT = 30;
 
@@ -53,13 +53,11 @@ public final class Constants {
     public static final int BACK_RIGHT_ENCODER =  13;    // 5
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-
-
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(115);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(315);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(293);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
@@ -69,14 +67,17 @@ public final class Constants {
       }
     }
   }
+
   public static final class ArmConstants{
     public static final int ARM_1_MOTOR = 6;
     public static final int ARM_2_MOTOR = 7;
   }
+
   public static final class ClawConstants{
-public static final int CLAW_MOTOR = 16;
-public static final int INTAKE_MOTOR = 17;
+    public static final int CLAW_MOTOR = 16;
+    public static final int INTAKE_MOTOR = 17;
   }
+
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 0.2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;
@@ -117,18 +118,17 @@ public static final int INTAKE_MOTOR = 17;
       {102.743, 442.44, 46.27, 0.0}, 
       {102.743, 274.80, 46.27, 0.0}, 
       {102.743, 107.16, 46.27, 0.0}};
-      public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
-      public static final double reflectiveTapeHeightLower = 0.6096; //meters
-      public static final double reflectiveTapeHeightUpper = 1.0668; //meters
-      //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
+    public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
+    public static final double reflectiveTapeHeightLower = 0.6096; //meters
+    public static final double reflectiveTapeHeightUpper = 1.0668; //meters
+    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     }
-    
-    public static class AimbotConstants {
-      public static final double kP = 1.0;
-      public static final double kI = 0.0;
-      public static final double kD = 0.0;
-      public static final double speed = 0.5;
-      public static final double minimumAdjustment = 0.5;
-    }
-  
+
+  public static class AimbotConstants {
+    public static final double kP = 1.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    public static final double speed = 0.5;
+    public static final double minimumAdjustment = 0.5;
   }
+}

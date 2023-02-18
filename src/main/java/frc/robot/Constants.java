@@ -99,7 +99,7 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 0.1524; //meters
+    public static final double camHeight = 0.1524; // Metres
     public static final double camAngle = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final Transform3d robotToCam = new Transform3d(
       new Translation3d(-3, 0.5, 5.5),
@@ -108,7 +108,6 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final double[][] tagArray = {
       {1551.35, 107.16, 46.27, 180.0}, 
       {1551.35, 274.80, 46.27, 180.0}, 
@@ -121,7 +120,6 @@ public final class Constants {
     public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
     public static final double reflectiveTapeHeightLower = 0.6096; //meters
     public static final double reflectiveTapeHeightUpper = 1.0668; //meters
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     }
 
   public static class AimbotConstants {
@@ -133,7 +131,7 @@ public final class Constants {
   }
 
   public static class Trajectories {
-    // Scenario 1
+  // Scenario 1
   public static final PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", 1, 1);
   public static final PathPlannerTrajectory Step2_4Cargo = PathPlanner.loadPath("Step 2_4Cargo", 1, 1);
   public static final PathPlannerTrajectory Step3_4Cargo = PathPlanner.loadPath("Step 3_4cargo", 1, 1);
@@ -169,6 +167,6 @@ public final class Constants {
   public static final PathPlannerTrajectory Step1_1BlockCargo = PathPlanner.loadPath("Step 1_1 Block Cargo",1,1);
   public static final PathPlannerTrajectory Step2_1BlockCargo = PathPlanner.loadPath("Step 2_1 Block Cargo", 1,1);
   //Scenario 7 
-   public static final PathPlannerTrajectory Step1_Park = PathPlanner.loadPath("Step 1_ Park", 1, 1);
+  public static final PathPlannerTrajectory Step1_Park = PathPlanner.loadPath("Step 1_ Park", 1, 1);
 }
 }

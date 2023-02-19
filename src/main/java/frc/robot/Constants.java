@@ -51,24 +51,24 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
 
-    public static final int FRONT_LEFT_DRIVE_MOTOR = 5;
-    public static final int FRONT_LEFT_TURN_MOTOR = 6;
-    public static final int FRONT_LEFT_ENCODER = 11;
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 12;
+    public static final int FRONT_LEFT_TURN_MOTOR = 13;
+    public static final int FRONT_LEFT_ENCODER = 4;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 7;
-    public static final int FRONT_RIGHT_TURN_MOTOR = 8;
-    public static final int FRONT_RIGHT_ENCODER = 12;
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 10;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 11;
+    public static final int FRONT_RIGHT_ENCODER = 3;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 3;
-    public static final int BACK_LEFT_TURN_MOTOR = 4;
-    public static final int BACK_LEFT_ENCODER = 13;
+    public static final int BACK_LEFT_DRIVE_MOTOR = 14;
+    public static final int BACK_LEFT_TURN_MOTOR = 15;
+    public static final int BACK_LEFT_ENCODER = 5;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
-    public static final int BACK_RIGHT_DRIVE_MOTOR = 9;
-    public static final int BACK_RIGHT_TURN_MOTOR = 10;
-    public static final int BACK_RIGHT_ENCODER = 14;
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 8;
+    public static final int BACK_RIGHT_TURN_MOTOR = 9;
+    public static final int BACK_RIGHT_ENCODER = 2;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
     public static final void setOffsets() {
@@ -95,29 +95,29 @@ public final class Constants {
     public static final double kPXController = 4;
     public static final double kPYController = 4;
     public static final double kPThetaController = 2;
-    public static final double ArmEncoder1 = 18;
+
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
         1);
   }
 
   public static final class ArmConstants {
-    public static final int ArmMotor1 = 15;
-    public static final int ArmMotor2 = 16;
+    public static final int ArmMotor1 = 6;
+    public static final int ArmMotor2 = 7;
     public static final double ArmLiftSpeed = .25;
     public static final double ArmLowerSpeed = -.25;
     public static final double ARMOFFSET = -Math.toRadians(0);
   }
 
   public static final class ClawConstants {
-    public static final int IntakeMotor = 17;
-    public static final int Claw = 18;
+    public static final int IntakeMotor = 18;
+    public static final int Claw = 19;
     public static final double IntakeSpeed = .75;
     public static final double ClawSpeed = .5;
   }
 
   public static final class TelescopeConstants {
-    public static final int TelescopeMotor = 18;
+    public static final int TelescopeMotor = 16;
     public static final double telescopeSpeed = .25;
 
   }

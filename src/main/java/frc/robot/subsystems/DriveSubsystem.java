@@ -39,7 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
             new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    private final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(15);
+    private final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(17);
 
     private final SwerveDriveOdometry odometry;
     private final SwerveModule frontLeftModule;

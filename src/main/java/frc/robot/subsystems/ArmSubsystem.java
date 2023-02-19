@@ -20,7 +20,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ArmMotor2, MotorType.kBrushless);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0, 0);
     private final ProfiledPIDController controller = new ProfiledPIDController(0, 0, 0, constraints);
-    private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
+    private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(4);
     private final double encoderOffset = 0.427;
 
     public ArmSubsystem() {

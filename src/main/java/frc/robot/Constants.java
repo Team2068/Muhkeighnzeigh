@@ -102,8 +102,8 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int ArmMotor1 = 15;
-    public static final int ArmMotor2 = 16;
+    public static final int ArmMotor1 = 1;
+    public static final int ArmMotor2 = 2;
     public static final double ArmLiftSpeed = .25;
     public static final double ArmLowerSpeed = -.25;
     public static final double ARMOFFSET = -Math.toRadians(0);

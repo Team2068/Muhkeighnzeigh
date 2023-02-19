@@ -34,7 +34,7 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
-  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  //private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final CommandXboxController mechController = new CommandXboxController(1);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

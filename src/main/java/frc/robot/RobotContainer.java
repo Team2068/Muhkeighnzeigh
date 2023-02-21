@@ -8,7 +8,7 @@ import frc.robot.Constants.Paths;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
+//import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;

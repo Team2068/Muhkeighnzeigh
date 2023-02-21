@@ -30,20 +30,18 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Photonvision extends SubsystemBase {
-
-  PhotonCamera camera = new PhotonCamera("OV5647");
   AprilTagFieldLayout aprilTagFieldLayout;
-
+  PhotonCamera camera;
   //ArrayList<Pair<PhotonCamera, Transform3d>> camList = new ArrayList<Pair<PhotonCamera, Transform3d>>();
   PhotonPoseEstimator poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT, camera, RobotConstants.robotToCam);
 
-  public Photonvision() {
+  public Photonvision(String camName) {
     try {
       aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (Exception e) {
       System.out.println(e);
     }
-    
+    camera = new PhotonCamera(camName);
     //camList.add(new Pair<PhotonCamera, Transform3d>(camera, RobotConstants.robotToCam));
 
     // GameConstants.tagMap.put(1, new Double[]{1551.35, 107.16, 46.27, 180.0});

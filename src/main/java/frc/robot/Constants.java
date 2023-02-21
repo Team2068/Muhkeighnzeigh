@@ -105,6 +105,7 @@ public final class Constants {
       new Translation3d(-3, 0.5, 5.5),
       new Rotation3d(0, camAngle, 0)
     );
+    public static final String camName1 = "OV5647";
   }
 
   public static class GameConstants {

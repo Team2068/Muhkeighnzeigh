@@ -33,25 +33,27 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
 
-    public static final int FRONT_LEFT_DRIVE_MOTOR = 4;  // 8
-    public static final int FRONT_LEFT_TURN_MOTOR = 5;   // 9
-    public static final int FRONT_LEFT_ENCODER = 10;     // 2
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 6;
+    public static final int FRONT_LEFT_TURN_MOTOR = 7;
+    public static final int FRONT_LEFT_ENCODER = 15;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 6; // 10
-    public static final int FRONT_RIGHT_TURN_MOTOR = 7;  // 11
-    public static final int FRONT_RIGHT_ENCODER = 11;    // 3
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 8;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 9;
+    public static final int FRONT_RIGHT_ENCODER = 14;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 2;   // 12
-    public static final int BACK_LEFT_TURN_MOTOR = 3;    // 13
-    public static final int BACK_LEFT_ENCODER = 12;      // 4
+    public static final int BACK_LEFT_DRIVE_MOTOR = 4;
+    public static final int BACK_LEFT_TURN_MOTOR = 5;
+    public static final int BACK_LEFT_ENCODER = 16;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
-    public static final int BACK_RIGHT_DRIVE_MOTOR = 8;  // 14
-    public static final int BACK_RIGHT_TURN_MOTOR = 9;   // 15
-    public static final int BACK_RIGHT_ENCODER =  13;    // 5
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 10;
+    public static final int BACK_RIGHT_TURN_MOTOR = 11;
+    public static final int BACK_RIGHT_ENCODER =  13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
+
+    public static final int PIGEON_ID = 21;
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
@@ -61,21 +63,21 @@ public final class Constants {
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(293);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(148);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(230);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(84);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(138);
       }
     }
   }
 
   public static final class ArmConstants{
-    public static final int ARM_1_MOTOR = 6;
-    public static final int ARM_2_MOTOR = 7;
+    public static final int ARM_1_MOTOR = 2;
+    public static final int ARM_2_MOTOR = 3;
   }
 
   public static final class ClawConstants{
-    public static final int CLAW_MOTOR = 16;
-    public static final int INTAKE_MOTOR = 17;
+    public static final int CLAW_MOTOR = 17;
+    public static final int INTAKE_MOTOR = 18;
   }
 
   public static final class AutoConstants {
@@ -105,6 +107,7 @@ public final class Constants {
       new Translation3d(-3, 0.5, 5.5),
       new Rotation3d(0, camAngle, 0)
     );
+    public static final String camName1 = "OV5647";
   }
 
   public static class GameConstants {

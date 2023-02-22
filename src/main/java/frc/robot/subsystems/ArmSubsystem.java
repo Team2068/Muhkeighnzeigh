@@ -16,12 +16,11 @@ public class ArmSubsystem extends SubsystemBase {
     double lastSpeed = 0;
     double lastTime = Timer.getFPGATimestamp();
     SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(0, 0, 0);
-    private final CANSparkMax arm1Motor = new CANSparkMax(ArmConstants.ArmMotor1, MotorType.kBrushless);
-    private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ArmMotor2, MotorType.kBrushless);
+    private final CANSparkMax arm1Motor = new CANSparkMax(ArmConstants.ARM_1_MOTOR, MotorType.kBrushless);
+    private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ARM_2_MOTOR, MotorType.kBrushless);
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0, 0);
     private final ProfiledPIDController controller = new ProfiledPIDController(0, 0, 0, constraints);
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(4);
-    private final double encoderOffset = 0.427;
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
@@ -47,7 +46,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The absolute arm angle in degrees from 0-360 up positive.
      */
     public double getArmPosition() {
-        double deg = (-armEncoder.getAbsolutePosition() + encoderOffset) * 360;
+        double deg = (-armEncoder.getAbsolutePosition() + ArmConstants.ARM_OFFSET) * 360;
         return (deg % 360) + (deg < 0 ? 360 : 0);
     }
 

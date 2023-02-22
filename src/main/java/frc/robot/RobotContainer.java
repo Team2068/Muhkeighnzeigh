@@ -41,8 +41,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    mechController.a().whileTrue(new InstantCommand(() -> armSubsystem.goToLowerGoal(0)));
-    mechController.b().whileTrue(new InstantCommand(() -> armSubsystem.goToUpperGoal(0)));
+    mechController.a().whileTrue(new InstantCommand(() -> armSubsystem.goToLowerGoal(180))).whileFalse(new InstantCommand(armSubsystem::stop));
+    mechController.b().whileTrue(new InstantCommand(() -> armSubsystem.goToUpperGoal(90))).whileFalse(new InstantCommand(armSubsystem::stop));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));

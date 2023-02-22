@@ -15,15 +15,17 @@ import frc.robot.Constants.ArmConstants;
 public class ArmSubsystem extends SubsystemBase {
     double lastSpeed = 0;
     double lastTime = Timer.getFPGATimestamp();
-    SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(0, 0, 0);
     private final CANSparkMax arm1Motor = new CANSparkMax(ArmConstants.ARM_1_MOTOR, MotorType.kBrushless);
     private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ARM_2_MOTOR, MotorType.kBrushless);
-    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0, 0);
-    private final ProfiledPIDController controller = new ProfiledPIDController(2, 0, 0, constraints);
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
 
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0.1, 0.1);
+    private final ProfiledPIDController controller = new ProfiledPIDController(0.6, 0, 0, constraints);
+    private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(0, 0, 0);
+    
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
+        arm2Motor.setInverted(true);
     }
 
     public void goToLowerGoal(double lowerGoalPosition) {
@@ -42,6 +44,11 @@ public class ArmSubsystem extends SubsystemBase {
         arm1Motor.setVoltage(upperPidVal + feedForward.calculate(controller.getSetpoint().velocity, upperAcceleration));
     }
 
+    public void stop() {
+        arm1Motor.set(0);
+        arm2Motor.set(0);
+    }
+
     /**
      * @return The absolute arm angle in degrees from 0-360 up positive.
      */
@@ -55,7 +62,8 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm Absolute Rotation", armEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Arm Rotation", armEncoder.get());
         SmartDashboard.putNumber("getArmPosition()", getArmPosition());
-        SmartDashboard.putNumber("Arm1 Power", arm1Motor.get());
-        SmartDashboard.putNumber("Arm2 Power", arm2Motor.get());
+        SmartDashboard.putNumber("Controller Output", controller.getGoal().velocity);
+        SmartDashboard.putNumber("Arm1 Power", arm1Motor.getBusVoltage());
+        SmartDashboard.putNumber("Arm2 Power", arm2Motor.getBusVoltage());
     }
 }

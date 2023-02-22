@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
+  // private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
@@ -47,8 +47,8 @@ public class RobotContainer {
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
-    driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
-    driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
+    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
+    // driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   }
 
   public Command getAutonomousCommand() {

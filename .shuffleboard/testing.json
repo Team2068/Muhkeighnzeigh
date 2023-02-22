@@ -11,24 +11,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "4,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Pigeon 2 [15]",
-              "_title": "Pigeon 2 [15]",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
-            }
-          },
-          "6,0": {
+          "0,3": {
             "size": [
               1,
               1
@@ -41,7 +24,7 @@
               "_showGlyph": false
             }
           },
-          "7,0": {
+          "1,3": {
             "size": [
               1,
               1
@@ -54,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "6,1": {
+          "2,2": {
             "size": [
               1,
               1
@@ -146,124 +129,7 @@
               ]
             }
           },
-          "8,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target pitch",
-              "_title": "target pitch",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target yaw",
-              "_title": "target yaw",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target area",
-              "_title": "target area",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target skew",
-              "_title": "target skew",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target x",
-              "_title": "target x",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "0,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target y",
-              "_title": "target y",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "1,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target z",
-              "_title": "target z",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "2,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target rotation",
-              "_title": "target rotation",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "3,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/distance",
-              "_title": "distance",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "4,2": {
             "size": [
               1,
               1
@@ -276,7 +142,7 @@
               "_showGlyph": false
             }
           },
-          "5,2": {
+          "1,2": {
             "size": [
               1,
               1
@@ -287,6 +153,85 @@
               "_title": "Pigeon Roll",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Pigeon 2 [21]",
+              "_title": "Pigeon 2 [21]",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Absolute Rotation",
+              "_title": "Arm Absolute Rotation",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Rotation",
+              "_title": "Arm Rotation",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Arm Information",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/getArmPosition()",
+                  "_title": "Arm Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm1 Power",
+                  "_title": "Arm1 Power",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm2 Power",
+                  "_title": "Arm2 Power",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
             }
           }
         }

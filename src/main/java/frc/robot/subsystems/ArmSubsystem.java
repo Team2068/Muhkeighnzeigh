@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -18,7 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax arm1Motor = new CANSparkMax(ArmConstants.ARM_1_MOTOR, MotorType.kBrushless);
     private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ARM_2_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
-
+   
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0.1, 0.1);
     private final ProfiledPIDController controller = new ProfiledPIDController(0.6, 0, 0, constraints);
     private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(0, 0, 0);
@@ -26,8 +27,13 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
         arm2Motor.setInverted(true);
+        arm1Motor.setIdleMode(IdleMode.kCoast);
+        arm2Motor.setIdleMode(IdleMode.kCoast);
     }
-
+public void setVoltage(double voltage){
+arm1Motor.setVoltage(voltage);
+arm2Motor.setVoltage(voltage);
+}
     public void goToLowerGoal(double lowerGoalPosition) {
         double lowerPidVal = controller.calculate(getArmPosition(), lowerGoalPosition);
         double lowerAcceleration = (controller.getSetpoint().velocity - lastSpeed)
@@ -40,6 +46,7 @@ public class ArmSubsystem extends SubsystemBase {
         double upperPidVal = controller.calculate(getArmPosition(), upperGoalPosition);
         double upperAcceleration = (controller.getSetpoint().velocity - lastSpeed)
                 / (Timer.getFPGATimestamp() - lastTime);
+        System.out.println("pos: "+getArmPosition());
         arm2Motor.setVoltage(upperPidVal + feedForward.calculate(controller.getSetpoint().velocity, upperAcceleration));
         arm1Motor.setVoltage(upperPidVal + feedForward.calculate(controller.getSetpoint().velocity, upperAcceleration));
     }
@@ -65,5 +72,6 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Controller Output", controller.getGoal().velocity);
         SmartDashboard.putNumber("Arm1 Power", arm1Motor.getBusVoltage());
         SmartDashboard.putNumber("Arm2 Power", arm2Motor.getBusVoltage());
+        SmartDashboard.putNumber("PID error", controller.getPositionError());
     }
 }

@@ -83,7 +83,7 @@ public final class Constants {
     public static final int ARM_1_MOTOR = 2;
     public static final int ARM_2_MOTOR = 3;
 
-    public static final double ARM_SPEED = .25;
+    public static final double ARM_SPEED = -.25;
     public static final double ARM_OFFSET = 0.427;
   }
 

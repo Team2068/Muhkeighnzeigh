@@ -9,6 +9,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.GoToLowerGoal;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -41,7 +42,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    mechController.a().whileTrue(new InstantCommand(() -> armSubsystem.goToLowerGoal(180))).whileFalse(new InstantCommand(armSubsystem::stop));
+    mechController.a().whileTrue(new GoToLowerGoal(armSubsystem)).whileFalse(new InstantCommand(armSubsystem::stop));
     mechController.b().whileTrue(new InstantCommand(() -> armSubsystem.goToUpperGoal(90))).whileFalse(new InstantCommand(armSubsystem::stop));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));

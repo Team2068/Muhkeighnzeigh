@@ -74,6 +74,11 @@ public final class Constants {
   }
 
   public static class Trajectories {
+    PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", new PathConstrains(1, 1));
+
+    
+    
+    
     // Scenario 1
   public static final PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", 1, 1);
   public static final PathPlannerTrajectory Step2_4Cargo = PathPlanner.loadPath("Step 2_4Cargo", 1, 1);

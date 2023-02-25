@@ -12,6 +12,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ProfiledSetArmPosition;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 //import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;

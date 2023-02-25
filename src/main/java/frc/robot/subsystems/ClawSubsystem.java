@@ -1,43 +1,43 @@
-// package frc.robot.subsystems;
+package frc.robot.subsystems;
 
-// import com.revrobotics.CANSparkMax;
-// import com.revrobotics.CANSparkMax.IdleMode;
-// import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants.ClawConstants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ClawConstants;
 
-// public class ClawSubsystem extends SubsystemBase {
-//     private CANSparkMax Claw = new CANSparkMax(ClawConstants.Claw, MotorType.kBrushless);
-//     private CANSparkMax IntakeMotor = new CANSparkMax(ClawConstants.IntakeMotor, MotorType.kBrushless);
+public class ClawSubsystem extends SubsystemBase {
+    private CANSparkMax claw = new CANSparkMax(ClawConstants.CLAW_MOTOR, MotorType.kBrushless);
+    private CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
 
-//     public ClawSubsystem() {
-//         Claw.setIdleMode(IdleMode.kCoast);
-//         IntakeMotor.setIdleMode(IdleMode.kCoast);
-//     }
+    public ClawSubsystem() {
+        claw.setIdleMode(IdleMode.kCoast);
+        intakeMotor.setIdleMode(IdleMode.kCoast);
+    }
 
-//     public void openClaw(double speed) {
-//         Claw.set(speed);
-//         IntakeMotor.set(speed);
-//     }
+    public void openClaw(double speed) {
+        claw.set(speed);
+        intakeMotor.set(speed);
+    }
 
-//     public void openClaw() {
-//         Claw.set(ClawConstants.ClawSpeed);
-//         IntakeMotor.set(ClawConstants.IntakeSpeed);
-//     }
+    public void openClaw() {
+        claw.set(ClawConstants.CLAW_SPEED);
+        intakeMotor.set(ClawConstants.INTAKE_SPEED);
+    }
 
-//     public void closeClaw(double speed) {
-//         Claw.set(-speed);
-//         IntakeMotor.set(-speed);
-//     }
+    public void closeClaw(double speed) {
+        claw.set(-speed);
+        intakeMotor.set(-speed);
+    }
 
-//     public void closeClaw() {
-//         Claw.set(-ClawConstants.ClawSpeed);
-//         IntakeMotor.set(-ClawConstants.IntakeSpeed);
-//     }
+    public void closeClaw() {
+        claw.set(-ClawConstants.CLAW_SPEED);
+        intakeMotor.set(-ClawConstants.INTAKE_SPEED);
+    }
 
-//     public void stopClaw() {
-//         Claw.set(0);
-//         IntakeMotor.set(0);
-//     }
-// }
+    public void stopClaw() {
+        claw.set(0);
+        intakeMotor.set(0);
+    }
+}

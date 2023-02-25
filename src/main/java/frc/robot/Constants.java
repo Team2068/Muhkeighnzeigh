@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -74,47 +77,13 @@ public final class Constants {
   }
 
   public static class Trajectories {
-    PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", new PathConstrains(1, 1));
+    PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", new PathConstraints(1, 1));
 
-    
-    
-    
     // Scenario 1
-  public static final PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_4Cargo = PathPlanner.loadPath("Step 2_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_4Cargo = PathPlanner.loadPath("Step 3_4cargo", 1, 1);
-  public static final PathPlannerTrajectory Step4_4Cargo = PathPlanner.loadPath("Step 4_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step5_4Cargo = PathPlanner.loadPath("Step 5_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step6_4Cargo = PathPlanner.loadPath("Step 6_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step7_4Cargo = PathPlanner.loadPath("Step 7_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step8_4Cargo = PathPlanner.loadPath("Step 8_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step9_4Cargo = PathPlanner.loadPath("Step 9_4Cargo", 1, 1);
-  // Scenario 2
-  public static final PathPlannerTrajectory Step1_2CargoCandB = PathPlanner.loadPath("Step 1_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step2_2CargoCandB = PathPlanner.loadPath("Step 2_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step3_2CargoCandB = PathPlanner.loadPath("Step 3_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step4_2CargoCandB = PathPlanner.loadPath("Step 4_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step5_2CargoCandB = PathPlanner.loadPath("Step 5_  2 Cargo C and B", 1, 1);
-  // Scenario 3
-  public static final PathPlannerTrajectory Step1_2BlockCargo = PathPlanner.loadPath("Step 1_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_2BlockCargo = PathPlanner.loadPath("Step 2_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_2BlockCargo = PathPlanner.loadPath("Step 3_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step4_2BlockCargo = PathPlanner.loadPath("Step 4_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step5_2BlockCargo = PathPlanner.loadPath("Step 5_ 2 Block Cargo", 1, 1);
-  // Scenario 4
-  public static final PathPlannerTrajectory Step1_2ConeCargo = PathPlanner.loadPath("Step 1_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_2ConeCargo = PathPlanner.loadPath("Step 2_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_2ConeCargo = PathPlanner.loadPath("Step 3_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step4_2ConeCargo = PathPlanner.loadPath("Step 4_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step5_2ConeCargo = PathPlanner.loadPath("Step 5_ 2 Cone Cargo", 1, 1);
-  // Scenario 5
-  public static final PathPlannerTrajectory Step1_1ConeCargo = PathPlanner.loadPath("Step 1_ 1 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_1ConeCargo = PathPlanner.loadPath("Step 2_ 1 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_1ConeCargo = PathPlanner.loadPath("Step 2_ 1 Cone Cargo", 1, 1);
-  // Scenario 6
-  public static final PathPlannerTrajectory Step1_1BlockCargo = PathPlanner.loadPath("Step 1_1 Block Cargo",1,1);
-  public static final PathPlannerTrajectory Step2_1BlockCargo = PathPlanner.loadPath("Step 2_1 Block Cargo", 1,1);
-  //Scenario 7 
-   public static final PathPlannerTrajectory Step1_Park = PathPlanner.loadPath("Step 1_ Park", 1, 1);
-}
+    PathPlannerTrajectory Scenario14Cargo = PathPlanner.loadPath("(Scenario 1) 4 Cargo", new PathConstraints(4, 3));
+    List<PathPlannerTrajectory> pathGroup2 = PathPlanner.loadPathGroup(
+    "(Scenario 1) 4 Cargo",
+    new PathConstraints(4,3),
+    new PathConstraints(4,3));
+  }
 }

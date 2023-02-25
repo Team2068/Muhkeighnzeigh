@@ -9,7 +9,8 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.GoToLowerGoal;
+import frc.robot.commands.ProfiledSetArmPosition;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.Photonvision;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -42,8 +44,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    mechController.a().whileTrue(new GoToLowerGoal(armSubsystem)).whileFalse(new InstantCommand(armSubsystem::stop));
-    mechController.b().whileTrue(new InstantCommand(() -> armSubsystem.goToUpperGoal(90))).whileFalse(new InstantCommand(armSubsystem::stop));
+    mechController.a().onTrue(new SetArmPosition(armSubsystem, 90));
+    mechController.b().whileTrue(new SetArmPosition(armSubsystem, 180));
+    mechController.x().onTrue(new ProfiledSetArmPosition(armSubsystem, new TrapezoidProfile.State(90, 0)));
+    mechController.y().onTrue(new ProfiledSetArmPosition(armSubsystem, new TrapezoidProfile.State(180, 0)));
+    
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));

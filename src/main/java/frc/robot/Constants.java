@@ -47,9 +47,9 @@ public final class Constants {
     public static final int FRONT_LEFT_ENCODER = 15;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 8;
-    public static final int FRONT_RIGHT_TURN_MOTOR = 9;
-    public static final int FRONT_RIGHT_ENCODER = 14;
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 7;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 8;
+    public static final int FRONT_RIGHT_ENCODER = 12;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
     public static final int BACK_LEFT_DRIVE_MOTOR = 4;

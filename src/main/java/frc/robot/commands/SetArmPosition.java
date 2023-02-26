@@ -19,13 +19,12 @@ public class SetArmPosition extends CommandBase {
     addRequirements(armSubsystem);
 
     controller.setSetpoint(angleDegrees);
-    // controller.setTolerance(5); // 5 degree tolerance
+    controller.setTolerance(5); // 5 degree tolerance
     controller.enableContinuousInput(0, 360);
   }
 
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {
@@ -39,7 +38,7 @@ public class SetArmPosition extends CommandBase {
 
     SmartDashboard.putNumber("SAP PID", pidOutput);
     SmartDashboard.putNumber("SAP FF", ffOutput);
-    SmartDashboard.putNumber("SAP new voltage", newOutput);
+    SmartDashboard.putNumber("SAP Voltage", newOutput);
 
     armSubsystem.setVoltage(newOutput);
     lastPosition = currentPosition;
@@ -52,7 +51,7 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    // return controller.atSetpoint();
-    return false;
+    return controller.atSetpoint();
+    // return false;
   }
 }

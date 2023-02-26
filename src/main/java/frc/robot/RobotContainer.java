@@ -47,8 +47,8 @@ public class RobotContainer {
   private void configureBindings() {
     mechController.a().onTrue(new SetArmPosition(armSubsystem, 90));
     mechController.b().whileTrue(new SetArmPosition(armSubsystem, 180));
-    mechController.x().onTrue(new ProfiledSetArmPosition(armSubsystem, new TrapezoidProfile.State(90, 0)));
-    mechController.y().onTrue(new ProfiledSetArmPosition(armSubsystem, new TrapezoidProfile.State(180, 0)));
+    mechController.x().onTrue(new SetArmPosition(armSubsystem, 270));
+    mechController.y().onTrue(new SetArmPosition(armSubsystem, 360));
     
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
@@ -65,12 +65,9 @@ public class RobotContainer {
   }
 
   private static double deadband(double value, double deadband) {
-    if (Math.abs(value) > deadband) {
-      if (value > 0.0)
-        return (value - deadband) / (1.0 - deadband);
-      return (value + deadband) / (1.0 - deadband);
-    }
-    return 0.0;
+    if (Math.abs(value) <= deadband) return 0.0;
+    deadband *= (value > 0.0) ? 1 : -1;
+    return (value + deadband) / (1.0 + deadband);
   }
 
   private static double modifyAxis(double value) {

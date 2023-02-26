@@ -24,8 +24,8 @@ public class ArmSubsystem extends SubsystemBase {
         armEncoder.setDutyCycleRange(0, 1);
 
         arm1Motor.setInverted(true);
-        arm1Motor.setIdleMode(IdleMode.kCoast);
-        arm2Motor.setIdleMode(IdleMode.kCoast);
+        arm1Motor.setIdleMode(IdleMode.kBrake);
+        arm2Motor.setIdleMode(IdleMode.kBrake);
         arm1Motor.setOpenLoopRampRate(0.2);
         arm1Motor.setOpenLoopRampRate(0.2);
     }

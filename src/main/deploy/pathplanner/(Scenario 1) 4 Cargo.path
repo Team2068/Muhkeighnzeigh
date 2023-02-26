@@ -41,7 +41,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "Pick Cone"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -176,8 +178,8 @@
           "Scoring Cone"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "minimum",
+        "waitTime": 1.0
       }
     },
     {
@@ -268,12 +270,6 @@
       "position": 0.0,
       "names": [
         "event"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "Pick Block"
       ]
     }
   ]

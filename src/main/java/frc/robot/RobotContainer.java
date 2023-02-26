@@ -5,41 +5,27 @@
 package frc.robot;
 
 import frc.robot.Constants.Paths;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.commands.AutonBalance;
+import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.FollowTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Photonvision;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-/**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-
+  private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(0);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
   public RobotContainer() {
-    // Configure the trigger bindings
     configureBindings();
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -49,39 +35,19 @@ public class RobotContainer {
     PathPlannerServer.startServer(5811);
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
+    driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
-    return new FollowTrajectory(Paths.funny, driveSubsystem);
+    return new SequentialCommandGroup(
+      driveSubsystem.followPath(Paths.loop),
+      new AutonBalance(driveSubsystem));
   }
 
   private static double deadband(double value, double deadband) {

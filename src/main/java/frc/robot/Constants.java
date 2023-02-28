@@ -101,18 +101,19 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 0.1524; //meters
-    public static final double camAngle = Units.degreesToRadians(20); //replace with actual angle of the camera
-    public static final Transform3d robotToCam = new Transform3d(
-      new Translation3d(-3, 0.5, 5.5),
-      new Rotation3d(0, camAngle, 0)
-    );
-    public static final String camName1 = "OV5647";
+    public static final double CAM_HEIGHT = 0.1524; //meters
+    public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
+    public static final String CAM_NAME = "OV5647";
+  }
+
+  public static class PhotonConstants {
+    public static final int REFLECTIVE_TAPE_PIPELINE_INDEX = 0;
+    public static final int APRILTAG_PIPELINE_INDEX = 1;
   }
 
   public static class GameConstants {
     //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
-    public static final double[][] tagArray = {
+    public static final double[][] TAG_ARRAY = {
       {1551.35, 107.16, 46.27, 180.0}, 
       {1551.35, 274.80, 46.27, 180.0}, 
       {1551.35, 442.44, 46.27, 180.0}, 
@@ -121,9 +122,9 @@ public final class Constants {
       {102.743, 442.44, 46.27, 0.0}, 
       {102.743, 274.80, 46.27, 0.0}, 
       {102.743, 107.16, 46.27, 0.0}};
-    public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
-    public static final double reflectiveTapeHeightLower = 0.6096; //meters
-    public static final double reflectiveTapeHeightUpper = 1.0668; //meters
+    public static final double APRILTAG_HEIGHT = Units.inchesToMeters(17.5); // CM
+    public static final double REFLTAPE_HEIGHT_LOWER = 0.6096; //meters
+    public static final double REFLTAPE_HEIGHT_UPPER = 1.0668; //meters
     //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     }
 

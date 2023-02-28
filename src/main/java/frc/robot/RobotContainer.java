@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
+  private final Photonvision photonvision = new Photonvision(RobotConstants.CAM_NAME);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(0);
 

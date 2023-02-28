@@ -8,12 +8,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase {
-    private CANSparkMax claw = new CANSparkMax(ClawConstants.CLAW_MOTOR, MotorType.kBrushless);
-    private CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
-
+    private final CANSparkMax claw = new CANSparkMax(ClawConstants.CLAW_MOTOR, MotorType.kBrushless);
+    private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
+    private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
+    private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0);
     public ClawSubsystem() {
-        claw.setIdleMode(IdleMode.kCoast);
+        clawEncoder.setDutyCycleRange(0,1);
+
+        claw.setIdleMode(IdleMode.kBrake);
         intakeMotor.setIdleMode(IdleMode.kCoast);
+        claw.setOpenLoopRampRate(.4);
+        intakeMotor.setOpenLoopRampRate(.4);
+    }
+    public void setClawVoltage(double voltage){
+        claw.setClawVoltage(voltage);
+    }
+    public void setClaw(double speed){
+        claw.setClaw(speed);
+        intakeMotor.setClaw(speed);
     }
 
     public void openClaw(double speed) {
@@ -39,5 +51,17 @@ public class ClawSubsystem extends SubsystemBase {
     public void stopClaw() {
         claw.set(0);
         intakeMotor.set(0);
+    }
+    public double getClawPosition(){
+        double clawDeg = (clawEncoder.getAbsolutePosition() + ClawConstants.CLAW_OFFSET) *360;
+        return (deg % 360) + (deg < 0 ? 360 : 0);
+    }
+    public double calculateClawFeedforward(double positionRadians, double velocity){
+        return clawFeedforward.calculate(positionRadians, velocity);
+    }
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("getClawPosition()", getClawPosition());
+        SmartDashboard.putNumber("Claw Power", claw.getBusVoltage());
     }
 }

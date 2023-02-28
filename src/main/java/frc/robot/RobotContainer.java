@@ -27,33 +27,43 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
-    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
-        () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    driveSubsystem.setDefaultCommand(
+        new DefaultDriveCommand(
+            driveSubsystem,
+            () ->
+                -modifyAxis(driverController.getLeftY())
+                    * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () ->
+                -modifyAxis(driverController.getLeftX())
+                    * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () ->
+                -modifyAxis(driverController.getRightX())
+                    * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
     PathPlannerServer.startServer(5811);
   }
 
   private void configureBindings() {
-    driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
+    driverController
+        .a()
+        .whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
-    driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
+    driverController
+        .leftTrigger()
+        .toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   }
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-      driveSubsystem.followPath(Paths.loop),
-      new AutonBalance(driveSubsystem));
+        driveSubsystem.followPath(Paths.loop), new AutonBalance(driveSubsystem));
   }
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
-      if (value > 0.0)
-        return (value - deadband) / (1.0 - deadband);
+      if (value > 0.0) return (value - deadband) / (1.0 - deadband);
       return (value + deadband) / (1.0 - deadband);
     }
     return 0.0;

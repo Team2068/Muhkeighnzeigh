@@ -19,7 +19,10 @@ public class Aimbot extends PIDCommand {
   public Aimbot(Photonvision photonvision, DriveSubsystem driveSubsystem) {
     super(
         // The controller that the command will use
-        new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
+        new PIDController(
+            Constants.AimbotConstants.kP,
+            Constants.AimbotConstants.kI,
+            Constants.AimbotConstants.kD),
         // This should return the measurement
         () -> photonvision.data.targetYaw,
         // This should return the setpoint (can also be a constant)
@@ -27,7 +30,13 @@ public class Aimbot extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          driveSubsystem.drive(new ChassisSpeeds(0, 0, output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND));
+          driveSubsystem.drive(
+              new ChassisSpeeds(
+                  0,
+                  0,
+                  output
+                      * Constants.AimbotConstants.speed
+                      * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND));
         });
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveSubsystem);
@@ -37,6 +46,7 @@ public class Aimbot extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(getController().getPositionError()) < Constants.AimbotConstants.minimumAdjustment;
+    return Math.abs(getController().getPositionError())
+        < Constants.AimbotConstants.minimumAdjustment;
   }
 }

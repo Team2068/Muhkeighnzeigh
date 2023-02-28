@@ -1,11 +1,11 @@
 package com.swervedrivespecialties.swervelib;
 
 public interface DriveController {
-    void setReferenceVoltage(double voltage);
+  void setReferenceVoltage(double voltage);
 
-    double getStateVelocity();
+  double getStateVelocity();
 
-    double getDrivePosition();
+  double getDrivePosition();
 
-    void resetPosition();
+  void resetPosition();
 }

@@ -26,9 +26,7 @@ public final class Constants {
   }
 
   public static ChassisConfiguration getChassisConfiguration() {
-    return System.getenv("PRACTICE_ROBOT") != null
-        ? ChassisConfiguration.PRACTICE
-        : ChassisConfiguration.MAIN;
+    return System.getenv("PRACTICE_ROBOT") != null ? ChassisConfiguration.PRACTICE : ChassisConfiguration.MAIN;
   }
 
   public static final class DriveConstants {
@@ -52,7 +50,7 @@ public final class Constants {
 
     public static final int BACK_RIGHT_DRIVE_MOTOR = 10;
     public static final int BACK_RIGHT_TURN_MOTOR = 11;
-    public static final int BACK_RIGHT_ENCODER = 13;
+    public static final int BACK_RIGHT_ENCODER =  13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
     public static final int PIGEON_ID = 21;
@@ -72,12 +70,12 @@ public final class Constants {
     }
   }
 
-  public static final class ArmConstants {
+  public static final class ArmConstants{
     public static final int ARM_1_MOTOR = 2;
     public static final int ARM_2_MOTOR = 3;
   }
 
-  public static final class ClawConstants {
+  public static final class ClawConstants{
     public static final int CLAW_MOTOR = 17;
     public static final int INTAKE_MOTOR = 18;
   }
@@ -85,53 +83,49 @@ public final class Constants {
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 0.2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2 * Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2*Math.PI;
 
     public static final double kPXController = 2;
     public static final double kPYController = 2;
     public static final double kPThetaController = 2.5;
 
     // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(1, 1);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1, 1);
   }
 
   public static class Paths {
-    public static final PathPlannerTrajectory bounce =
-        PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
-    public static final PathPlannerTrajectory funny =
-        PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
-    public static final PathPlannerTrajectory loop =
-        PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
+    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
+    public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
+    public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 0.1524; // meters
-    public static final double camAngle =
-        Units.degreesToRadians(20); // replace with actual angle of the camera
-    public static final Transform3d robotToCam =
-        new Transform3d(new Translation3d(-3, 0.5, 5.5), new Rotation3d(0, camAngle, 0));
+    public static final double camHeight = 0.1524; //meters
+    public static final double camAngle = Units.degreesToRadians(20); //replace with actual angle of the camera
+    public static final Transform3d robotToCam = new Transform3d(
+      new Translation3d(-3, 0.5, 5.5),
+      new Rotation3d(0, camAngle, 0)
+    );
     public static final String camName1 = "OV5647";
   }
 
   public static class GameConstants {
-    // public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
+    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final double[][] tagArray = {
-      {1551.35, 107.16, 46.27, 180.0},
-      {1551.35, 274.80, 46.27, 180.0},
-      {1551.35, 442.44, 46.27, 180.0},
-      {1617.87, 674.97, 69.54, 180.0},
-      {36.19, 674.97, 69.54, 0.0},
-      {102.743, 442.44, 46.27, 0.0},
-      {102.743, 274.80, 46.27, 0.0},
-      {102.743, 107.16, 46.27, 0.0}
-    };
+      {1551.35, 107.16, 46.27, 180.0}, 
+      {1551.35, 274.80, 46.27, 180.0}, 
+      {1551.35, 442.44, 46.27, 180.0}, 
+      {1617.87, 674.97, 69.54, 180.0}, 
+      {36.19, 674.97, 69.54, 0.0}, 
+      {102.743, 442.44, 46.27, 0.0}, 
+      {102.743, 274.80, 46.27, 0.0}, 
+      {102.743, 107.16, 46.27, 0.0}};
     public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
-    public static final double reflectiveTapeHeightLower = 0.6096; // meters
-    public static final double reflectiveTapeHeightUpper = 1.0668; // meters
-    // public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
-  }
+    public static final double reflectiveTapeHeightLower = 0.6096; //meters
+    public static final double reflectiveTapeHeightUpper = 1.0668; //meters
+    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
+    }
 
   public static class AimbotConstants {
     public static final double kP = 1.0;

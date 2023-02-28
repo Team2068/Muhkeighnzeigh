@@ -18,28 +18,21 @@ public class AutonBalance extends SequentialCommandGroup {
     DriveSubsystem driveSubsystem;
 
     public Balance(DriveSubsystem driveSubsystem, double setpoint) {
-      super(
-          new PIDController(kP, 0, 0),
-          driveSubsystem.pigeon2::getRoll,
-          setpoint,
-          output -> {
-            driveSubsystem.drive(
-                new ChassisSpeeds(-output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0, 0));
-          },
-          driveSubsystem);
+      super(new PIDController(kP, 0, 0), driveSubsystem.pigeon2::getRoll, setpoint, output -> {
+        driveSubsystem.drive(new ChassisSpeeds(-output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0,0));
+      }, driveSubsystem);
       this.driveSubsystem = driveSubsystem;
     }
 
     @Override
     public boolean isFinished() {
-      return Math.abs(m_controller.getPositionError()) < 1;
+        return Math.abs(m_controller.getPositionError()) < 1;
     }
-
     @Override
     public void end(boolean interrupted) {
-      super.end(interrupted);
-      System.out.println("Robot Balanced!");
-      driveSubsystem.drive(new ChassisSpeeds());
+        super.end(interrupted);
+        System.out.println("Robot Balanced!");
+        driveSubsystem.drive(new ChassisSpeeds());
     }
   }
 
@@ -48,7 +41,8 @@ public class AutonBalance extends SequentialCommandGroup {
     // Before we balance (the roll when the robot is flat) and make this our setpoint
     final double initialRoll = driveSubsystem.pigeon2.getRoll();
     addCommands(
-        new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds(1, 0, 0)).withTimeout(3),
-        new Balance(driveSubsystem, initialRoll));
+      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds(1, 0, 0)).withTimeout(3),
+      new Balance(driveSubsystem, initialRoll)
+    );
   }
 }

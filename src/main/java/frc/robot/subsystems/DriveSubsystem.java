@@ -1,8 +1,13 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -21,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.AutoConstants;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Paths;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -46,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
             new Translation2d(-DriveConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -DriveConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    public final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(15);
+    public final WPI_Pigeon2 pigeon2 = new WPI_Pigeon2(DriveConstants.PIGEON_ID);
 
     private final SwerveDriveOdometry odometry;
     private final SwerveModule frontLeftModule;
@@ -58,6 +64,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = false;
     private Pose2d pose;
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+        this::getPose, 
+        this::resetOdometry, 
+        new PIDConstants(AutoConstants.kPXController, 0, 0.01),
+        new PIDConstants(AutoConstants.kPThetaController, 0, 0.01),
+        this::drive,
+        Paths.eventMap);
 
     public DriveSubsystem() {
         DriveConstants.setOffsets();
@@ -226,6 +240,19 @@ public class DriveSubsystem extends SubsystemBase {
             this
         ).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
     }
+
+    public Command followPathWithEvents(PathPlannerTrajectory path){
+        return new FollowPathWithEvents(
+            followPath(path),
+            path.getMarkers(),
+            Paths.eventMap
+        );
+    }
+
+    public Command followPathGroup(List<PathPlannerTrajectory> path){
+          return autoBuilder.fullAuto(path);
+    }
+  
 
     public void periodic() {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);

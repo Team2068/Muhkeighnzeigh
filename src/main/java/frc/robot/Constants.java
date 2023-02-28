@@ -4,15 +4,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import java.util.HashMap;
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.DriveSubsystem; 
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -33,25 +41,27 @@ public final class Constants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
 
-    public static final int FRONT_LEFT_DRIVE_MOTOR = 4;  // 8
-    public static final int FRONT_LEFT_TURN_MOTOR = 5;   // 9
-    public static final int FRONT_LEFT_ENCODER = 10;     // 2
+    public static final int FRONT_LEFT_DRIVE_MOTOR = 6;
+    public static final int FRONT_LEFT_TURN_MOTOR = 7;
+    public static final int FRONT_LEFT_ENCODER = 15;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
-    public static final int FRONT_RIGHT_DRIVE_MOTOR = 6; // 10
-    public static final int FRONT_RIGHT_TURN_MOTOR = 7;  // 11
-    public static final int FRONT_RIGHT_ENCODER = 11;    // 3
+    public static final int FRONT_RIGHT_DRIVE_MOTOR = 8;
+    public static final int FRONT_RIGHT_TURN_MOTOR = 9;
+    public static final int FRONT_RIGHT_ENCODER = 14;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 2;   // 12
-    public static final int BACK_LEFT_TURN_MOTOR = 3;    // 13
-    public static final int BACK_LEFT_ENCODER = 12;      // 4
+    public static final int BACK_LEFT_DRIVE_MOTOR = 4;
+    public static final int BACK_LEFT_TURN_MOTOR = 5;
+    public static final int BACK_LEFT_ENCODER = 16;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
-    public static final int BACK_RIGHT_DRIVE_MOTOR = 8;  // 14
-    public static final int BACK_RIGHT_TURN_MOTOR = 9;   // 15
-    public static final int BACK_RIGHT_ENCODER =  13;    // 5
+    public static final int BACK_RIGHT_DRIVE_MOTOR = 10;
+    public static final int BACK_RIGHT_TURN_MOTOR = 11;
+    public static final int BACK_RIGHT_ENCODER =  13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
+
+    public static final int PIGEON_ID = 21;
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
@@ -61,21 +71,21 @@ public final class Constants {
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(293);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(68);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(148);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(230);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(84);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(138);
       }
     }
   }
 
   public static final class ArmConstants{
-    public static final int ARM_1_MOTOR = 6;
-    public static final int ARM_2_MOTOR = 7;
+    public static final int ARM_1_MOTOR = 2;
+    public static final int ARM_2_MOTOR = 3;
   }
 
   public static final class ClawConstants{
-    public static final int CLAW_MOTOR = 16;
-    public static final int INTAKE_MOTOR = 17;
+    public static final int CLAW_MOTOR = 17;
+    public static final int INTAKE_MOTOR = 18;
   }
 
   public static final class AutoConstants {
@@ -93,9 +103,65 @@ public final class Constants {
   }
 
   public static class Paths {
-    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
+    public static HashMap<String, Command> eventMap = new HashMap<String, Command>();
+
+    public static void initEventMap(){
+      eventMap.put("Pickup", null); // TODO: replace null /w the command
+      
+      eventMap.put("Score Cube High", null);
+      eventMap.put("Score Cone High", null);
+      
+      eventMap.put("Score Cube Mid", null);
+      eventMap.put("Score Cone Mid", null);
+    }
+
+    // Testing
+    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
+
+    // Scenario 1
+    PathPlannerTrajectory Scenario14Cargo = PathPlanner.loadPath("(Scenario 1) 4 Cargo", new PathConstraints(4, 3));
+    List<PathPlannerTrajectory> pathGroup1 = PathPlanner.loadPathGroup(
+    "(Scenario 1) 4 Cargo",
+    new PathConstraints(4,3),
+    new PathConstraints(4,3));
+
+      //Scenario 2
+      PathPlannerTrajectory Scenario21ConeCargo = PathPlanner.loadPath("(Scenario 2) 1 Cone Cargo", new PathConstraints(4, 3));
+      List<PathPlannerTrajectory> pathGroup2 = PathPlanner.loadPathGroup(
+        "(Scenario 2) 1 Cone Cargo",
+        new PathConstraints(4,3),
+        new PathConstraints(4,3));
+    
+      //Scenario 3
+      PathPlannerTrajectory Scenario31BlockCargo = PathPlanner.loadPath("(Scenario 3) 1 Block Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup3 = PathPlanner.loadPathGroup(
+      "(Scenario 3) 1 Block Cargo", 
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+      
+      //Scenario 4
+      PathPlannerTrajectory Scenario42ConeCargo = PathPlanner.loadPath("(Scenario 4) 2 Cone Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup4 = PathPlanner.loadPathGroup(
+      "(Scenario 4) 2 Cone Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+  
+      //Scenario 5
+      PathPlannerTrajectory Scenario52BlockCargo = PathPlanner.loadPath("(Scenario 5) 2 Block Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup5 = PathPlanner.loadPathGroup(
+      "(Scenario 5) 2 Block Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+  
+  
+      //Scenario 6
+      PathPlannerTrajectory Scenario61Cand1BCargo = PathPlanner.loadPath("(Scenario 6) 1C and 1B Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup6 = PathPlanner.loadPathGroup(
+      "(Scenario 6) 1C and 1B Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
   }
 
   public static class RobotConstants {
@@ -105,6 +171,7 @@ public final class Constants {
       new Translation3d(-3, 0.5, 5.5),
       new Rotation3d(0, camAngle, 0)
     );
+    public static final String camName1 = "OV5647";
   }
 
   public static class GameConstants {
@@ -129,44 +196,4 @@ public final class Constants {
     public static final double speed = 0.5;
     public static final double minimumAdjustment = 0.5;
   }
-
-  public static class Trajectories {
-  // Scenario 1
-  public static final PathPlannerTrajectory Step1_4Cargo = PathPlanner.loadPath("Step 1_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_4Cargo = PathPlanner.loadPath("Step 2_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_4Cargo = PathPlanner.loadPath("Step 3_4cargo", 1, 1);
-  public static final PathPlannerTrajectory Step4_4Cargo = PathPlanner.loadPath("Step 4_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step5_4Cargo = PathPlanner.loadPath("Step 5_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step6_4Cargo = PathPlanner.loadPath("Step 6_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step7_4Cargo = PathPlanner.loadPath("Step 7_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step8_4Cargo = PathPlanner.loadPath("Step 8_4Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step9_4Cargo = PathPlanner.loadPath("Step 9_4Cargo", 1, 1);
-  // Scenario 2
-  public static final PathPlannerTrajectory Step1_2CargoCandB = PathPlanner.loadPath("Step 1_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step2_2CargoCandB = PathPlanner.loadPath("Step 2_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step3_2CargoCandB = PathPlanner.loadPath("Step 3_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step4_2CargoCandB = PathPlanner.loadPath("Step 4_  2 Cargo C and B", 1, 1);
-  public static final PathPlannerTrajectory Step5_2CargoCandB = PathPlanner.loadPath("Step 5_  2 Cargo C and B", 1, 1);
-  // Scenario 3
-  public static final PathPlannerTrajectory Step1_2BlockCargo = PathPlanner.loadPath("Step 1_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_2BlockCargo = PathPlanner.loadPath("Step 2_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_2BlockCargo = PathPlanner.loadPath("Step 3_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step4_2BlockCargo = PathPlanner.loadPath("Step 4_ 2 Block Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step5_2BlockCargo = PathPlanner.loadPath("Step 5_ 2 Block Cargo", 1, 1);
-  // Scenario 4
-  public static final PathPlannerTrajectory Step1_2ConeCargo = PathPlanner.loadPath("Step 1_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_2ConeCargo = PathPlanner.loadPath("Step 2_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_2ConeCargo = PathPlanner.loadPath("Step 3_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step4_2ConeCargo = PathPlanner.loadPath("Step 4_ 2 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step5_2ConeCargo = PathPlanner.loadPath("Step 5_ 2 Cone Cargo", 1, 1);
-  // Scenario 5
-  public static final PathPlannerTrajectory Step1_1ConeCargo = PathPlanner.loadPath("Step 1_ 1 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step2_1ConeCargo = PathPlanner.loadPath("Step 2_ 1 Cone Cargo", 1, 1);
-  public static final PathPlannerTrajectory Step3_1ConeCargo = PathPlanner.loadPath("Step 2_ 1 Cone Cargo", 1, 1);
-  // Scenario 6
-  public static final PathPlannerTrajectory Step1_1BlockCargo = PathPlanner.loadPath("Step 1_1 Block Cargo",1,1);
-  public static final PathPlannerTrajectory Step2_1BlockCargo = PathPlanner.loadPath("Step 2_1 Block Cargo", 1,1);
-  //Scenario 7 
-  public static final PathPlannerTrajectory Step1_Park = PathPlanner.loadPath("Step 1_ Park", 1, 1);
-}
 }

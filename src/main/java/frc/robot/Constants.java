@@ -10,6 +10,8 @@ import java.util.List;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -17,7 +19,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand; 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.DriveSubsystem; 
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -124,44 +127,41 @@ public final class Constants {
     new PathConstraints(4,3),
     new PathConstraints(4,3));
 
-        //Scenario 2
-        PathPlannerTrajectory Scenario21ConeCargo = PathPlanner.loadPath("(Scenario 2) 1 Cone Cargo", new PathConstraints(4, 3));
-        List<PathPlannerTrajectory> pathGroup2 = PathPlanner.loadPathGroup(
-          "(Scenario 2) 1 Cone Cargo",
-          new PathConstraints(4,3),
-          new PathConstraints(4,3));
+      //Scenario 2
+      PathPlannerTrajectory Scenario21ConeCargo = PathPlanner.loadPath("(Scenario 2) 1 Cone Cargo", new PathConstraints(4, 3));
+      List<PathPlannerTrajectory> pathGroup2 = PathPlanner.loadPathGroup(
+        "(Scenario 2) 1 Cone Cargo",
+        new PathConstraints(4,3),
+        new PathConstraints(4,3));
+    
+      //Scenario 3
+      PathPlannerTrajectory Scenario31BlockCargo = PathPlanner.loadPath("(Scenario 3) 1 Block Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup3 = PathPlanner.loadPathGroup(
+      "(Scenario 3) 1 Block Cargo", 
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
       
-        
-        //Scenario 3
-        PathPlannerTrajectory Scenario31BlockCargo = PathPlanner.loadPath("(Scenario 3) 1 Block Cargo", new PathConstraints(4,3));
-        List<PathPlannerTrajectory> pathGroup3 = PathPlanner.loadPathGroup(
-        "(Scenario 3) 1 Block Cargo", 
-        new PathConstraints(4,3),
-        new PathConstraints(4,3));
-       
-       
-       //Scenario 4
-        PathPlannerTrajectory Scenario42ConeCargo = PathPlanner.loadPath("(Scenario 4) 2 Cone Cargo", new PathConstraints(4,3));
-        List<PathPlannerTrajectory> pathGroup4 = PathPlanner.loadPathGroup(
-        "(Scenario 4) 2 Cone Cargo",
-        new PathConstraints(4,3),
-        new PathConstraints(4,3));
-    
-    
-        //Scenario 5
-        PathPlannerTrajectory Scenario52BlockCargo = PathPlanner.loadPath("(Scenario 5) 2 Block Cargo", new PathConstraints(4,3));
-        List<PathPlannerTrajectory> pathGroup5 = PathPlanner.loadPathGroup(
-        "(Scenario 5) 2 Block Cargo",
-        new PathConstraints(4,3),
-        new PathConstraints(4,3));
-    
-    
-        //Scenario 6
-        PathPlannerTrajectory Scenario61Cand1BCargo = PathPlanner.loadPath("(Scenario 6) 1C and 1B Cargo", new PathConstraints(4,3));
-        List<PathPlannerTrajectory> pathGroup6 = PathPlanner.loadPathGroup(
-        "(Scenario 6) 1C and 1B Cargo",
-        new PathConstraints(4,3),
-        new PathConstraints(4,3));
+      //Scenario 4
+      PathPlannerTrajectory Scenario42ConeCargo = PathPlanner.loadPath("(Scenario 4) 2 Cone Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup4 = PathPlanner.loadPathGroup(
+      "(Scenario 4) 2 Cone Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+  
+      //Scenario 5
+      PathPlannerTrajectory Scenario52BlockCargo = PathPlanner.loadPath("(Scenario 5) 2 Block Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup5 = PathPlanner.loadPathGroup(
+      "(Scenario 5) 2 Block Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+  
+  
+      //Scenario 6
+      PathPlannerTrajectory Scenario61Cand1BCargo = PathPlanner.loadPath("(Scenario 6) 1C and 1B Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup6 = PathPlanner.loadPathGroup(
+      "(Scenario 6) 1C and 1B Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
   }
 
   public static class RobotConstants {

@@ -1,8 +1,12 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
@@ -60,6 +64,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = false;
     private Pose2d pose;
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+        this::getPose, 
+        this::resetOdometry, 
+        new PIDConstants(AutoConstants.kPXController, 0, 0.01),
+        new PIDConstants(AutoConstants.kPThetaController, 0, 0.01),
+        this::drive,
+        Paths.eventMap);
 
     public DriveSubsystem() {
         DriveConstants.setOffsets();
@@ -236,6 +248,11 @@ public class DriveSubsystem extends SubsystemBase {
             Paths.eventMap
         );
     }
+
+    public Command followPathGroup(List<PathPlannerTrajectory> path){
+          return autoBuilder.fullAuto(path);
+    }
+  
 
     public void periodic() {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);

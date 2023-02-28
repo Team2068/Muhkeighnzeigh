@@ -6,7 +6,6 @@ import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -19,7 +18,7 @@ public class Paths extends CommandBase {
     private final Timer m_timer = new Timer();
     private final Trajectory m_trajectory;
     private final Pose2d m_pose;
-    private final SwerveDriveKinematics m_kinematics;
+    // private final SwerveDriveKinematics m_kinematics;
     private final HolonomicDriveController m_controller;
     private final DriveSubsystem m_drivetrain;
 
@@ -27,7 +26,7 @@ public class Paths extends CommandBase {
     public Paths(Trajectory trajectory, DriveSubsystem drivetrainSubsystem){
         this.m_drivetrain = drivetrainSubsystem;
         this.m_trajectory = trajectory;
-        this.m_kinematics = drivetrainSubsystem.getKinematics();
+        // this.m_kinematics = drivetrainSubsystem.getKinematics();
         this.m_pose = drivetrainSubsystem.getPose();
 
         ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);

@@ -4,15 +4,19 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import java.util.HashMap;
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -95,13 +99,69 @@ public final class Constants {
   }
 
   public static class Paths {
-    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
+    public static HashMap<String, Command> eventMap = new HashMap<String, Command>();
+
+    public static void initEventMap(){
+      eventMap.put("Pickup", null); // TODO: replace null /w the command
+      
+      eventMap.put("Score Cube High", null);
+      eventMap.put("Score Cone High", null);
+      
+      eventMap.put("Score Cube Mid", null);
+      eventMap.put("Score Cone Mid", null);
+    }
+
+    // Testing
+    public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(2, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
+
+    // Scenario 1
+    PathPlannerTrajectory Scenario14Cargo = PathPlanner.loadPath("(Scenario 1) 4 Cargo", new PathConstraints(4, 3));
+    List<PathPlannerTrajectory> pathGroup1 = PathPlanner.loadPathGroup(
+    "(Scenario 1) 4 Cargo",
+    new PathConstraints(4,3),
+    new PathConstraints(4,3));
+
+      //Scenario 2
+      PathPlannerTrajectory Scenario21ConeCargo = PathPlanner.loadPath("(Scenario 2) 1 Cone Cargo", new PathConstraints(4, 3));
+      List<PathPlannerTrajectory> pathGroup2 = PathPlanner.loadPathGroup(
+        "(Scenario 2) 1 Cone Cargo",
+        new PathConstraints(4,3),
+        new PathConstraints(4,3));
+    
+      //Scenario 3
+      PathPlannerTrajectory Scenario31BlockCargo = PathPlanner.loadPath("(Scenario 3) 1 Block Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup3 = PathPlanner.loadPathGroup(
+      "(Scenario 3) 1 Block Cargo", 
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+      
+      //Scenario 4
+      PathPlannerTrajectory Scenario42ConeCargo = PathPlanner.loadPath("(Scenario 4) 2 Cone Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup4 = PathPlanner.loadPathGroup(
+      "(Scenario 4) 2 Cone Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+  
+      //Scenario 5
+      PathPlannerTrajectory Scenario52BlockCargo = PathPlanner.loadPath("(Scenario 5) 2 Block Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup5 = PathPlanner.loadPathGroup(
+      "(Scenario 5) 2 Block Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
+  
+  
+      //Scenario 6
+      PathPlannerTrajectory Scenario61Cand1BCargo = PathPlanner.loadPath("(Scenario 6) 1C and 1B Cargo", new PathConstraints(4,3));
+      List<PathPlannerTrajectory> pathGroup6 = PathPlanner.loadPathGroup(
+      "(Scenario 6) 1C and 1B Cargo",
+      new PathConstraints(4,3),
+      new PathConstraints(4,3));
   }
 
   public static class RobotConstants {
-    public static final double camHeight = 0.1524; //meters
+    public static final double camHeight = 0.1524; // Metres
     public static final double camAngle = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final Transform3d robotToCam = new Transform3d(
       new Translation3d(-3, 0.5, 5.5),
@@ -111,7 +171,6 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final double[][] tagArray = {
       {1551.35, 107.16, 46.27, 180.0}, 
       {1551.35, 274.80, 46.27, 180.0}, 
@@ -124,7 +183,6 @@ public final class Constants {
     public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
     public static final double reflectiveTapeHeightLower = 0.6096; //meters
     public static final double reflectiveTapeHeightUpper = 1.0668; //meters
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     }
 
   public static class AimbotConstants {

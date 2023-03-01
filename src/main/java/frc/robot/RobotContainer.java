@@ -49,7 +49,8 @@ public class RobotContainer {
     mechController.b().whileTrue(new SetArmPosition(armSubsystem, 180));
     mechController.x().onTrue(new SetArmPosition(armSubsystem, 270));
     mechController.y().onTrue(new SetArmPosition(armSubsystem, 360));
-    
+    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 90));
+    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 180));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));

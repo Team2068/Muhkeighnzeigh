@@ -62,7 +62,7 @@ public final class Constants {
     public static final int BACK_RIGHT_ENCODER = 13;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-    public static final int PIGEON_ID = 21;
+    public static final int PIGEON_ID = 19;
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {

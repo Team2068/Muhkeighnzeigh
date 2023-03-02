@@ -40,9 +40,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    mechController.a().onTrue(new SetArmPosition(armSubsystem, 90));
+    mechController.a().whileTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
     mechController.b().whileTrue(new SetArmPosition(armSubsystem, 180));
-    mechController.x().onTrue(new SetArmPosition(armSubsystem, 270));
+    mechController.a().onFalse(new InstantCommand(()->clawSubsystem.setWristSpeed(0)));
     mechController.y().onTrue(new SetArmPosition(armSubsystem, 360));
     mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 90));
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 180));

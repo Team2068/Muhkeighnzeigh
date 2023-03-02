@@ -46,7 +46,6 @@ public class Photonvision extends SubsystemBase {
   public AprilTagData tagData = new AprilTagData();
 
   public void togglePipeline() {
-    //camera.setPipelineIndex( (getPipelineIndex() == 1) ? 2 : 1);
     if (camera.getPipelineIndex() == PhotonConstants.REFLECTIVE_TAPE_PIPELINE_INDEX) {
       camera.setPipelineIndex(PhotonConstants.APRILTAG_PIPELINE_INDEX);
       camera.setLED(VisionLEDMode.kOff);
@@ -69,11 +68,7 @@ public class Photonvision extends SubsystemBase {
 
     PhotonTrackedTarget bestTarget = results.getBestTarget();
 
-    if (!results.hasTargets()) {
-      return;
-    }
-
-    if (bestTarget == null) {
+    if (!results.hasTargets() || bestTarget == null) {
       return;
     }
 

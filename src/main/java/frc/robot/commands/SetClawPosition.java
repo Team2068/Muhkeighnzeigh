@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
 
 public class SetClawPosition extends CommandBase {
-    private final PIDController clawController = new PIDController(0, 0, 0);
+    private final PIDController clawController = new PIDController(1, 0, 0);
     private final ClawSubsystem clawSubsystem;
     private double lastClawPosition = 0;
 
@@ -19,9 +19,7 @@ public class SetClawPosition extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -35,7 +33,7 @@ public class SetClawPosition extends CommandBase {
         SmartDashboard.putNumber("Claw FeedForwad", cffOutput);
         SmartDashboard.putNumber("Claw Voltage", newClawOutput);
 
-        clawSubsystem.setWristVoltage(newClawOutput);
+        clawSubsystem.setWristVoltage(newClawOutput / 360 * 8);
         lastClawPosition = currentClawPosition;
 
     }

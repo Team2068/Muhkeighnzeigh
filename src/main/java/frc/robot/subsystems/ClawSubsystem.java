@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
@@ -15,6 +17,8 @@ public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
     private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0);
+    private final Solenoid clawSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0); // FIXME: put real channel
+    private boolean clawOpen = false;
 
     public ClawSubsystem() {
         clawEncoder.setDutyCycleRange(0, 1);
@@ -37,24 +41,14 @@ public class ClawSubsystem extends SubsystemBase {
         intakeMotor.set(speed);
     }
 
-    public void openClaw(double speed) {
-        wristMotor.set(speed);
-        intakeMotor.set(speed);
-    }
-
     public void openClaw() {
-        wristMotor.set(ClawConstants.WRIST_SPEED);
-        intakeMotor.set(ClawConstants.INTAKE_SPEED);
-    }
-
-    public void closeClaw(double speed) {
-        wristMotor.set(-speed);
-        intakeMotor.set(-speed);
+        if(!clawOpen)
+            clawSolenoid.toggle();
     }
 
     public void closeClaw() {
-        wristMotor.set(-ClawConstants.WRIST_SPEED);
-        intakeMotor.set(-ClawConstants.INTAKE_SPEED);
+        if(clawOpen)
+            clawSolenoid.toggle();
     }
 
     public void stopClaw() {
@@ -73,6 +67,8 @@ public class ClawSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        clawOpen = clawSolenoid.get();
+        SmartDashboard.putString("Claw State", (clawOpen) ? "Open" : "Closed");
         SmartDashboard.putNumber("getClawPosition()", getClawPosition());
         SmartDashboard.putNumber("Claw Power", wristMotor.getBusVoltage());
     }

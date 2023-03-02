@@ -16,7 +16,7 @@ public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax wristMotor = new CANSparkMax(ClawConstants.WRIST_MOTOR, MotorType.kBrushless);
     private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
-    private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0);
+    private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0); // FIXME: add feedforward
     private final Solenoid clawSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0); // FIXME: put real channel
     private boolean clawOpen = false;
 
@@ -42,12 +42,12 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void openClaw() {
-        if(!clawOpen)
+        if (!clawOpen)
             clawSolenoid.toggle();
     }
 
     public void closeClaw() {
-        if(clawOpen)
+        if (clawOpen)
             clawSolenoid.toggle();
     }
 

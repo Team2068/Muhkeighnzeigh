@@ -90,9 +90,10 @@ public final class Constants {
   public static final class ClawConstants {
     public static final int WRIST_MOTOR = 17;
     public static final int INTAKE_MOTOR = 18;
-    public static final double CLAW_OFFSET = 0;
+
+    public static final double WRIST_OFFSET = 0;
     public static final double INTAKE_SPEED = .75;
-    public static final double CLAW_SPEED = .5;
+    public static final double WRIST_SPEED = .5;
   }
 
   public static final class AutoConstants {
@@ -132,8 +133,6 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    // public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer,
-    // Double[]>(8);
     public static final double[][] tagArray = {
         { 1551.35, 107.16, 46.27, 180.0 },
         { 1551.35, 274.80, 46.27, 180.0 },
@@ -146,7 +145,6 @@ public final class Constants {
     public static final double aprilTagHeight = Units.inchesToMeters(17.5); // CM
     public static final double reflectiveTapeHeightLower = 0.6096; // meters
     public static final double reflectiveTapeHeightUpper = 1.0668; // meters
-    // public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
   }
 
   public static class AimbotConstants {

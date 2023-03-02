@@ -88,7 +88,7 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
-    public static final int CLAW_MOTOR = 17;
+    public static final int WRIST_MOTOR = 17;
     public static final int INTAKE_MOTOR = 18;
     public static final double CLAW_OFFSET = 0;
     public static final double INTAKE_SPEED = .75;

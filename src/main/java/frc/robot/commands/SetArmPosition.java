@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class SetArmPosition extends CommandBase {
-  private final PIDController controller = new PIDController(0.8, 0, 0);
+  private final PIDController controller = new PIDController(1, 0, 0);
   private final ArmSubsystem armSubsystem;
   private double lastPosition = 0;
 
@@ -21,7 +21,7 @@ public class SetArmPosition extends CommandBase {
     controller.setSetpoint(angleDegrees);
     controller.setTolerance(5); // 5 degree tolerance
     controller.enableContinuousInput(0, 360);
-  }
+  } 
 
   @Override
   public void initialize() {}
@@ -51,7 +51,7 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return controller.atSetpoint();
-    // return false;
+    // return controller.atSetpoint();
+    return false;
   }
 }

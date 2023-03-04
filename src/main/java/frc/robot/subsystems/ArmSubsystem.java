@@ -17,17 +17,16 @@ public class ArmSubsystem extends SubsystemBase {
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
 
     // NOTE: found values using http://reca.lc/arm
-    // TODO: use SysId to calculate feedforwards
-    private final ArmFeedforward feedforward = new ArmFeedforward(0.01, 0.40, 0.26);
+    private final ArmFeedforward feedforward = new ArmFeedforward(0.01, 0.40, 0.26); // TODO: use SysId to calculate feedforwards
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
 
-        arm1Motor.setInverted(true);
-        arm1Motor.setIdleMode(IdleMode.kBrake);
-        arm2Motor.setIdleMode(IdleMode.kBrake);
+        arm1Motor.setIdleMode(IdleMode.kCoast);
+        arm2Motor.setIdleMode(IdleMode.kCoast);
+        
         arm1Motor.setOpenLoopRampRate(0.2);
-        arm1Motor.setOpenLoopRampRate(0.2);
+        arm2Motor.setOpenLoopRampRate(0.2);
     }
 
     public void setVoltage(double voltage) {
@@ -59,8 +58,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("getArmPosition()", getArmPosition());
+        SmartDashboard.putNumber("Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm1 Power", arm1Motor.getBusVoltage());
         SmartDashboard.putNumber("Arm2 Power", arm2Motor.getBusVoltage());
+        SmartDashboard.putNumber("Arm1 RPM", arm1Motor.get());
+        SmartDashboard.putNumber("Arm2 RPM", arm2Motor.get());
     }
 }

@@ -37,18 +37,20 @@ public class RobotContainer {
         () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
     PathPlannerServer.startServer(5811);
-  }
-
+  } 
+ 
   private void configureBindings() {
-    mechController.a().whileTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
-    mechController.b().whileTrue(new SetArmPosition(armSubsystem, 180));
-    mechController.a().onFalse(new InstantCommand(()->clawSubsystem.setWristSpeed(0)));
+    // mechController.a().onTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
+    mechController.a().onTrue(new SetArmPosition(armSubsystem, 275));
+    mechController.b().onTrue(new SetArmPosition(armSubsystem, 180));
+    mechController.x().onTrue(new InstantCommand(()->armSubsystem.set(1)));
     mechController.y().onTrue(new SetArmPosition(armSubsystem, 360));
-    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 90));
-    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 180));
-    driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
-    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
+    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
+    
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));

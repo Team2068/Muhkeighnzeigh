@@ -18,13 +18,13 @@ public class ClawSubsystem extends SubsystemBase {
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
     private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0); // FIXME: add feedforward
     private final Solenoid clawSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0); // FIXME: put real channel
-    private boolean clawOpen = false;
 
     public ClawSubsystem() {
         clawEncoder.setDutyCycleRange(0, 1);
 
         wristMotor.setIdleMode(IdleMode.kBrake);
         intakeMotor.setIdleMode(IdleMode.kCoast);
+
         wristMotor.setOpenLoopRampRate(.4);
         intakeMotor.setOpenLoopRampRate(.4);
     }
@@ -42,13 +42,11 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void openClaw() {
-        if (!clawOpen)
-            clawSolenoid.toggle();
+        clawSolenoid.set(true);
     }
 
     public void closeClaw() {
-        if (clawOpen)
-            clawSolenoid.toggle();
+        clawSolenoid.set(false);
     }
 
     public void stopClaw() {
@@ -67,9 +65,8 @@ public class ClawSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        clawOpen = clawSolenoid.get();
-        SmartDashboard.putString("Claw State", (clawOpen) ? "Open" : "Closed");
-        SmartDashboard.putNumber("getClawPosition()", getClawPosition());
+        SmartDashboard.putString("Claw State", (clawSolenoid.get()) ? "Open" : "Closed");
+        SmartDashboard.putNumber("Claw Position", getClawPosition());
         SmartDashboard.putNumber("Claw Power", wristMotor.getBusVoltage());
     }
 }

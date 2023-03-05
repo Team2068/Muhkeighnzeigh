@@ -112,9 +112,8 @@ public final class Constants {
   }
 
   public static final class TelescopeConstants {
-    public static final int TELESCOPE_MOTOR = 16;
+    public static final int TELESCOPE_MOTOR = 12;
     public static final double TELESCOPE_SPEED = .25;
-
   }
 
   public static class Paths {

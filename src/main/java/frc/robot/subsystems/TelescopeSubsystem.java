@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TelescopeConstants;
 
@@ -11,7 +12,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     private CANSparkMax telescopeMotor = new CANSparkMax(TelescopeConstants.TELESCOPE_MOTOR, MotorType.kBrushless);
 
     public TelescopeSubsystem() {
-        telescopeMotor.setIdleMode(IdleMode.kCoast);
+        telescopeMotor.setIdleMode(IdleMode.kBrake);
     }
 
     public void extendTelescope(double speed) {
@@ -32,5 +33,10 @@ public class TelescopeSubsystem extends SubsystemBase {
 
     public void stopTelescope() {
         telescopeMotor.set(0);
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Telescope Position", telescopeMotor.getEncoder().getPosition());
     }
 }

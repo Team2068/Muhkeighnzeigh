@@ -6,16 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Pickup extends SequentialCommandGroup {
-  public Pickup(Boolean cone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
+public class Pickup2 extends SequentialCommandGroup {
+  public Pickup2(Boolean pickingCone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
     addCommands(
       new SetArmPosition(armSubsystem, 18), 
       new InstantCommand(armSubsystem::stop),
-      new SetClawPosition(clawSubsystem, 245)
+      new SetClawPosition(clawSubsystem, 175),
+      new InstantCommand(() -> { clawSubsystem.setIntakeSpeed(); if (pickingCone) clawSubsystem.closeClaw();}),
+      new WaitCommand(0.5),
+      new InstantCommand(clawSubsystem::stopClaw)
     );
   }
 }

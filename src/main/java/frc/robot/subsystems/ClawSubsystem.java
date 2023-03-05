@@ -37,6 +37,10 @@ public class ClawSubsystem extends SubsystemBase {
         wristMotor.set(speed);
     }
 
+    public void setIntakeSpeed(){
+        intakeMotor.set(ClawConstants.INTAKE_SPEED);
+    }
+
     public void setIntakeSpeed(double speed) {
         intakeMotor.set(speed);
     }

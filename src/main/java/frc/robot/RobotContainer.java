@@ -12,6 +12,7 @@ import frc.robot.commands.SetClawPosition;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
@@ -23,12 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
   // private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final ArmSubsystem armSubsystem = new ArmSubsystem();
-  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
-
-  private final CommandXboxController mechController = new CommandXboxController(1);
-  private final CommandXboxController driverController = new CommandXboxController(0);
+  final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  final ArmSubsystem armSubsystem = new ArmSubsystem();
+  final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
+  
+  final CommandXboxController mechController = new CommandXboxController(1);
+  final CommandXboxController driverController = new CommandXboxController(0);
+ 
   public RobotContainer() {
     configureBindings();
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
@@ -44,10 +47,11 @@ public class RobotContainer {
     mechController.a().onTrue(new SetArmPosition(armSubsystem, 275));
     mechController.b().onTrue(new SetArmPosition(armSubsystem, 180));
     mechController.x().onTrue(new InstantCommand(()->armSubsystem.set(1)));
-    mechController.y().onTrue(new SetArmPosition(armSubsystem, 360));
+    mechController.y().onTrue(new InstantCommand(telescopeSubsystem::stopTelescope));
     mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
- 
+    mechController.rightTrigger().onTrue(new InstantCommand(telescopeSubsystem::extendTelescope));
+    mechController.rightBumper().onTrue(new InstantCommand(telescopeSubsystem::retractTelescope));
     
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));

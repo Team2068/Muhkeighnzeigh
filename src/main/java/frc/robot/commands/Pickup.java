@@ -13,9 +13,9 @@ import frc.robot.subsystems.ClawSubsystem;
 public class Pickup extends SequentialCommandGroup {
   public Pickup(Boolean cone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
     addCommands(
-      new SetArmPosition(armSubsystem, 0), 
+      new SetArmPosition(armSubsystem, 18), 
       new InstantCommand(armSubsystem::stop),
-      new SetClawPosition(clawSubsystem, 0)
+      new SetClawPosition(clawSubsystem, 245)
     );
   }
 }

@@ -50,8 +50,8 @@ public class RobotContainer {
     mechController.y().onTrue(new InstantCommand(telescopeSubsystem::stopTelescope));
     mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
-    mechController.rightTrigger().onTrue(new InstantCommand(telescopeSubsystem::extendTelescope));
-    mechController.rightBumper().onTrue(new InstantCommand(telescopeSubsystem::retractTelescope));
+    mechController.rightTrigger().onTrue(new InstantCommand(()->clawSubsystem.setIntakeSpeed(0.5)));
+    mechController.rightBumper().onTrue(new InstantCommand(()->clawSubsystem.setIntakeSpeed(-0.5)));
     
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));

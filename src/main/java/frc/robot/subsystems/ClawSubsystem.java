@@ -46,11 +46,11 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void openClaw() {
-        clawSolenoid.set(true);
+        clawSolenoid.set(false);
     }
 
     public void closeClaw() {
-        clawSolenoid.set(false);
+        clawSolenoid.set(true);
     }
 
     public void stopClaw() {

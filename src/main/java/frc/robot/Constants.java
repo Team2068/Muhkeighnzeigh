@@ -44,22 +44,22 @@ public final class Constants {
 
     public static final int FRONT_LEFT_DRIVE_MOTOR = 6;
     public static final int FRONT_LEFT_TURN_MOTOR = 7;
-    public static final int FRONT_LEFT_ENCODER = 15;
+    public static final int FRONT_LEFT_ENCODER = 17;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
     public static final int FRONT_RIGHT_DRIVE_MOTOR = 8;
     public static final int FRONT_RIGHT_TURN_MOTOR = 9;
-    public static final int FRONT_RIGHT_ENCODER = 14;
+    public static final int FRONT_RIGHT_ENCODER = 16;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
     public static final int BACK_LEFT_DRIVE_MOTOR = 4;
     public static final int BACK_LEFT_TURN_MOTOR = 5;
-    public static final int BACK_LEFT_ENCODER = 16;
+    public static final int BACK_LEFT_ENCODER = 18;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
     public static final int BACK_RIGHT_DRIVE_MOTOR = 10;
     public static final int BACK_RIGHT_TURN_MOTOR = 11;
-    public static final int BACK_RIGHT_ENCODER = 13;
+    public static final int BACK_RIGHT_ENCODER = 15;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
     public static final int PIGEON_ID = 19;
@@ -88,8 +88,8 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
-    public static final int WRIST_MOTOR = 17;
-    public static final int INTAKE_MOTOR = 18;
+    public static final int WRIST_MOTOR = 13;
+    public static final int INTAKE_MOTOR = 14;
 
     public static final double WRIST_OFFSET = 0;
     public static final double INTAKE_SPEED = .75;

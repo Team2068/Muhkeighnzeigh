@@ -19,8 +19,8 @@ public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
     private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0); // FIXME: add feedforward
-    private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(20, PneumaticsModuleType.REVPH, 8, 9);
-    private final Compressor compressor = new Compressor(20, PneumaticsModuleType.REVPH);
+    private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 8, 9);
+    private final Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
 
     public ClawSubsystem() {
@@ -75,9 +75,8 @@ public class ClawSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Claw State", (clawSolenoid.get() == Value.kForward) ? "Open" : "Closed");
+        SmartDashboard.putString("Claw State", (clawSolenoid.get() == Value.kReverse) ? "Open" : "Closed");
         SmartDashboard.putNumber("Claw Position", getClawPosition());
         SmartDashboard.putNumber("Claw Power", wristMotor.getBusVoltage());
-        SmartDashboard.putNumber("Pressure (PSI)", compressor.getPressure());
     }
 }

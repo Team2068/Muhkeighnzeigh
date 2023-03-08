@@ -155,24 +155,7 @@
               "_showGlyph": false
             }
           },
-          "4,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Pigeon 2 [21]",
-              "_title": "Pigeon 2 [21]",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
-            }
-          },
-          "2,3": {
+          "7,2": {
             "size": [
               1,
               1
@@ -199,13 +182,6 @@
               "_children": [
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/getArmPosition()",
-                  "_title": "Arm Angle",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Arm1 Power",
                   "_title": "Arm1 Power",
                   "_glyph": 148,
@@ -217,65 +193,18 @@
                   "_title": "Arm2 Power",
                   "_glyph": 148,
                   "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm Position",
+                  "_title": "Arm Position",
+                  "_glyph": 148,
+                  "_showGlyph": false
                 }
               ]
             }
           },
-          "8,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/SysIdVoltageCommand",
-              "_title": "SysIdVoltageCommand",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/SysIdTestType",
-              "_title": "SysIdTestType",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/SysIdTest",
-              "_title": "SysIdTest",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/SysIdRotate",
-              "_title": "SysIdRotate",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "7,2": {
+          "5,2": {
             "size": [
               1,
               1
@@ -288,7 +217,7 @@
               "_showGlyph": false
             }
           },
-          "6,2": {
+          "4,2": {
             "size": [
               1,
               1
@@ -301,7 +230,7 @@
               "_showGlyph": false
             }
           },
-          "8,2": {
+          "6,2": {
             "size": [
               1,
               1
@@ -310,6 +239,98 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/SAP new voltage",
               "_title": "SAP new voltage",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Pigeon 2 [19]",
+              "_title": "Pigeon 2 [19]",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "4,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm1 RPM",
+              "_title": "Arm1 RPM",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm2 RPM",
+              "_title": "Arm2 RPM",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Claw Info",
+              "_glyph": 143,
+              "_showGlyph": true,
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Claw Power",
+                  "_title": "Claw Power",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Claw Position",
+                  "_title": "Claw Position",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Claw State",
+                  "_title": "Claw State",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
+            }
+          },
+          "3,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Telescope Position",
+              "_title": "Telescope Position",
               "_glyph": 148,
               "_showGlyph": false
             }

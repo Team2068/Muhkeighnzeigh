@@ -15,9 +15,8 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ARM_2_MOTOR, MotorType.kBrushless);
 
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
-
     // NOTE: found values using http://reca.lc/arm
-    private final ArmFeedforward feedforward = new ArmFeedforward(0.01, 0.40, 0.26); // TODO: use SysId to calculate feedforwards
+    private final ArmFeedforward feedforward = new ArmFeedforward(0.01, 1.45, 0.63, 0.14); // TODO: use SysId to calculate feedforwards
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
@@ -27,6 +26,8 @@ public class ArmSubsystem extends SubsystemBase {
         
         arm1Motor.setOpenLoopRampRate(0.2);
         arm2Motor.setOpenLoopRampRate(0.2);
+
+        arm1Motor.setInverted(true);
     }
 
     public void setVoltage(double voltage) {
@@ -48,7 +49,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The absolute arm angle in degrees from 0-360 up positive.
      */
     public double getArmPosition() {
-        double deg = (-armEncoder.getAbsolutePosition() + ArmConstants.ARM_OFFSET) * 360;
+        double deg = (armEncoder.getAbsolutePosition() - 0.73) * 360;
         return (deg % 360) + (deg < 0 ? 360 : 0);
     }
 
@@ -59,6 +60,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Position", getArmPosition());
+        SmartDashboard.putNumber("Arm Abs Position", armEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Arm1 Power", arm1Motor.getBusVoltage());
         SmartDashboard.putNumber("Arm2 Power", arm2Motor.getBusVoltage());
         SmartDashboard.putNumber("Arm1 RPM", arm1Motor.get());

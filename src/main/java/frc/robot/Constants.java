@@ -13,6 +13,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -66,16 +67,17 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(109);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(114);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(277);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(50);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(134);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(360);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(210);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(306);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(138);
       }
+      SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
     }
   }
 

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -32,7 +33,7 @@ public class SetClawPosition extends CommandBase {
         SmartDashboard.putNumber("Claw FeedForwad", cffOutput);
         SmartDashboard.putNumber("Claw Voltage", newClawOutput);
 
-        clawSubsystem.setWristVoltage(newClawOutput);
+        clawSubsystem.setWristVoltage(MathUtil.clamp(newClawOutput, -12, 12));
         lastClawPosition = currentClawPosition;
     }
 

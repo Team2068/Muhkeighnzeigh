@@ -27,7 +27,7 @@ public class RobotContainer {
   final DriveSubsystem driveSubsystem = new DriveSubsystem();
   final ArmSubsystem armSubsystem = new ArmSubsystem();
   final ClawSubsystem clawSubsystem = new ClawSubsystem();
-  final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
+  //final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
   
   final CommandXboxController mechController = new CommandXboxController(1);
   final CommandXboxController driverController = new CommandXboxController(0);
@@ -44,10 +44,10 @@ public class RobotContainer {
  
   private void configureBindings() {
     // mechController.a().onTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
-    mechController.a().onTrue(new SetArmPosition(armSubsystem, 275));
+    mechController.a().onTrue(new SetArmPosition(armSubsystem, 0));
     mechController.b().onTrue(new SetArmPosition(armSubsystem, 180));
     mechController.x().onTrue(new InstantCommand(()->armSubsystem.set(1)));
-    mechController.y().onTrue(new InstantCommand(telescopeSubsystem::stopTelescope));
+    //smechController.y().onTrue(new InstantCommand(telescopeSubsystem::stopTelescope));
     mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
     mechController.rightTrigger().onTrue(new InstantCommand(()->clawSubsystem.setIntakeSpeed(0.5)));
@@ -61,7 +61,7 @@ public class RobotContainer {
     driverController.rightBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
-  }
+  } 
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(

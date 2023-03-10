@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -39,8 +40,8 @@ public class SetArmPosition extends CommandBase {
     SmartDashboard.putNumber("SAP PID", pidOutput);
     SmartDashboard.putNumber("SAP FF", ffOutput);
     SmartDashboard.putNumber("SAP Voltage", newOutput);
-
-    armSubsystem.setVoltage(newOutput);
+    
+    armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
     lastPosition = currentPosition;
   }
 
@@ -51,7 +52,7 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    // return controller.atSetpoint();
-    return false;
+    return controller.atSetpoint();
+    // return false;
   }
 }

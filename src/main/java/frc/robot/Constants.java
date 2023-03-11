@@ -53,8 +53,8 @@ public final class Constants {
     public static final int FRONT_RIGHT_ENCODER = 16;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 4;
-    public static final int BACK_LEFT_TURN_MOTOR = 5;
+    public static final int BACK_LEFT_DRIVE_MOTOR = 5;
+    public static final int BACK_LEFT_TURN_MOTOR = 4;
     public static final int BACK_LEFT_ENCODER = 18;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
@@ -68,9 +68,9 @@ public final class Constants {
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(114);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(277);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(97);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(134);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(205);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(360);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(210);

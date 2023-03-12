@@ -48,14 +48,14 @@ public class RobotContainer {
     // mechController.a().onTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
     mechController.a().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
     mechController.b().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-     mechController.x().onTrue(new Pickup2(false, armSubsystem, clawSubsystem));
+  //   mechController.x().onTrue(new Pickup2(false, armSubsystem, clawSubsystem));
    // mechController.x().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(0.5)));
     mechController.y().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)));
     mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
     mechController.rightTrigger().onTrue(new InstantCommand(clawSubsystem::closeClaw));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
-
+mechController.x().onTrue(new SetArmPosition(armSubsystem, 38));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));

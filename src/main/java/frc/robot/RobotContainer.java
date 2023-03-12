@@ -66,7 +66,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-      driveSubsystem.followPath(Paths.loop),
+      driveSubsystem.followPath(Paths.park),
       new AutonBalance(driveSubsystem));
   }
 

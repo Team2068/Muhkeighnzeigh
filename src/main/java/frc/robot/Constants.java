@@ -67,10 +67,10 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(114);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(97);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(177);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(99);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(205);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(180);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(360);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(210);
@@ -122,6 +122,7 @@ public final class Constants {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
+    public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
   }
 
   public static class RobotConstants {

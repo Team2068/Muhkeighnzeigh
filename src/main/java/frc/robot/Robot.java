@@ -21,7 +21,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   AddressableLED led;
+  //AddressableLED led2;
   AddressableLEDBuffer ledBuffer;
+  //AddressableLEDBuffer ledBuffer2;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,12 +34,19 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     led = new AddressableLED(0);
-    ledBuffer = new AddressableLEDBuffer(3000);
-    
+    //led2 = new AddressableLED(1);
+
+    ledBuffer = new AddressableLEDBuffer(4000);
+    //ledBuffer2 = new AddressableLEDBuffer(3000);
+
     led.setLength(ledBuffer.getLength());
+    //led2.setLength(ledBuffer2.getLength());
 
     led.setData(ledBuffer);
+    //led2.setData(ledBuffer2);
+
     led.start();
+    //led2.start();
 
     m_robotContainer = new RobotContainer();
   }
@@ -50,10 +59,6 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
 
-  private void rainbow() {
-    
-  }
-
   @Override
   public void robotPeriodic() {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
@@ -63,10 +68,15 @@ public class Robot extends TimedRobot {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       //gold ledBuffer.setRGB(i, 255, 215, 0);
       //light blue for some reason 
-      ledBuffer.setRGB(i, 255, 192, 203);
-      ledBuffer.setHSV(i, 350, 25, 100);
+      ledBuffer.setRGB(i, 255, 20, 147);     
+      //ledBuffer.setRGB(i, 255, 255, 0); 
+      //ledBuffer.setHSV(i, 350, 25, 100);
     }
+    // for (int i = 0; i < ledBuffer2.getLength(); i++) {
+    //   ledBuffer2.setRGB(i, 255, 105, 180);
+    // }
     led.setData(ledBuffer);
+    //led2.setData(ledBuffer2);
 
     CommandScheduler.getInstance().run();
   }

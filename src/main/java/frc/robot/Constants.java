@@ -110,6 +110,11 @@ public final class Constants {
     public static final String camName1 = "OV5647";
   }
 
+  public static class LEDConstants {
+    public static final int LED_PORT = 0;
+    public static final int LED_LENGTH = 3000;
+  }
+
   public static class GameConstants {
     //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final double[][] tagArray = {

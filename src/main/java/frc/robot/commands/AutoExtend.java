@@ -6,23 +6,28 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.Photonvision;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoExtend extends PIDCommand {
   /** Creates a new AutoExtend. */
-  public AutoExtend() {
+  public AutoExtend(Photonvision photonvision, TelescopeSubsystem telescope) {
     super(
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new PIDController(1, 0, 0),
         // This should return the measurement
-        () -> 0,
+        () -> telescope.telescopeMotor.getEncoder().getPosition(), 
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        () -> photonvision.distanceToTelescopePosition(),
         // This uses the output
         output -> {
           // Use the output here
+          if(output != photonvision.distanceToTelescopePosition()) {
+            telescope.extendTelescope();
+          }
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.

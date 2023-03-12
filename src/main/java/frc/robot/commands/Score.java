@@ -13,9 +13,9 @@ import frc.robot.subsystems.ClawSubsystem;
 public class Score extends SequentialCommandGroup {
   public Score(Boolean cone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
     addCommands(
-      new SetArmPosition(armSubsystem, 0), 
+      new SetArmPosition(armSubsystem, 36), 
       new InstantCommand(armSubsystem::stop),
-      new SetClawPosition(clawSubsystem, 0)
+      new SetClawPosition(clawSubsystem, 306)
     );
   }
 }

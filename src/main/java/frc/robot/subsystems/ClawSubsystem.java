@@ -80,6 +80,7 @@ public class ClawSubsystem extends SubsystemBase {
         if(Constants.getChassisConfiguration() == ChassisConfiguration.MAIN)
             SmartDashboard.putString("Claw State", (clawSolenoid.get() == Value.kReverse) ? "Open" : "Closed");
         SmartDashboard.putNumber("Claw Position", getClawPosition());
+        SmartDashboard.putNumber("Claw Abs Position", clawEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Claw Power", wristMotor.getBusVoltage());
     }
 }

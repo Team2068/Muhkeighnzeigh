@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.Pickup2;
+import frc.robot.commands.Score;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.subsystems.ArmSubsystem;
@@ -27,7 +29,7 @@ public class RobotContainer {
   final DriveSubsystem driveSubsystem = new DriveSubsystem();
   final ArmSubsystem armSubsystem = new ArmSubsystem();
   final ClawSubsystem clawSubsystem = new ClawSubsystem();
-  //final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
+  final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
   
   final CommandXboxController mechController = new CommandXboxController(1);
   final CommandXboxController driverController = new CommandXboxController(0);
@@ -44,28 +46,27 @@ public class RobotContainer {
  
   private void configureBindings() {
     // mechController.a().onTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
-    mechController.a().onTrue(new SetArmPosition(armSubsystem, 0));
-    mechController.b().onTrue(new SetArmPosition(armSubsystem, 180));
-    mechController.x().onTrue(new InstantCommand(()->armSubsystem.set(1)));
-    //smechController.y().onTrue(new InstantCommand(telescopeSubsystem::stopTelescope));
+    mechController.a().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+    mechController.b().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+     mechController.x().onTrue(new Pickup2(false, armSubsystem, clawSubsystem));
+   // mechController.x().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(0.5)));
+    mechController.y().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)));
     mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
-    mechController.rightTrigger().onTrue(new InstantCommand(()->clawSubsystem.setIntakeSpeed(0.5)));
-    mechController.rightBumper().onTrue(new InstantCommand(()->clawSubsystem.setIntakeSpeed(-0.5)));
-    
+    mechController.rightTrigger().onTrue(new InstantCommand(clawSubsystem::closeClaw));
+    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
+
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
-    driverController.leftBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
-    driverController.rightBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   } 
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-      driveSubsystem.followPath(Paths.loop),
+      driveSubsystem.followPath(Paths.park),
       new AutonBalance(driveSubsystem));
   }
 

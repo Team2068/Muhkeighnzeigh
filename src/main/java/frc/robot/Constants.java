@@ -72,10 +72,10 @@ public final class Constants {
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(134);
       } else {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(360);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(210);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(306);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(138);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(345);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(60);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
       }
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
     }

@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 
@@ -31,11 +32,13 @@ public class AutoExtend extends PIDCommand {
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+    addRequirements(photonvision);
+    addRequirements(telescope);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(getController().getPositionError()) < Constants.AimbotConstants.minimumAdjustment;
   }
 }

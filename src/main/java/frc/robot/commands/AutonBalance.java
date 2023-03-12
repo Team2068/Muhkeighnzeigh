@@ -41,7 +41,7 @@ public class AutonBalance extends SequentialCommandGroup {
     // Before we balance (the roll when the robot is flat) and make this our setpoint
     final double initialRoll = driveSubsystem.pigeon2.getRoll();
     addCommands(
-      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds(1, 0, 0)).withTimeout(3),
+      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds(2, 0, 0)).withTimeout(3),
       new Balance(driveSubsystem, initialRoll)
     );
   }

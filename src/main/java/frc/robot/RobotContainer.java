@@ -55,7 +55,7 @@ public class RobotContainer {
     mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
     mechController.rightTrigger().onTrue(new InstantCommand(clawSubsystem::closeClaw));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
-mechController.x().onTrue(new SetArmPosition(armSubsystem, 38));
+mechController.x().onTrue(new SetArmPosition(armSubsystem,0 ));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));

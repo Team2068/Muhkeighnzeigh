@@ -21,8 +21,8 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
 
-        arm1Motor.setIdleMode(IdleMode.kCoast);
-        arm2Motor.setIdleMode(IdleMode.kCoast);
+        arm1Motor.setIdleMode(IdleMode.kBrake);
+        arm2Motor.setIdleMode(IdleMode.kBrake);
         
         arm1Motor.setOpenLoopRampRate(0.2);
         arm2Motor.setOpenLoopRampRate(0.2);
@@ -39,7 +39,7 @@ public class ArmSubsystem extends SubsystemBase {
         arm1Motor.set(speed);
         arm2Motor.set(speed);
     }
-
+    
     public void stop() {
         arm1Motor.set(0);
         arm2Motor.set(0);

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class SetArmPosition extends CommandBase {
-  private final PIDController controller = new PIDController(1, 0, 0);
+  private final PIDController controller = new PIDController(1, 0, 1);
   private final ArmSubsystem armSubsystem;
   private double lastPosition = 0;
 
@@ -41,7 +41,7 @@ public class SetArmPosition extends CommandBase {
     SmartDashboard.putNumber("SAP FF", ffOutput);
     SmartDashboard.putNumber("SAP Voltage", newOutput);
     
-    armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
+    armSubsystem.setVoltage(MathUtil.clamp(-newOutput, -12, 12));
     lastPosition = currentPosition;
   }
 

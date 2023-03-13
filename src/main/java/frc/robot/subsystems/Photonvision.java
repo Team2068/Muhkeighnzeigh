@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GameConstants;
@@ -21,6 +22,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Photonvision extends SubsystemBase {
   PhotonCamera camera;
+  Servo mount = new Servo(PhotonConstants.SERVO_PORT);
 
   public Photonvision(String camName) {
     camera = new PhotonCamera(camName);
@@ -97,15 +99,19 @@ public class Photonvision extends SubsystemBase {
       return 0;
     }
     else if(camera.getPipelineIndex() == PhotonConstants.REFLECTIVE_TAPE_PIPELINE_INDEX) {
-      return PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.CAM_HEIGHT,
-              GameConstants.REFLTAPE_HEIGHT_LOWER, RobotConstants.CAM_ANGLE,
+      return PhotonUtils.calculateDistanceToTargetMeters(PhotonConstants.CAM_HEIGHT,
+              GameConstants.REFLTAPE_HEIGHT_LOWER, PhotonConstants.CAM_ANGLE,
               Units.degreesToRadians(data.targetPitch));
     }
     else {
-      return PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.CAM_HEIGHT,
-              GameConstants.APRILTAG_HEIGHT, RobotConstants.CAM_ANGLE,
+      return PhotonUtils.calculateDistanceToTargetMeters(PhotonConstants.CAM_HEIGHT,
+              GameConstants.APRILTAG_HEIGHT, PhotonConstants.CAM_ANGLE,
               Units.degreesToRadians(data.targetPitch));
     }
+  }
+
+  public void rotateMount() {
+    mount.setAngle((mount.getAngle() == 270) ? 90 : 270);
   }
 
   @Override

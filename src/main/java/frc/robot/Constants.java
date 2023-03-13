@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -101,14 +98,16 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    public static final double CAM_HEIGHT = 0.1524; //meters
-    public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
-    public static final String CAM_NAME = "OV5647";
+    
   }
 
   public static class PhotonConstants {
     public static final int REFLECTIVE_TAPE_PIPELINE_INDEX = 0;
     public static final int APRILTAG_PIPELINE_INDEX = 1;
+    public static final double CAM_HEIGHT = 0.1524; //meters
+    public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
+    public static final String CAM_NAME = "OV5647";
+    public static final int SERVO_PORT = 9; //change to actual port
   }
 
   public static class GameConstants {

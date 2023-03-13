@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.Paths;
-import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.PhotonConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.Aimbot;
 import frc.robot.commands.DefaultDriveCommand;
@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Photonvision photonvision = new Photonvision(RobotConstants.CAM_NAME);
+  private final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(0);
 

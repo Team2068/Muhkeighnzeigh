@@ -91,7 +91,7 @@ public final class Constants {
     public static void setOffsets() {
       if(getChassisConfiguration() == ChassisConfiguration.MAIN) {
         ARM_OFFSET = 0;
-        ARM_LIMIT = 0;
+        ARM_LIMIT = 0.4;
       } else {
         ARM_OFFSET = 0.176;
         ARM_LIMIT = 0.78;

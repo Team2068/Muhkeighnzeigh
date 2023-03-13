@@ -16,14 +16,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
     // NOTE: found values using http://reca.lc/arm
-    private final ArmFeedforward feedforward = new ArmFeedforward(0.01, 1.45, 0.63, 0.14); // TODO: use SysId to calculate feedforwards
+    private final ArmFeedforward feedforward = new ArmFeedforward(0, 4.1160, 50);
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
 
         arm1Motor.setIdleMode(IdleMode.kBrake);
         arm2Motor.setIdleMode(IdleMode.kBrake);
-        
+
         arm1Motor.setOpenLoopRampRate(0.2);
         arm2Motor.setOpenLoopRampRate(0.2);
 
@@ -41,7 +41,7 @@ public class ArmSubsystem extends SubsystemBase {
         arm1Motor.set(speed);
         arm2Motor.set(speed);
     }
-    
+
     public void stop() {
         arm1Motor.set(0);
         arm2Motor.set(0);
@@ -53,11 +53,11 @@ public class ArmSubsystem extends SubsystemBase {
     public double getArmPosition() {
         double abs = armEncoder.getAbsolutePosition();
         double deg = (abs - ArmConstants.ARM_OFFSET) * 360;
-        return (abs > ArmConstants.ARM_LIMIT && abs < 1) ? (deg - 360) : deg;
+        return -((abs > ArmConstants.ARM_LIMIT && abs < 1) ? (deg - 360) : deg);
     }
 
     public double calculateFeedforward(double positionRadians, double velocity) {
-        return feedforward.calculate(positionRadians, velocity);
+        return feedforward.calculate(positionRadians, 0);
     }
 
     @Override

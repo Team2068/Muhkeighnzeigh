@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class SetArmPosition extends CommandBase {
-  private final PIDController controller = new PIDController(1, 0, 1);
+  private final PIDController controller = new PIDController(0.07, 0, 0);
   private final ArmSubsystem armSubsystem;
   private double lastPosition = 0;
 
@@ -20,8 +20,7 @@ public class SetArmPosition extends CommandBase {
     addRequirements(armSubsystem);
 
     controller.setSetpoint(angleDegrees);
-    controller.setTolerance(5); // 5 degree tolerance
-    controller.enableContinuousInput(0, 360);
+    controller.setTolerance(0); // 5 degree tolerance
   } 
 
   @Override
@@ -35,24 +34,30 @@ public class SetArmPosition extends CommandBase {
     double pidOutput = controller.calculate(currentPosition);
     double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint),
         (Math.toRadians(currentPosition) - Math.toRadians(lastPosition)) / controller.getPeriod());
-    double newOutput = (pidOutput / 180 * 8) + ffOutput;
+    double newOutput = (pidOutput) + -ffOutput;
 
     SmartDashboard.putNumber("SAP PID", pidOutput);
     SmartDashboard.putNumber("SAP FF", ffOutput);
     SmartDashboard.putNumber("SAP Voltage", newOutput);
     
-    armSubsystem.setVoltage(MathUtil.clamp(-newOutput, -12, 12));
+    armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
     lastPosition = currentPosition;
   }
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("exiting!!!");
+    System.out.println("exiting!!!");
+    System.out.println("exiting!!!");
+    System.out.println("exiting!!!");
+    System.out.println("exiting!!!");
+    System.out.println("exiting!!!");
     armSubsystem.set(0);
   }
 
   @Override
   public boolean isFinished() {
-    return controller.atSetpoint();
-    // return false;
+    // return controller.atSetpoint();
+    return false;
   }
 }

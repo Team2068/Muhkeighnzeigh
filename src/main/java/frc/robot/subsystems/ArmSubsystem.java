@@ -28,6 +28,8 @@ public class ArmSubsystem extends SubsystemBase {
         arm2Motor.setOpenLoopRampRate(0.2);
 
         arm1Motor.setInverted(true);
+
+        ArmConstants.setOffsets();
     }
 
     public void setVoltage(double voltage) {
@@ -49,8 +51,9 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The absolute arm angle in degrees from 0-360 up positive.
      */
     public double getArmPosition() {
-        double deg = (armEncoder.getAbsolutePosition() - 0.73) * 360;
-        return (deg % 360) + (deg < 0 ? 360 : 0);
+        double abs = armEncoder.getAbsolutePosition();
+        double deg = (abs - ArmConstants.ARM_OFFSET) * 360;
+        return (abs > ArmConstants.ARM_LIMIT && abs < 1) ? (deg - 360) : deg;
     }
 
     public double calculateFeedforward(double positionRadians, double velocity) {

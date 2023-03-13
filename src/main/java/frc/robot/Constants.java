@@ -84,9 +84,19 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int ARM_1_MOTOR = 2;
     public static final int ARM_2_MOTOR = 3;
+    
+    public static double ARM_OFFSET;
+    public static double ARM_LIMIT;
 
-    public static final double ARM_SPEED = -.25;
-    public static final double ARM_OFFSET = 0.427;
+    public static void setOffsets() {
+      if(getChassisConfiguration() == ChassisConfiguration.MAIN) {
+        ARM_OFFSET = 0;
+        ARM_LIMIT = 0;
+      } else {
+        ARM_OFFSET = 0.176;
+        ARM_LIMIT = 0.78;
+      }
+    }
   }
 
   public static final class ClawConstants {

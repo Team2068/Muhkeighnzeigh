@@ -113,12 +113,6 @@ public class Photonvision extends SubsystemBase {
     }
   }
 
-  public double distanceToTelescopePosition () {
-    double m = 0.0;
-    double b = 0.0;
-    return (m * getDistance(camera.getLatestResult()) + b);
-  }
-
   @Override
   public void periodic() {
     if(camera.getLatestResult() == null)

@@ -10,6 +10,7 @@ import frc.robot.Constants.TelescopeConstants;
 
 public class TelescopeSubsystem extends SubsystemBase {
     public CANSparkMax telescopeMotor = new CANSparkMax(TelescopeConstants.TELESCOPE_MOTOR, MotorType.kBrushless);
+    Photonvision pv;
 
     public TelescopeSubsystem() {
         telescopeMotor.setIdleMode(IdleMode.kBrake);
@@ -34,6 +35,16 @@ public class TelescopeSubsystem extends SubsystemBase {
     public void stopTelescope() {
         telescopeMotor.set(0);
     }
+
+    public void autoExtend () {
+        double m = 0.0;
+        double b = 0.0;
+        double distanceToTelescopePosition = (m * pv.getDistance(pv.camera.getLatestResult()) + b);
+
+        while (telescopeMotor.getEncoder().getPosition() != distanceToTelescopePosition) {
+            extendTelescope();
+        }
+      } 
 
     @Override
     public void periodic(){

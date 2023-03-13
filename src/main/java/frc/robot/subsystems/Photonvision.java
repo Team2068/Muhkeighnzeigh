@@ -90,7 +90,6 @@ public class Photonvision extends SubsystemBase {
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
     return;
-    
   }
 
   public double getDistance(PhotonPipelineResult results) {
@@ -99,7 +98,7 @@ public class Photonvision extends SubsystemBase {
     }
     else if(camera.getPipelineIndex() == PhotonConstants.REFLECTIVE_TAPE_PIPELINE_INDEX) {
       return PhotonUtils.calculateDistanceToTargetMeters(RobotConstants.CAM_HEIGHT,
-              GameConstants.REFLTAPE_HEIGHT_UPPER, RobotConstants.CAM_ANGLE,
+              GameConstants.REFLTAPE_HEIGHT_LOWER, RobotConstants.CAM_ANGLE,
               Units.degreesToRadians(data.targetPitch));
     }
     else {

@@ -9,8 +9,6 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.Pickup2;
-import frc.robot.commands.Score;
-import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;

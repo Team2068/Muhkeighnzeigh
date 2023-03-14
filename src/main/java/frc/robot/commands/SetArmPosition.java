@@ -44,6 +44,11 @@ public class SetArmPosition extends CommandBase {
     lastPosition = currentPosition;
   }
 
+  public boolean isCloseEnough() {
+    System.out.println("Error: " + controller.getPositionError());
+    return Math.abs(controller.getPositionError()) < 20;
+  }
+
   @Override
   public void end(boolean interrupted) {
     System.out.println("exiting!!!");

@@ -72,8 +72,8 @@ public final class Constants {
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(180);
       } else {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(345);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(60);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
       }

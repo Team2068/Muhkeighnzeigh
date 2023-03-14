@@ -35,8 +35,20 @@ public class TelescopeSubsystem extends SubsystemBase {
         telescopeMotor.set(0);
     }
 
+    public void setVoltage(double voltage) {
+        telescopeMotor.setVoltage(voltage);
+    }
+
+    public double getPosition() {
+        return telescopeMotor.getEncoder().getPosition();
+    }
+
+    public void resetPosition() {
+        telescopeMotor.getEncoder().setPosition(0);
+    }
+
     @Override
-    public void periodic(){
-        SmartDashboard.putNumber("Telescope Position", telescopeMotor.getEncoder().getPosition());
+    public void periodic() {
+        SmartDashboard.putNumber("Telescope Position", getPosition());
     }
 }

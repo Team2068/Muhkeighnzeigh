@@ -18,9 +18,8 @@ import frc.robot.Constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax wristMotor = new CANSparkMax(ClawConstants.WRIST_MOTOR, MotorType.kBrushless);
-    private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
-    private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0, 0, 0); // FIXME: add feedforward
+    private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0.001, 0, 0);
     private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 8, 9);
     private final Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
@@ -29,10 +28,8 @@ public class ClawSubsystem extends SubsystemBase {
         clawEncoder.setDutyCycleRange(0, 1);
 
         wristMotor.setIdleMode(IdleMode.kBrake);
-        intakeMotor.setIdleMode(IdleMode.kCoast);
 
         wristMotor.setOpenLoopRampRate(.4);
-        intakeMotor.setOpenLoopRampRate(.4);
 
         compressor.enableDigital();
     }
@@ -45,25 +42,16 @@ public class ClawSubsystem extends SubsystemBase {
         wristMotor.set(speed);
     }
 
-    public void setIntakeSpeed(){
-        intakeMotor.set(ClawConstants.INTAKE_SPEED);
-    }
-
-    public void setIntakeSpeed(double speed) {
-        intakeMotor.set(speed);
-    }
-
     public void openClaw() {
-        clawSolenoid.set(Value.kForward);
+        clawSolenoid.set(Value.kReverse);
     }
 
     public void closeClaw() {
-        clawSolenoid.set(Value.kReverse);
+        clawSolenoid.set(Value.kForward);
     }
 
     public void stopClaw() {
         wristMotor.set(0);
-        intakeMotor.set(0);
     }
 
     public double getClawPosition() {
@@ -71,8 +59,8 @@ public class ClawSubsystem extends SubsystemBase {
         return (deg % 360) + (deg < 0 ? 360 : 0);
     }
 
-    public double calculateClawFeedforward(double positionRadians, double velocity) {
-        return clawFeedforward.calculate(positionRadians, velocity);
+    public double calculateClawFeedforward(double velocity) {
+        return clawFeedforward.calculate(velocity);
     }
 
     @Override

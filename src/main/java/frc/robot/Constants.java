@@ -129,7 +129,7 @@ public final class Constants {
     }
 
   public static class AimbotConstants {
-    public static final double kP = 1.0;
+    public static final double kP = 1.0; //try the kp ki kd values above
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double speed = 0.5;

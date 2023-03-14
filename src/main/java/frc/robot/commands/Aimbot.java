@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.PhotonConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 
@@ -16,6 +17,7 @@ import frc.robot.subsystems.Photonvision;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Aimbot extends PIDCommand {
   /** Creates a new Aimbot. */
+  DriveSubsystem driveSubsystem;
   public Aimbot(Photonvision photonvision, DriveSubsystem driveSubsystem) {
     super(
         // The controller that the command will use
@@ -23,13 +25,14 @@ public class Aimbot extends PIDCommand {
         // This should return the measurement
         () -> photonvision.data.targetYaw,
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        () -> ((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET : -PhotonConstants.AIMBOT_OFFSET),
         // This uses the output
         output -> {
           // Use the output here
           driveSubsystem.drive(new ChassisSpeeds(0, 0, output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND));
         });
     // Use addRequirements() here to declare subsystem dependencies.
+    this.driveSubsystem = driveSubsystem;
     addRequirements(driveSubsystem);
     addRequirements(photonvision);
   }
@@ -38,5 +41,10 @@ public class Aimbot extends PIDCommand {
   @Override
   public boolean isFinished() {
     return Math.abs(getController().getPositionError()) < Constants.AimbotConstants.minimumAdjustment;
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    driveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
   }
 }

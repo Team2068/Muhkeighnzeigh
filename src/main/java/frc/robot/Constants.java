@@ -32,32 +32,32 @@ public final class Constants {
 
     public static final int FRONT_LEFT_DRIVE_MOTOR = 6;
     public static final int FRONT_LEFT_TURN_MOTOR = 7;
-    public static final int FRONT_LEFT_ENCODER = 15;
+    public static final int FRONT_LEFT_ENCODER = 17;
     public static double FRONT_LEFT_ENCODER_OFFSET;
 
     public static final int FRONT_RIGHT_DRIVE_MOTOR = 8;
     public static final int FRONT_RIGHT_TURN_MOTOR = 9;
-    public static final int FRONT_RIGHT_ENCODER = 14;
+    public static final int FRONT_RIGHT_ENCODER = 16;
     public static double FRONT_RIGHT_ENCODER_OFFSET;
 
-    public static final int BACK_LEFT_DRIVE_MOTOR = 4;
-    public static final int BACK_LEFT_TURN_MOTOR = 5;
-    public static final int BACK_LEFT_ENCODER = 16;
+    public static final int BACK_LEFT_DRIVE_MOTOR = 5;
+    public static final int BACK_LEFT_TURN_MOTOR = 4;
+    public static final int BACK_LEFT_ENCODER = 18;
     public static double BACK_LEFT_ENCODER_OFFSET;
 
     public static final int BACK_RIGHT_DRIVE_MOTOR = 10;
     public static final int BACK_RIGHT_TURN_MOTOR = 11;
-    public static final int BACK_RIGHT_ENCODER =  13;
+    public static final int BACK_RIGHT_ENCODER =  15;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
-    public static final int PIGEON_ID = 21;
+    public static final int PIGEON_ID = 19;
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(344);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(315);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(293);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(177);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(99);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(270);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(148);
@@ -104,10 +104,11 @@ public final class Constants {
   public static class PhotonConstants {
     public static final int REFLECTIVE_TAPE_PIPELINE_INDEX = 0;
     public static final int APRILTAG_PIPELINE_INDEX = 1;
-    public static final double CAM_HEIGHT = 0.1524; //meters
+    public static final double CAM_HEIGHT = 0.1524; //replace with actual height of camera in meters
     public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final String CAM_NAME = "OV5647";
-    public static final int SERVO_PORT = 9; //change to actual port
+    public static final int SERVO_PORT = 6; //change to actual port
+    public static final double AIMBOT_OFFSET = -15.85;
   }
 
   public static class GameConstants {

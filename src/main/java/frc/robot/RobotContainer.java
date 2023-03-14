@@ -42,6 +42,7 @@ public class RobotContainer {
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
+    driverController.rightTrigger().whileTrue(new InstantCommand(() -> photonvision.rotateMount()));
   }
 
   public Command getAutonomousCommand() {

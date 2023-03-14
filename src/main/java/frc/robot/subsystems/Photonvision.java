@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.PhotonConstants;
-import frc.robot.Constants.RobotConstants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -52,11 +51,10 @@ public class Photonvision extends SubsystemBase {
       camera.setPipelineIndex(PhotonConstants.APRILTAG_PIPELINE_INDEX);
       camera.setLED(VisionLEDMode.kOff);
       System.out.println(camera.getLEDMode());
-    }
-    else if (camera.getPipelineIndex() == PhotonConstants.APRILTAG_PIPELINE_INDEX) {
+    } else if (camera.getPipelineIndex() == PhotonConstants.APRILTAG_PIPELINE_INDEX) {
       camera.setPipelineIndex(PhotonConstants.REFLECTIVE_TAPE_PIPELINE_INDEX);
       camera.setLED(VisionLEDMode.kOn);
-      //NetworkTableInstance.getDefault().getTable("photonvision").getEntry("ledMode").setInteger(0);
+      // NetworkTableInstance.getDefault().getTable("photonvision").getEntry("ledMode").setInteger(0);
       System.out.println(camera.getLEDMode());
     }
   }
@@ -84,11 +82,11 @@ public class Photonvision extends SubsystemBase {
     if (camera.getPipelineIndex() == PhotonConstants.APRILTAG_PIPELINE_INDEX) { // if target is an apriltag target
       tagData.targetId = bestTarget.getFiducialId();
       tagData.poseAmbiguity = bestTarget.getPoseAmbiguity();
-      tagData.tagPose2 = new Pose3d(
-                            GameConstants.TAG_ARRAY[tagData.targetId-1][0], 
-                            GameConstants.TAG_ARRAY[tagData.targetId-1][1], 
-                            GameConstants.TAG_ARRAY[tagData.targetId-1][2],
-                            new Rotation3d(0, 0, GameConstants.TAG_ARRAY[tagData.targetId-1][3]));
+      // tagData.tagPose2 = new Pose3d(
+      //     GameConstants.TAG_ARRAY[tagData.targetId - 1][0],
+      //     GameConstants.TAG_ARRAY[tagData.targetId - 1][1],
+      //     GameConstants.TAG_ARRAY[tagData.targetId - 1][2],
+      //     new Rotation3d(0, 0, GameConstants.TAG_ARRAY[tagData.targetId - 1][3]));
       tagData.alternateCameraToTarget = bestTarget.getAlternateCameraToTarget();
     }
     return;
@@ -97,33 +95,38 @@ public class Photonvision extends SubsystemBase {
   public double getDistance(PhotonPipelineResult results) {
     if (!results.hasTargets()) {
       return 0;
-    }
-    else if(camera.getPipelineIndex() == PhotonConstants.REFLECTIVE_TAPE_PIPELINE_INDEX) {
+    } else if (camera.getPipelineIndex() == PhotonConstants.REFLECTIVE_TAPE_PIPELINE_INDEX) {
       return PhotonUtils.calculateDistanceToTargetMeters(PhotonConstants.CAM_HEIGHT,
-              GameConstants.REFLTAPE_HEIGHT_LOWER, PhotonConstants.CAM_ANGLE,
-              Units.degreesToRadians(data.targetPitch));
-    }
-    else {
+          GameConstants.REFLTAPE_HEIGHT_LOWER, PhotonConstants.CAM_ANGLE,
+          Units.degreesToRadians(data.targetPitch));
+    } else {
       return PhotonUtils.calculateDistanceToTargetMeters(PhotonConstants.CAM_HEIGHT,
-              GameConstants.APRILTAG_HEIGHT, PhotonConstants.CAM_ANGLE,
-              Units.degreesToRadians(data.targetPitch));
+          GameConstants.APRILTAG_HEIGHT, PhotonConstants.CAM_ANGLE,
+          Units.degreesToRadians(data.targetPitch));
     }
   }
 
   public void rotateMount() {
-    mount.setAngle((mount.getAngle() == 270) ? 90 : 270);
+    mount.setAngle((mount.getAngle() == 40) ? 180 : 40);
+    //mount.set(((mount.getAngle()) / 360) == 0) ? 1 : 0);
+    //mount.set((mount.get() == 0) ? 1 : 0);
+  }
+
+  public boolean isFlipped () {
+    return mount.getAngle() == 180;
   }
 
   @Override
   public void periodic() {
-    if(camera.getLatestResult() == null)
+    if (camera.getLatestResult() == null)
       return;
-      if (!camera.getLatestResult().hasTargets())
-        return;
-      
+    if (!camera.getLatestResult().hasTargets())
+      return;
+
     updateData();
 
-    SmartDashboard.putNumber("distance", Units.metersToInches(getDistance(camera.getLatestResult())));
-    
+    //SmartDashboard.putNumber("distance", Units.metersToInches(getDistance(camera.getLatestResult())));
+    //System.out.println(mount.getAngle());
+    //System.out.println(mount.get());
   }
 }

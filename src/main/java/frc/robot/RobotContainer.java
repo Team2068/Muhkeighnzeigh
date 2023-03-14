@@ -57,8 +57,8 @@ public class RobotContainer {
     // mechController.x().onTrue(new Pickup2(false, armSubsystem, clawSubsystem));
     // mechController.x().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(0.5)));
     // mechController.y().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)));
-    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 175));
-    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 245));
+    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 155));
+    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 292));
     mechController.rightTrigger().onTrue(new InstantCommand(clawSubsystem::closeClaw));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
     mechController.x().onTrue(new SetArmPosition(armSubsystem,65));

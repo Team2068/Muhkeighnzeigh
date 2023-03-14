@@ -18,13 +18,26 @@
             ],
             "content": {
               "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ypr rotation",
+              "_title": "ypr rotation",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "1,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Pigeon rotation",
               "_title": "Pigeon rotation",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "2,3": {
+          "2,2": {
             "size": [
               1,
               1
@@ -101,15 +114,15 @@
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Odometry rotation",
-                  "_title": "Odometry rotation",
+                  "_source0": "network_table:///SmartDashboard/Y position",
+                  "_title": "Y position",
                   "_glyph": 148,
                   "_showGlyph": false
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Y position",
-                  "_title": "Y position",
+                  "_source0": "network_table:///SmartDashboard/Odometry rotation",
+                  "_title": "Odometry rotation",
                   "_glyph": 148,
                   "_showGlyph": false
                 }
@@ -142,7 +155,20 @@
               "_showGlyph": false
             }
           },
-          "8,0": {
+          "7,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Absolute Rotation",
+              "_title": "Arm Absolute Rotation",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
             "size": [
               2,
               2
@@ -174,36 +200,47 @@
                   "_title": "Arm Position",
                   "_glyph": 148,
                   "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/SAP FF",
-                  "_title": "SmartDashboard/SAP FF",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/SAP PID",
-                  "_title": "SmartDashboard/SAP PID",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/SAP Voltage",
-                  "_title": "SAP Voltage",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Arm Abs Position",
-                  "_title": "Arm Abs Position",
-                  "_glyph": 148,
-                  "_showGlyph": false
                 }
               ]
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/SAP FF",
+              "_title": "SmartDashboard/SAP FF",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/SAP PID",
+              "_title": "SmartDashboard/SAP PID",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/SAP new voltage",
+              "_title": "SAP new voltage",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           },
           "4,0": {
@@ -223,7 +260,33 @@
               "Visuals/Counter clockwise": false
             }
           },
-          "6,0": {
+          "4,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm1 RPM",
+              "_title": "Arm1 RPM",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm2 RPM",
+              "_title": "Arm2 RPM",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,0": {
             "size": [
               2,
               2
@@ -255,39 +318,11 @@
                   "_title": "Claw State",
                   "_glyph": 148,
                   "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Claw PID",
-                  "_title": "Claw PID",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Claw FeedForwad",
-                  "_title": "Claw FeedForwad",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Claw Voltage",
-                  "_title": "Claw Voltage",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Claw Abs Position",
-                  "_title": "Claw Abs Position",
-                  "_glyph": 148,
-                  "_showGlyph": false
                 }
               ]
             }
           },
-          "2,2": {
+          "3,2": {
             "size": [
               1,
               1
@@ -300,7 +335,7 @@
               "_showGlyph": false
             }
           },
-          "1,3": {
+          "8,2": {
             "size": [
               1,
               1
@@ -313,28 +348,80 @@
               "_showGlyph": false
             }
           },
-          "3,2": {
+          "9,2": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Arm1 RPM",
-              "_title": "Arm1 RPM",
+              "_source0": "network_table:///SmartDashboard/Arm Abs Position",
+              "_title": "Arm Abs Position",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "4,2": {
+          "2,3": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Arm2 RPM",
-              "_title": "Arm2 RPM",
+              "_source0": "network_table:///SmartDashboard/Claw Abs Position",
+              "_title": "Claw Abs Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/SAP Voltage",
+              "_title": "SAP Voltage",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Claw PID",
+              "_title": "Claw PID",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "7,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Claw FeedForwad",
+              "_title": "Claw FeedForwad",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Claw Voltage",
+              "_title": "Claw Voltage",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -636,9 +723,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.199999809265137,
-    "y": -7.199999809265137,
-    "width": 1550.4000244140625,
-    "height": 830.4000244140625
+    "x": -6.400000095367432,
+    "y": 1.600000023841858,
+    "width": 1547.199951171875,
+    "height": 828.7999877929688
   }
 }

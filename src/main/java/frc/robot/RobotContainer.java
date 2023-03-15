@@ -6,11 +6,21 @@ package frc.robot;
 
 import frc.robot.Constants.Paths;
 import frc.robot.Constants.PhotonConstants;
-import frc.robot.commands.AutonBalance;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.Aimbot;
+import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.Pickup2;
+import frc.robot.commands.Score;
+import frc.robot.commands.ScoreHigh;
+import frc.robot.commands.SetArmPosition;
+import frc.robot.commands.SetClawPosition;
+import frc.robot.commands.SetTelescopePosition;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
@@ -21,10 +31,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final CommandXboxController driverController = new CommandXboxController(0);
-
+  private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
+  final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  final ArmSubsystem armSubsystem = new ArmSubsystem();
+  final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
+  
+  final CommandXboxController mechController = new CommandXboxController(1);
+  final CommandXboxController driverController = new CommandXboxController(0);
+ 
   public RobotContainer() {
     configureBindings();
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
@@ -33,12 +48,26 @@ public class RobotContainer {
         () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
     PathPlannerServer.startServer(5811);
-  }
-
+  } 
+ 
   private void configureBindings() {
-    driverController.a().whileTrue(new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds())));
-    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    // mechController.a().onTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
+    mechController.a().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+    mechController.b().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+    mechController.povUp().onTrue(new SetTelescopePosition(telescopeSubsystem, 0));
+    mechController.povDown().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
+    mechController.povLeft().onTrue(new SetTelescopePosition(telescopeSubsystem, 50));
+    mechController.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
+    // mechController.x().onTrue(new Pickup2(false, armSubsystem, clawSubsystem));
+    // mechController.x().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(0.5)));
+    // mechController.y().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)));
+    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 155));
+    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 292));
+    mechController.rightTrigger().onTrue(new InstantCommand(clawSubsystem::closeClaw));
+    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
+    mechController.x().onTrue(new SetArmPosition(armSubsystem,65));
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
@@ -47,17 +76,14 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-      driveSubsystem.followPath(Paths.loop),
+      driveSubsystem.followPath(Paths.park),
       new AutonBalance(driveSubsystem));
   }
 
   private static double deadband(double value, double deadband) {
-    if (Math.abs(value) > deadband) {
-      if (value > 0.0)
-        return (value - deadband) / (1.0 - deadband);
-      return (value + deadband) / (1.0 - deadband);
-    }
-    return 0.0;
+    if (Math.abs(value) <= deadband) return 0.0;
+    deadband *= (value > 0.0) ? 1 : -1;
+    return (value + deadband) / (1.0 + deadband);
   }
 
   private static double modifyAxis(double value) {

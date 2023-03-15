@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -20,6 +21,15 @@ public final class Constants {
   public enum ChassisConfiguration {
     MAIN,
     PRACTICE
+  }
+
+  public final static class ControllerConstants {
+    public static final int RIGHT_TRIGGER = 3;
+    public static final int LEFT_TRIGGER = 2;
+    public static final double TRIGGER_ACTIVATION_THRESHOLD = .3;
+    public static final int POV_ANGLE_UP = 0;
+    public static final int POV_ANGLE_LEFT = 270;
+    public static final int POV_ANGLE_RIGHT = 90;
   }
 
   public static ChassisConfiguration getChassisConfiguration() {
@@ -47,7 +57,7 @@ public final class Constants {
 
     public static final int BACK_RIGHT_DRIVE_MOTOR = 10;
     public static final int BACK_RIGHT_TURN_MOTOR = 11;
-    public static final int BACK_RIGHT_ENCODER =  15;
+    public static final int BACK_RIGHT_ENCODER = 15;
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
     public static final int PIGEON_ID = 19;
@@ -59,42 +69,67 @@ public final class Constants {
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(180);
       } else {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(346);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(148);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(230);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(138);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
+      }
+      SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
+    }
+  }
+
+  public static final class ArmConstants {
+    public static final int ARM_1_MOTOR = 2;
+    public static final int ARM_2_MOTOR = 3;
+    
+    public static double ARM_OFFSET;
+    public static double ARM_LIMIT;
+
+    public static void setOffsets() {
+      if(getChassisConfiguration() == ChassisConfiguration.MAIN) {
+        ARM_OFFSET = 0;
+        ARM_LIMIT = 0.4;
+      } else {
+        ARM_OFFSET = 0.176;
+        ARM_LIMIT = 0.78;
       }
     }
   }
 
-  public static final class ArmConstants{
-    public static final int ARM_1_MOTOR = 2;
-    public static final int ARM_2_MOTOR = 3;
-  }
+  public static final class ClawConstants {
+    public static final int WRIST_MOTOR = 13;
+    public static final int INTAKE_MOTOR = 14;
 
-  public static final class ClawConstants{
-    public static final int CLAW_MOTOR = 17;
-    public static final int INTAKE_MOTOR = 18;
+    public static final double WRIST_OFFSET = 0;
+    public static final double INTAKE_SPEED = .75;
+    public static final double WRIST_SPEED = .5;
   }
 
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 0.2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.2;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2*Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2 * Math.PI;
 
     public static final double kPXController = 2;
     public static final double kPYController = 2;
     public static final double kPThetaController = 2.5;
 
     // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1, 1);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
+        1);
+  }
+
+  public static final class TelescopeConstants {
+    public static final int TELESCOPE_MOTOR = 12;
+    public static final double TELESCOPE_SPEED = 0.5;
   }
 
   public static class Paths {
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
+    public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
   }
 
   public static class RobotConstants {

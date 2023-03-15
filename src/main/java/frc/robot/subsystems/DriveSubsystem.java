@@ -238,7 +238,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         double[] ypr = new double[3];
         pigeon2.getYawPitchRoll(ypr);
-        SmartDashboard.putNumber("ypr rotation", ypr[0]);
         SmartDashboard.putNumber("Odometry rotation", getGyroscopeRotation().getDegrees());
         SmartDashboard.putNumber("Pigeon rotation", pigeon2.getYaw());
         SmartDashboard.putNumber("Pigeon Pitch", pigeon2.getPitch());

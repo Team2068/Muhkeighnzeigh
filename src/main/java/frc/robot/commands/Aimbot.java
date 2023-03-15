@@ -29,7 +29,7 @@ public class Aimbot extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          driveSubsystem.drive(new ChassisSpeeds(0, 0, output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND));
+          driveSubsystem.drive(new ChassisSpeeds(0, output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
         });
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveSubsystem = driveSubsystem;

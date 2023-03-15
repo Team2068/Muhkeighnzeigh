@@ -64,10 +64,10 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(177);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(123);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(99);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(180);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(28);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
@@ -103,6 +103,10 @@ public final class Constants {
     public static final double WRIST_OFFSET = 0;
     public static final double INTAKE_SPEED = .75;
     public static final double WRIST_SPEED = .5;
+
+    public static final double INTAKE_POSITION = 280;
+    public static final double FLAT_POSITION = 155;
+    public static final double CARRY_POSITION = 292;
   }
 
   public static final class AutoConstants {
@@ -123,6 +127,9 @@ public final class Constants {
   public static final class TelescopeConstants {
     public static final int TELESCOPE_MOTOR = 12;
     public static final double TELESCOPE_SPEED = 0.5;
+
+    public static final double HIGH_POSITION = 85;
+    public static final double LOW_POSITION = 10;
   }
 
   public static class Paths {
@@ -130,10 +137,6 @@ public final class Constants {
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
-  }
-
-  public static class RobotConstants {
-    
   }
 
   public static class PhotonConstants {

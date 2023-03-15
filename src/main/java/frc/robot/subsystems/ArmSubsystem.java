@@ -16,7 +16,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
     // NOTE: found values using http://reca.lc/arm
-    private final ArmFeedforward feedforward = new ArmFeedforward(0, 4.1160, 50);
+    private final ArmFeedforward feedforward = new ArmFeedforward(0, 3.5, 50);
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);

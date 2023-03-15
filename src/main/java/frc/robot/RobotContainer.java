@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
 import frc.robot.Constants.PhotonConstants;
-import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.Aimbot;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
@@ -25,13 +27,14 @@ import frc.robot.subsystems.TelescopeSubsystem;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Photonvision photonvision = new Photonvision(RobotConstants.camName1);
+  private final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
   final DriveSubsystem driveSubsystem = new DriveSubsystem();
   final ArmSubsystem armSubsystem = new ArmSubsystem();
   final ClawSubsystem clawSubsystem = new ClawSubsystem();
@@ -46,26 +49,27 @@ public class RobotContainer {
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-
-    PathPlannerServer.startServer(5811);
+      SmartDashboard.putData(new InstantCommand(photonvision::rotateMount));
   } 
  
   private void configureBindings() {
-    // mechController.a().onTrue(new InstantCommand(()->clawSubsystem.setWristSpeed(-.5)));
-    mechController.a().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    mechController.b().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).onFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    mechController.povUp().onTrue(new SetTelescopePosition(telescopeSubsystem, 0));
-    mechController.povDown().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
-    mechController.povLeft().onTrue(new SetTelescopePosition(telescopeSubsystem, 50));
-    mechController.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
-    // mechController.x().onTrue(new Pickup2(false, armSubsystem, clawSubsystem));
-    // mechController.x().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(0.5)));
-    // mechController.y().onTrue(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)));
-    mechController.leftTrigger().onTrue(new SetClawPosition(clawSubsystem, 155));
-    mechController.leftBumper().onTrue(new SetClawPosition(clawSubsystem, 292));
-    mechController.rightTrigger().onTrue(new InstantCommand(clawSubsystem::closeClaw));
+   SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
+
+    mechController.x().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.FLAT_POSITION));
+    mechController.a().onTrue(new InstantCommand(armCommand::cancel));
+    mechController.b().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION));
+    mechController.y().onTrue(armCommand);
+
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
-    mechController.x().onTrue(new SetArmPosition(armSubsystem,65));
+    mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, TelescopeConstants.HIGH_POSITION));
+
+    mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
+    mechController.leftTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, TelescopeConstants.LOW_POSITION));
+
+    mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
+    mechController.povDown().onTrue(new SetTelescopePosition(telescopeSubsystem, 0));
+    mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));
+    
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));

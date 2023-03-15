@@ -44,6 +44,14 @@ public class SetArmPosition extends CommandBase {
     lastPosition = currentPosition;
   }
 
+  public void updateSetpoint(double angleDegrees) {
+    controller.setSetpoint(angleDegrees);
+  }
+
+  public void flipPosition() {
+    controller.setSetpoint(-controller.getSetpoint());
+  }
+
   public boolean isCloseEnough() {
     System.out.println("Error: " + controller.getPositionError());
     return Math.abs(controller.getPositionError()) < 20;

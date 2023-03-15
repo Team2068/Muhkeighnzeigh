@@ -55,8 +55,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public double getClawPosition() {
-        double deg = (clawEncoder.getAbsolutePosition() + ClawConstants.WRIST_OFFSET) * 360;
-        return (deg % 360) + (deg < 0 ? 360 : 0);
+        return (clawEncoder.getAbsolutePosition() + ClawConstants.WRIST_OFFSET) * 360;
     }
 
     public double calculateClawFeedforward(double velocity) {

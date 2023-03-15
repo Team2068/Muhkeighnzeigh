@@ -24,9 +24,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 
-import com.pathplanner.lib.server.PathPlannerServer;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -61,14 +58,15 @@ public class RobotContainer {
     mechController.y().onTrue(armCommand);
 
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
-    mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, TelescopeConstants.HIGH_POSITION));
+    mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION));
 
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
-    mechController.leftTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, TelescopeConstants.LOW_POSITION));
+    mechController.leftTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION));
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
-    mechController.povDown().onTrue(new SetTelescopePosition(telescopeSubsystem, 0));
+    mechController.povDown().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0));
     mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));
+    mechController.rightStick().onTrue(new InstantCommand(armCommand::flipPosition));
     
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));

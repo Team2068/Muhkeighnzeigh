@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
 
 public class SetClawPosition extends CommandBase {
-    private final PIDController clawController = new PIDController(0.35, 1, 0); // old kp 0.4
+    private final PIDController clawController = new PIDController(0.55, 0, 0); // old kp 0.4
     private final ClawSubsystem clawSubsystem;
     private double lastClawPosition = 0;
 
@@ -16,7 +16,6 @@ public class SetClawPosition extends CommandBase {
         addRequirements(clawSubsystem);
         clawController.setSetpoint(angleDegrees);
         clawController.setTolerance(1);
-        clawController.enableContinuousInput(0, 360);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class SetClawPosition extends CommandBase {
         double velocity = (clawController.getSetpoint() - lastClawPosition) / clawController.getPeriod();
 
         double cffOutput = clawSubsystem.calculateClawFeedforward(velocity);
-        double newClawOutput = (clawPidOutput / 180 * 8) - cffOutput;
+        double newClawOutput = (-clawPidOutput / 180 * 8) - cffOutput;
         SmartDashboard.putNumber("Claw PID", clawPidOutput);
         SmartDashboard.putNumber("Claw FeedForwad", cffOutput);
         SmartDashboard.putNumber("Claw Voltage", newClawOutput);

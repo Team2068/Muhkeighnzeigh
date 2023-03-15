@@ -64,10 +64,10 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(123);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(89);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(99);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(28);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(167);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(11);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
@@ -100,13 +100,13 @@ public final class Constants {
     public static final int WRIST_MOTOR = 13;
     public static final int INTAKE_MOTOR = 14;
 
-    public static final double WRIST_OFFSET = 0;
+    public static final double WRIST_OFFSET = -0.06;
     public static final double INTAKE_SPEED = .75;
     public static final double WRIST_SPEED = .5;
 
-    public static final double INTAKE_POSITION = 280;
-    public static final double FLAT_POSITION = 155;
-    public static final double CARRY_POSITION = 292;
+    public static final double INTAKE_POSITION = 75;
+    public static final double FLAT_POSITION = 90;
+    public static final double CARRY_POSITION = 175;
   }
 
   public static final class AutoConstants {

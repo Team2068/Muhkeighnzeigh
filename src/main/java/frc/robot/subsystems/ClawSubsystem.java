@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -55,7 +56,9 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public double getClawPosition() {
-        return (clawEncoder.getAbsolutePosition() + ClawConstants.WRIST_OFFSET) * 360;
+        double abs = clawEncoder.getAbsolutePosition();
+        double deg = (abs - ClawConstants.WRIST_OFFSET) * 360;
+        return -((abs > 0.1 && abs < 1) ? (deg - 360) : deg);
     }
 
     public double calculateClawFeedforward(double velocity) {

@@ -14,16 +14,16 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 
-public class ScoreHigh extends SequentialCommandGroup {
-  public ScoreHigh(ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem, ClawSubsystem clawSubsystem) {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 70
+public class ScoreLow extends SequentialCommandGroup {
+  public ScoreLow(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
+    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75
     );
     addCommands(
       new ParallelCommandGroup(
         armCommand,
         new SequentialCommandGroup(
           new WaitCommand(2),
-          new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
+          new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION),
           new SetClawPosition(clawSubsystem, ClawConstants.FLAT_POSITION),
           new WaitCommand(1),
           new InstantCommand(clawSubsystem::openClaw)

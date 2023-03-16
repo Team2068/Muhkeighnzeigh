@@ -66,7 +66,5 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm Abs Position", armEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Arm1 Power", arm1Motor.getBusVoltage());
         SmartDashboard.putNumber("Arm2 Power", arm2Motor.getBusVoltage());
-        SmartDashboard.putNumber("Arm1 RPM", arm1Motor.get());
-        SmartDashboard.putNumber("Arm2 RPM", arm2Motor.get());
     }
 }

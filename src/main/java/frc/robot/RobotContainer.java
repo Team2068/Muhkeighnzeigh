@@ -13,7 +13,7 @@ import frc.robot.commands.Aimbot;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.Pickup2;
-import frc.robot.commands.Score;
+import frc.robot.commands.ScoreLow;
 import frc.robot.commands.ScoreHigh;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
@@ -50,30 +50,34 @@ public class RobotContainer {
   } 
  
   private void configureBindings() {
-   SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
+    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
 
     mechController.x().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.FLAT_POSITION));
     mechController.a().onTrue(new InstantCommand(armCommand::cancel));
     mechController.b().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION));
     mechController.y().onTrue(armCommand);
-
+   
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
     mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION));
+    // mechController.rightTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+
 
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
-    mechController.leftTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION));
+    mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem));
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
-    mechController.povDown().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0));
-    mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));
-    mechController.rightStick().onTrue(new InstantCommand(armCommand::flipPosition));
-    
+    mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+    mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));    
+    // mechControQller.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
+    mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
+
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
-    driverController.rightTrigger().whileTrue(new InstantCommand(() -> photonvision.rotateMount()));
+    // driverController.rightTrigger().whileTrue(new InstantCommand(() -> photonvision.rotateMount()));
   }
 
   public Command getAutonomousCommand() {
@@ -83,6 +87,7 @@ public class RobotContainer {
   }
 
   private static double deadband(double value, double deadband) {
+
     if (Math.abs(value) <= deadband) return 0.0;
     deadband *= (value > 0.0) ? 1 : -1;
     return (value + deadband) / (1.0 + deadband);

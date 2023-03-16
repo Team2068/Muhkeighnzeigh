@@ -64,10 +64,10 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(89);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(99);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(167);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(11);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(14);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(98);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(162);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(328);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
@@ -128,7 +128,7 @@ public final class Constants {
     public static final int TELESCOPE_MOTOR = 12;
     public static final double TELESCOPE_SPEED = 0.5;
 
-    public static final double HIGH_POSITION = 85;
+    public static final double HIGH_POSITION = 90;
     public static final double LOW_POSITION = 10;
   }
 
@@ -150,7 +150,6 @@ public final class Constants {
   }
 
   public static class GameConstants {
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
     public static final double[][] TAG_ARRAY = {
       {1551.35, 107.16, 46.27, 180.0}, 
       {1551.35, 274.80, 46.27, 180.0}, 
@@ -163,8 +162,7 @@ public final class Constants {
     public static final double APRILTAG_HEIGHT = Units.inchesToMeters(17.5); // CM
     public static final double REFLTAPE_HEIGHT_LOWER = 0.6096; //meters
     public static final double REFLTAPE_HEIGHT_UPPER = 1.0668; //meters
-    //public static final HashMap<Integer, Double[]> tagMap = new HashMap<Integer, Double[]>(8);
-    }
+  }
 
   public static class AimbotConstants {
     public static final double kP = 1.0; //try the kp ki kd values above

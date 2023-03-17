@@ -57,6 +57,7 @@ public class DriveSubsystem extends SubsystemBase {
     private ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
     private boolean fieldOriented = false;
+    private boolean slowMode = false;
     private Pose2d pose;
 
     public DriveSubsystem() {
@@ -176,7 +177,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] states) {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-
         frontLeftModule.set((states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
                 states[0].angle.getRadians());
         frontRightModule.set((states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
@@ -191,13 +191,20 @@ public class DriveSubsystem extends SubsystemBase {
         return fieldOriented;
     }
 
+    public boolean isSlowMode() {
+        return slowMode;
+    }
+
     public void toggleFieldOriented() {
         fieldOriented = !fieldOriented;
     }
 
+    public void toggleSlowMode() {
+        slowMode = !slowMode;
+    }
+
     public void maxSpeed() {
         MAX_VOLTAGE = 12;
-
     }
 
     public void normalSpeed() {
@@ -238,13 +245,13 @@ public class DriveSubsystem extends SubsystemBase {
 
         double[] ypr = new double[3];
         pigeon2.getYawPitchRoll(ypr);
-        SmartDashboard.putNumber("ypr rotation", ypr[0]);
         SmartDashboard.putNumber("Odometry rotation", getGyroscopeRotation().getDegrees());
-        SmartDashboard.putNumber("Pigeon rotation", pigeon2.getYaw());
+        SmartDashboard.putNumber("Pigeon Yaw", pigeon2.getYaw());
         SmartDashboard.putNumber("Pigeon Pitch", pigeon2.getPitch());
         SmartDashboard.putNumber("Pigeon Roll", pigeon2.getRoll());
 
         SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
+        SmartDashboard.putString("Drive Speed", slowMode ? "Slow" : "Normal");
     }
 
     public ChassisSpeeds getChassisSpeeds() {

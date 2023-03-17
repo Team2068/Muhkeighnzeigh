@@ -1,0 +1,17 @@
+x: flat
+a: release arm
+b: carry position
+y: lift arm
+
+r bumper: open claw
+r trigger: extend high
+
+l bumper: close claw
+l trigger: extend low
+
+dpad up: zero telescope encoder
+dpad left: 
+dpad right:
+dpad down: retract
+
+left joy down: flip other side

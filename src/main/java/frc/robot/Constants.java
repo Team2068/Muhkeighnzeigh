@@ -64,10 +64,10 @@ public final class Constants {
 
     public static final void setOffsets() {
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(14);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(4);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(98);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(162);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(328);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(165);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(281);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
@@ -137,6 +137,7 @@ public final class Constants {
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
+    public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 0.75)); 
   }
 
   public static class PhotonConstants {

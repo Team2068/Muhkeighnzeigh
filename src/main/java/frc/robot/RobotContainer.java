@@ -23,10 +23,11 @@ import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -40,14 +41,30 @@ public class RobotContainer {
   final CommandXboxController mechController = new CommandXboxController(1);
   final CommandXboxController driverController = new CommandXboxController(0);
  
+  SendableChooser<Command> autonomousSelector = new SendableChooser<>();
+
   public RobotContainer() {
     configureBindings();
+    configureAutonomous();
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
       SmartDashboard.putData(new InstantCommand(photonvision::rotateMount));
   } 
+
+  private void configureAutonomous() {
+    autonomousSelector.setDefaultOption("Drive to side + Park", new SequentialCommandGroup(
+      driveSubsystem.followPath(Paths.park),
+      new AutonBalance(driveSubsystem)));
+    autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem));
+    autonomousSelector.addOption("Leave Community", driveSubsystem.followPath(Paths.leaveCommunity));
+    autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
+      new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+      new WaitCommand(1),
+      new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
+      driveSubsystem.followPath(Paths.leaveCommunity)));
+  }
  
   private void configureBindings() {
     SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
@@ -61,15 +78,14 @@ public class RobotContainer {
     mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION));
     // mechController.rightTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
-
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
     mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem));
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
     mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));    
-    // mechControQller.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
     mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
+    // mechControQller.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
 
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
@@ -81,9 +97,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-      driveSubsystem.followPath(Paths.park),
-      new AutonBalance(driveSubsystem));
+    return autonomousSelector.getSelected();
   }
 
   private static double deadband(double value, double deadband) {

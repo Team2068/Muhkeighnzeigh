@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -18,6 +20,10 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  AddressableLED led;
+  //AddressableLED led2;
+  AddressableLEDBuffer ledBuffer;
+  //AddressableLEDBuffer ledBuffer2;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -27,6 +33,21 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    led = new AddressableLED(0);
+    //led2 = new AddressableLED(1);
+
+    ledBuffer = new AddressableLEDBuffer(4000);
+    //ledBuffer2 = new AddressableLEDBuffer(3000);
+
+    led.setLength(ledBuffer.getLength());
+    //led2.setLength(ledBuffer2.getLength());
+
+    led.setData(ledBuffer);
+    //led2.setData(ledBuffer2);
+
+    led.start();
+    //led2.start();
+
     m_robotContainer = new RobotContainer();
   }
 
@@ -37,12 +58,26 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
+
   @Override
   public void robotPeriodic() {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    for (int i = 0; i < ledBuffer.getLength(); i++) {
+      //gold ledBuffer.setRGB(i, 255, 215, 0);
+      //light blue for some reason 
+      ledBuffer.setRGB(i, 255, 20, 147);     
+      //ledBuffer.setRGB(i, 255, 255, 0); 
+      //ledBuffer.setHSV(i, 350, 25, 100);
+    }
+    // for (int i = 0; i < ledBuffer2.getLength(); i++) {
+    //   ledBuffer2.setRGB(i, 255, 105, 180);
+    // }
+    led.setData(ledBuffer);
+    //led2.setData(ledBuffer2);
+
     CommandScheduler.getInstance().run();
   }
 

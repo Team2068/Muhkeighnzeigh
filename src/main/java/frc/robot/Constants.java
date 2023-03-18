@@ -150,6 +150,11 @@ public final class Constants {
     public static final double AIMBOT_OFFSET = -15.85;
   }
 
+  public static class LEDConstants {
+    public static final int LED_PORT = 0;
+    public static final int LED_LENGTH = 3000;
+  }
+
   public static class GameConstants {
     public static final double[][] TAG_ARRAY = {
       {1551.35, 107.16, 46.27, 180.0}, 

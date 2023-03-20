@@ -7,6 +7,10 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -14,6 +18,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.DriveSubsystem;
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -65,10 +70,10 @@ public final class Constants {
 
     public static final int PIGEON_ID = 19;
 
-    public static final void setOffsets() {
+    public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(177);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(99);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(0);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(0);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(163);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(180);
       } else {
@@ -77,6 +82,16 @@ public final class Constants {
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
       }
+
+      int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
+      double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
+      for (int i = 0; i < arr.length; i++){
+        CANCoder coder = new CANCoder(i);
+        coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        coder.configMagnetOffset(offsets[i]);
+        coder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+      }
+
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
     }
   }

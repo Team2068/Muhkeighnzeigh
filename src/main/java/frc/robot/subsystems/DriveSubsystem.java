@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 5;
+    public static double MAX_VOLTAGE = 9;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -111,6 +111,13 @@ public class DriveSubsystem extends SubsystemBase {
         frontRightModule.resetDrivePosition();
         backLeftModule.resetDrivePosition();
         backRightModule.resetDrivePosition();
+    }
+
+    public void syncEncoders() {
+        frontLeftModule.resetSteerPosition();
+        frontRightModule.resetSteerPosition();
+        backLeftModule.resetSteerPosition();
+        backRightModule.resetSteerPosition();
     }
 
     public void zeroGyro() {

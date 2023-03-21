@@ -8,7 +8,7 @@ import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.Pickup2;
-import frc.robot.commands.Score;
+// import frc.robot.commands.Score?;
 import frc.robot.commands.ScoreHigh;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
@@ -65,6 +65,7 @@ public class RobotContainer {
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
   } 
@@ -85,5 +86,9 @@ public class RobotContainer {
     value = deadband(value, 0.05); // Deadband
     value = Math.copySign(value * value, value); // Square the axis
     return value;
+  }
+
+  public void syncEncodersDisabled() {
+    driveSubsystem.syncEncoders();
   }
 }

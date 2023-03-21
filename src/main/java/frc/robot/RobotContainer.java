@@ -9,6 +9,7 @@ import frc.robot.Constants.Paths;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.ScoreHigh;
 import frc.robot.commands.ScoreLow;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetTelescopePosition;
@@ -16,6 +17,9 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,36 +44,34 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
     configureAutonomous();
-    initEventMap(clawSubsystem);
+    initEventMap();
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
       // SmartDashboard.putData(new InstantCommand(photonvision::rotateMount));
       SmartDashboard.putData("Auto Selector", autonomousSelector);
+      PathPlannerServer.startServer(5811);
   } 
 
   private void configureAutonomous() {
     autonomousSelector.setDefaultOption("Drive to side + Park", new SequentialCommandGroup(
       driveSubsystem.followPath(Paths.park),
-      new AutonBalance(driveSubsystem)));
-    autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem));
+      new AutonBalance(driveSubsystem, false)));
+    autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem, false));
     autonomousSelector.addOption("Leave Community", driveSubsystem.followPath(Paths.leaveCommunity));
     autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
       new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
       new WaitCommand(1),
       new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
       driveSubsystem.followPath(Paths.leaveCommunity)));
-    autonomousSelector.addOption("Door Dash", driveSubsystem.followPathWithEvents(Paths.picking));
+    autonomousSelector.addOption("Door Dash", driveSubsystem.followPathWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
   }
 
-  public void initEventMap(ClawSubsystem claw){
-    Paths.eventMap.put("Pickup", new InstantCommand(claw::closeClaw)); // TODO: replace null /w the command
-    Paths.eventMap.put("Score High", null);
-    Paths.eventMap.put("", null);
-    
-    Paths.eventMap.put("Score Cube Mid", null);
-    Paths.eventMap.put("Score Cone Mid", null);
+  public void initEventMap(){
+    Paths.eventMap.put("Pickup", new InstantCommand(clawSubsystem::closeClaw)); // TODO: replace null /w the command
+    Paths.eventMap.put("Score High", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
+    Paths.eventMap.put("Score Low", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
   }
  
   private void configureBindings() {
@@ -116,7 +118,7 @@ public class RobotContainer {
   }
 
   private static double modifyAxis(double value) {
-    value = deadband(value, 0.05); // Deadband
+    value = deadband(value, 0.1); // Deadband
     value = Math.copySign(value * value, value); // Square the axis
     return value;
   }

@@ -36,12 +36,12 @@ public class AutonBalance extends SequentialCommandGroup {
     }
   }
 
-  public AutonBalance(DriveSubsystem driveSubsystem) {
+  public AutonBalance(DriveSubsystem driveSubsystem, boolean reversed) {
     // Since we cannot zero the ROLL of the gyro, take the initial roll
     // Before we balance (the roll when the robot is flat) and make this our setpoint
     final double initialRoll = driveSubsystem.pigeon2.getRoll();
     addCommands(
-      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds(2, 0, 0)).withTimeout(3),
+      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds((reversed) ? -1.5 : 1, 0, 0)).withTimeout(3),
       new Balance(driveSubsystem, initialRoll)
     );
   }

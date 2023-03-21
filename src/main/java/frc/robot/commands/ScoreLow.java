@@ -28,7 +28,7 @@ public class ScoreLow extends SequentialCommandGroup {
           new WaitCommand(1),
           new InstantCommand(clawSubsystem::openClaw)
         )
-      ).deadlineWith(new WaitCommand(6))
+      ).deadlineWith(new WaitCommand(4))
     );
   }
 }

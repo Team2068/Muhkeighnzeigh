@@ -60,6 +60,7 @@ public class RobotContainer {
       new WaitCommand(1),
       new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
       driveSubsystem.followPath(Paths.leaveCommunity)));
+    autonomousSelector.addOption("Door Dash", driveSubsystem.followPathWithEvents(Paths.picking));
   }
 
   public void initEventMap(ClawSubsystem claw){

@@ -157,6 +157,7 @@ public final class Constants {
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
     public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 0.75)); 
+    public static final PathPlannerTrajectory picking = PathPlanner.loadPath("(Scenario 0) pickup and go", new PathConstraints(2, 0.75)); 
   }
 
   public static class PhotonConstants {

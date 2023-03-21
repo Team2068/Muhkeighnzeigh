@@ -4,24 +4,17 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
-import frc.robot.Constants.PhotonConstants;
 import frc.robot.Constants.TelescopeConstants;
-import frc.robot.commands.Aimbot;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.Pickup2;
 import frc.robot.commands.ScoreLow;
-import frc.robot.commands.ScoreHigh;
 import frc.robot.commands.SetArmPosition;
-import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;

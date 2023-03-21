@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.AutoConstants;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Paths;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -28,8 +31,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 5;
+    public static double MAX_VOLTAGE = 9;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -59,6 +66,14 @@ public class DriveSubsystem extends SubsystemBase {
     private boolean fieldOriented = false;
     private boolean slowMode = false;
     private Pose2d pose;
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+        this::getPose, 
+        this::resetOdometry, 
+        new PIDConstants(AutoConstants.kPXController, 0, 0.01),
+        new PIDConstants(AutoConstants.kPThetaController, 0, 0.01),
+        this::drive,
+        Paths.eventMap);
 
     public DriveSubsystem() {
         DriveConstants.setOffsets();
@@ -112,6 +127,13 @@ public class DriveSubsystem extends SubsystemBase {
         frontRightModule.resetDrivePosition();
         backLeftModule.resetDrivePosition();
         backRightModule.resetDrivePosition();
+    }
+
+    public void syncEncoders() {
+        frontLeftModule.resetSteerPosition();
+        frontRightModule.resetSteerPosition();
+        backLeftModule.resetSteerPosition();
+        backRightModule.resetSteerPosition();
     }
 
     public void zeroGyro() {
@@ -232,6 +254,18 @@ public class DriveSubsystem extends SubsystemBase {
             this::drive,
             this
         ).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
+    }
+
+    public Command followPathWithEvents(PathPlannerTrajectory path){
+        return new FollowPathWithEvents(
+            followPath(path),
+            path.getMarkers(),
+            Paths.eventMap
+        );
+    }
+
+    public Command followPathGroup(List<PathPlannerTrajectory> path){
+          return autoBuilder.fullAuto(path);
     }
 
     public void periodic() {

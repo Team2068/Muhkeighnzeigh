@@ -23,6 +23,7 @@ import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
+  // private final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
   final DriveSubsystem driveSubsystem = new DriveSubsystem();
   final ArmSubsystem armSubsystem = new ArmSubsystem();
   final ClawSubsystem clawSubsystem = new ClawSubsystem();
@@ -46,11 +47,13 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
     configureAutonomous();
+    initEventMap(clawSubsystem);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-      SmartDashboard.putData(new InstantCommand(photonvision::rotateMount));
+      // SmartDashboard.putData(new InstantCommand(photonvision::rotateMount));
+      SmartDashboard.putData("Auto Selector", autonomousSelector);
   } 
 
   private void configureAutonomous() {
@@ -65,13 +68,22 @@ public class RobotContainer {
       new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
       driveSubsystem.followPath(Paths.leaveCommunity)));
   }
+
+  public void initEventMap(ClawSubsystem claw){
+    Paths.eventMap.put("Pickup", new InstantCommand(claw::closeClaw)); // TODO: replace null /w the command
+    Paths.eventMap.put("Score High", null);
+    Paths.eventMap.put("", null);
+    
+    Paths.eventMap.put("Score Cube Mid", null);
+    Paths.eventMap.put("Score Cone Mid", null);
+  }
  
   private void configureBindings() {
     SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
 
-    mechController.x().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.FLAT_POSITION));
+    // mechController.x().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.FLAT_POSITION));
     mechController.a().onTrue(new InstantCommand(armCommand::cancel));
-    mechController.b().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION));
+    // mechController.b().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION));
     mechController.y().onTrue(armCommand);
    
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
@@ -83,21 +95,23 @@ public class RobotContainer {
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));    
+    // mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));    
     mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
+    clawSubsystem.setDefaultCommand(new InstantCommand(() -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE, -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)), clawSubsystem));
+
     // mechControQller.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
 
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
-    driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
-    driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
-    // driverController.rightTrigger().whileTrue(new InstantCommand(() -> photonvision.rotateMount()));
-  }
+    driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
+    // driverController.rightBumper().whileTrue(new Aimbot(photonvision, driveSubsystem));
+  } 
 
   public Command getAutonomousCommand() {
-    return autonomousSelector.getSelected();
+    return new InstantCommand(clawSubsystem::closeClaw).andThen(autonomousSelector.getSelected());
   }
 
   private static double deadband(double value, double deadband) {
@@ -111,5 +125,9 @@ public class RobotContainer {
     value = deadband(value, 0.05); // Deadband
     value = Math.copySign(value * value, value); // Square the axis
     return value;
+  }
+
+  public void syncEncodersDisabled() {
+    driveSubsystem.syncEncoders();
   }
 }

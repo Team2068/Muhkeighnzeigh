@@ -27,6 +27,9 @@ public class ArmSubsystem extends SubsystemBase {
         arm1Motor.setOpenLoopRampRate(0.2);
         arm2Motor.setOpenLoopRampRate(0.2);
 
+        arm1Motor.setSmartCurrentLimit(60);
+        arm2Motor.setSmartCurrentLimit(60);
+
         arm1Motor.setInverted(true);
 
         ArmConstants.setOffsets();

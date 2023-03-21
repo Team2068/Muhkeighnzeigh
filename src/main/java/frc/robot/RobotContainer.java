@@ -99,7 +99,7 @@ public class RobotContainer {
     mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
     clawSubsystem.setDefaultCommand(new InstantCommand(() -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE, -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)), clawSubsystem));
 
-    // mechControQller.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
+    // mechController.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
 
     driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));

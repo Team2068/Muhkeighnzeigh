@@ -49,7 +49,7 @@ public class SetArmPosition extends CommandBase {
   }
 
   public void flipPosition() {
-    controller.setSetpoint(-controller.getSetpoint());
+    controller.setSetpoint(-controller.getSetpoint() + ((controller.getSetpoint() > 0) ? 20 : -20));
   }
 
   public boolean isCloseEnough() {

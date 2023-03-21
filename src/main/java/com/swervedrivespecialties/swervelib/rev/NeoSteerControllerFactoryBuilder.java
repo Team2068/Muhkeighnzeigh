@@ -1,3 +1,4 @@
+
 package com.swervedrivespecialties.swervelib.rev;
 
 import com.revrobotics.*;
@@ -139,6 +140,8 @@ public final class NeoSteerControllerFactoryBuilder {
             //     }
             // } else resetIteration = 0;
 
+            // motorEncoder.setPosition(currentAngleRadians);
+
             double currentAngleRadiansMod = currentAngleRadians % (2.0 * Math.PI);
             if (currentAngleRadiansMod < 0.0) {
                 currentAngleRadiansMod += 2.0 * Math.PI;
@@ -153,7 +156,7 @@ public final class NeoSteerControllerFactoryBuilder {
             // }
 
             this.referenceAngleRadians = referenceAngleRadians;
-            
+
             controller.setReference(adjustedReferenceAngleRadians, CANSparkMax.ControlType.kPosition);
         }
 
@@ -170,7 +173,7 @@ public final class NeoSteerControllerFactoryBuilder {
 
         @Override
         public void resetSteerPosition() {
-            setReferenceAngle(0);
+            motorEncoder.setPosition(absoluteEncoder.getAbsoluteAngle());
         }
     }
 }

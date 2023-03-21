@@ -323,6 +323,19 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Selector",
+              "_title": "Auto Selector",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -647,8 +660,8 @@
               "Controls/Rotation": "NONE",
               "compression": -1.0,
               "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           },
           "6,0": {
@@ -668,8 +681,8 @@
               "Controls/Rotation": "NONE",
               "compression": -1.0,
               "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           },
           "0,0": {
@@ -693,6 +706,6 @@
     "x": -7.199999809265137,
     "y": -7.199999809265137,
     "width": 1550.4000244140625,
-    "height": 830.4000244140625
+    "height": 838.4000244140625
   }
 }

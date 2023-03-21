@@ -13,6 +13,7 @@ import frc.robot.subsystems.TelescopeSubsystem;
 
 public class SetTelescopePosition extends PIDCommand {
   TelescopeSubsystem telescopeSubsystem;
+  ArmSubsystem armSubsystem;
 
   public SetTelescopePosition(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, double position) {
     super(
@@ -29,11 +30,12 @@ public class SetTelescopePosition extends PIDCommand {
         });
     addRequirements(telescopeSubsystem);
     this.telescopeSubsystem = telescopeSubsystem;
+    this.armSubsystem = armSubsystem;
   }
 
   @Override
   public boolean isFinished() {
-    return Math.abs(getController().getPositionError()) < 3; 
+    return Math.abs(getController().getPositionError()) < 3 || Math.abs(armSubsystem.getArmPosition()) >= 120; 
   }
 
   @Override

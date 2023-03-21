@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -11,6 +16,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants {
   public static final double DRIVE_MAX_VELOCITY_METERS_PER_SECOND = 0.2;
@@ -62,18 +68,28 @@ public final class Constants {
 
     public static final int PIGEON_ID = 19;
 
-    public static final void setOffsets() {
+    public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(14);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(98);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(162);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(328);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(219);
+        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
+        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(42);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
       }
+
+      int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
+      double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
+      for (int i = 0; i < arr.length; i++){
+        CANCoder coder = new CANCoder(i);
+        coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        coder.configMagnetOffset(offsets[i]);
+        coder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+      }
+
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
     }
   }
@@ -99,6 +115,7 @@ public final class Constants {
   public static final class ClawConstants {
     public static final int WRIST_MOTOR = 13;
     public static final int INTAKE_MOTOR = 14;
+    public static final int WRIST_VOLTAGE = 4;
 
     public static final double WRIST_OFFSET = -0.06;
     public static final double INTAKE_SPEED = .75;
@@ -133,10 +150,13 @@ public final class Constants {
   }
 
   public static class Paths {
+    public static HashMap<String, Command> eventMap = new HashMap<String, Command>();
+    
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
+    public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 0.75)); 
   }
 
   public static class PhotonConstants {
@@ -147,6 +167,11 @@ public final class Constants {
     public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
     public static final double AIMBOT_OFFSET = -15.85;
+  }
+
+  public static class LEDConstants {
+    public static final int LED_PORT = 0;
+    public static final int LED_LENGTH = 3000;
   }
 
   public static class GameConstants {

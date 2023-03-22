@@ -5,12 +5,10 @@ import java.util.List;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -33,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 public class DriveSubsystem extends SubsystemBase {
     public static double MAX_VOLTAGE = 9;
@@ -67,14 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
     private boolean slowMode = false;
     private Pose2d pose;
 
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-        this::getPose, 
-        this::resetOdometry, 
-        new PIDConstants(AutoConstants.kPXController, 0, 0.01),
-        new PIDConstants(AutoConstants.kPThetaController, 0, 0.01),
-        this::drive,
-        Paths.eventMap);
-
+    SwerveAutoBuilder autoBuilder;
     public DriveSubsystem() {
         DriveConstants.setOffsets();
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -118,6 +108,7 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
+        autoBuilder = new SwerveAutoBuilder(this::getPose, this::resetOdometry, new PIDConstants(AutoConstants.kPXController, 0, 0.01), new PIDConstants(AutoConstants.kPThetaController, 0, 0.01), this::drive, Paths.eventMap, this);
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
         zeroGyro();
     }
@@ -149,14 +140,15 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getAbsoluteRotation() {
-        double rot = Math.abs(pigeon2.getYaw()) % 360 * ( (pigeon2.getYaw() < 0) ? -1 : 1);
+        double rot = Math.abs(pigeon2.getYaw()) % 360 * ((pigeon2.getYaw() < 0) ? -1 : 1);
         return (rot < 0) ? rot += 360 : rot;
     }
 
-    public Rotation3d getGyro3d(){
-        double ypr[] = {0,0,0};
+    public Rotation3d getGyro3d() {
+        double ypr[] = { 0, 0, 0 };
         pigeon2.getYawPitchRoll(ypr);
-        return new Rotation3d(Units.degreesToRadians(ypr[2]), Units.degreesToRadians(ypr[1]), Units.degreesToRadians(ypr[0]));
+        return new Rotation3d(Units.degreesToRadians(ypr[2]), Units.degreesToRadians(ypr[1]),
+                Units.degreesToRadians(ypr[0]));
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -244,35 +236,23 @@ public class DriveSubsystem extends SubsystemBase {
         backRightModule.set(0, 0);
     }
 
-    public Command followPath(PathPlannerTrajectory path){
-        return new PPSwerveControllerCommand(
-            path, 
-            this::getPose,
-            new PIDController(AutoConstants.kPXController, 0, 0.01),
-            new PIDController(AutoConstants.kPYController, 0, 0.01),
-            new PIDController(AutoConstants.kPThetaController, 0, 0.01),
-            this::drive,
-            this
-        ).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
+    public Command followPath(PathPlannerTrajectory path) {
+        return autoBuilder.followPath(path).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
     }
 
-    public Command followPathWithEvents(PathPlannerTrajectory path){
-        return new FollowPathWithEvents(
-            followPath(path),
-            path.getMarkers(),
-            Paths.eventMap
-        );
+    public Command followPathWithEvents(List<PathPlannerTrajectory> path) {
+        return autoBuilder.fullAuto(path);
     }
 
-    public Command followPathGroup(List<PathPlannerTrajectory> path){
-          return autoBuilder.fullAuto(path);
+    public Command followPathGroup(List<PathPlannerTrajectory> path) {
+        return autoBuilder.followPathGroupWithEvents(path);
     }
 
     public void periodic() {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
         setModuleStates(states);
         pose = odometry.update(getGyroscopeRotation(), getModulePositions());
-        
+
         SmartDashboard.putData(pigeon2);
         SmartDashboard.putNumber("X position", pose.getX());
         SmartDashboard.putNumber("Y position", pose.getY());

@@ -12,6 +12,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
 import frc.robot.commands.ScoreLow;
 import frc.robot.commands.SetArmPosition;
+import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -38,13 +40,14 @@ public class RobotContainer {
   
   final CommandXboxController mechController = new CommandXboxController(1);
   final CommandXboxController driverController = new CommandXboxController(0);
+
  
   SendableChooser<Command> autonomousSelector = new SendableChooser<>();
 
   public RobotContainer() {
     configureBindings();
-    configureAutonomous();
     initEventMap();
+    configureAutonomous();
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -65,13 +68,26 @@ public class RobotContainer {
       new WaitCommand(1),
       new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
       driveSubsystem.followPath(Paths.leaveCommunity)));
+      // driveSubsystem.followPathWithEvents(Paths.picking, Paths.eventMap)
     autonomousSelector.addOption("Door Dash", driveSubsystem.followPathWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
+    autonomousSelector.addOption("Leave Community + Park", new SequentialCommandGroup(
+      new InstantCommand(clawSubsystem::closeClaw),
+      new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+      new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
+      driveSubsystem.followPath(Paths.leaveCommunityPark),
+      new AutonBalance(driveSubsystem, false)
+    ));
   }
 
   public void initEventMap(){
-    Paths.eventMap.put("Pickup", new InstantCommand(clawSubsystem::closeClaw)); // TODO: replace null /w the command
-    Paths.eventMap.put("Score High", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
-    Paths.eventMap.put("Score Low", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
+    Paths.eventMap.put("pickup", new SequentialCommandGroup(
+      new InstantCommand(clawSubsystem::openClaw),
+      new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION),
+      new InstantCommand(clawSubsystem::closeClaw)
+    ));
+    Paths.eventMap.put("print", new PrintCommand("PRINTINTINTINTTINTIN"));
+    Paths.eventMap.put("scorehigh", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
+    Paths.eventMap.put("scorelow", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
   }
  
   private void configureBindings() {
@@ -87,12 +103,14 @@ public class RobotContainer {
     // mechController.rightTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));
-    mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem));
+    // mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem));
+    mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
     // mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));    
-    mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
+    // mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
     clawSubsystem.setDefaultCommand(new InstantCommand(() -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE, -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)), clawSubsystem));
 
     // mechController.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
@@ -107,7 +125,7 @@ public class RobotContainer {
   } 
 
   public Command getAutonomousCommand() {
-    return new InstantCommand(clawSubsystem::closeClaw).andThen(autonomousSelector.getSelected());
+    return autonomousSelector.getSelected();
   }
 
   private static double deadband(double value, double deadband) {

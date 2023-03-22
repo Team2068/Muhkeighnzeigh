@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -70,10 +71,10 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(178);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(133);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(42);
+        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
@@ -134,7 +135,7 @@ public final class Constants {
 
     public static final double kPXController = 2;
     public static final double kPYController = 2;
-    public static final double kPThetaController = 2.5;
+    public static final double kPThetaController = 2;
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
@@ -150,14 +151,15 @@ public final class Constants {
   }
 
   public static class Paths {
-    public static HashMap<String, Command> eventMap = new HashMap<String, Command>();
+    public static final HashMap<String, Command> eventMap = new HashMap<String, Command>();
     
     public static final PathPlannerTrajectory bounce = PathPlanner.loadPath("Bounce", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", new PathConstraints(1, 0.75));
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", new PathConstraints(1, 0.75)); 
-    public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 0.75)); 
-    public static final PathPlannerTrajectory picking = PathPlanner.loadPath("(Scenario 0) pickup and go", new PathConstraints(7, 3.5)); 
+    public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 0.75));
+    public static final PathPlannerTrajectory leaveCommunityPark = PathPlanner.loadPath("(Scenario 10) Leave C and Park", new PathConstraints(7, 3.5)); 
+    public static final List<PathPlannerTrajectory> picking = PathPlanner.loadPathGroup("(Scenario 0) pickup and go", new PathConstraints(7, 3.5)); 
   }
 
   public static class PhotonConstants {

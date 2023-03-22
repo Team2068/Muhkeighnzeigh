@@ -6,9 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -16,19 +16,18 @@ import frc.robot.subsystems.TelescopeSubsystem;
 
 public class ScoreHigh extends SequentialCommandGroup {
   public ScoreHigh(ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem, ClawSubsystem clawSubsystem) {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 70
-    );
+    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 70);
     addCommands(
       new ParallelCommandGroup(
         armCommand,
+        new PrintCommand("Starting High..."),
         new SequentialCommandGroup(
-          new WaitCommand(2),
-          new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
-          new SetClawPosition(clawSubsystem, ClawConstants.FLAT_POSITION),
           new WaitCommand(1),
+          new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
+          new SetClawPosition(clawSubsystem, 0).withTimeout(0.5),
           new InstantCommand(clawSubsystem::openClaw)
         )
-      ).deadlineWith(new WaitCommand(6))
+      ).withTimeout(4)
     );
   }
 }

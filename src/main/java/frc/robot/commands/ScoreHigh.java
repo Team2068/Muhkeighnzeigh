@@ -22,7 +22,7 @@ public class ScoreHigh extends SequentialCommandGroup {
         armCommand,
         new PrintCommand("Starting High..."),
         new SequentialCommandGroup(
-          new WaitCommand(1),
+          new WaitCommand(0.5),
           new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
           new SetClawPosition(clawSubsystem, 0).withTimeout(0.5),
           new InstantCommand(clawSubsystem::openClaw)

@@ -240,7 +240,11 @@ public class DriveSubsystem extends SubsystemBase {
         return autoBuilder.followPath(path).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
     }
 
-    public Command followPathWithEvents(List<PathPlannerTrajectory> path) {
+    public Command followPathWithEvents(PathPlannerTrajectory path) {
+        return autoBuilder.followPathWithEvents(path);
+    }
+
+    public Command followPathGroupWithEvents(List<PathPlannerTrajectory> path) {
         return autoBuilder.fullAuto(path);
     }
 

@@ -69,13 +69,14 @@ public class RobotContainer {
       new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
       driveSubsystem.followPath(Paths.leaveCommunity)));
       // driveSubsystem.followPathWithEvents(Paths.picking, Paths.eventMap)
-    autonomousSelector.addOption("Door Dash", driveSubsystem.followPathWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
+    autonomousSelector.addOption("Door Dash", driveSubsystem.followPathGroupWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Leave Community + Park", new SequentialCommandGroup(
       new InstantCommand(clawSubsystem::closeClaw),
-      new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+      new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem),
       new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
+      new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION),
       driveSubsystem.followPath(Paths.leaveCommunityPark),
-      new AutonBalance(driveSubsystem, false)
+      new AutonBalance(driveSubsystem, true)
     ));
   }
 
@@ -86,6 +87,7 @@ public class RobotContainer {
       new InstantCommand(clawSubsystem::closeClaw)
     ));
     Paths.eventMap.put("print", new PrintCommand("PRINTINTINTINTTINTIN"));
+    Paths.eventMap.put("liftarm", new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(1));
     Paths.eventMap.put("scorehigh", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
     Paths.eventMap.put("scorelow", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem).andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
   }
@@ -99,7 +101,7 @@ public class RobotContainer {
     mechController.y().onTrue(armCommand);
    
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw));
-    mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION));
+  //  mechController.rightTrigger().onTrue(new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION));
     // mechController.rightTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw));

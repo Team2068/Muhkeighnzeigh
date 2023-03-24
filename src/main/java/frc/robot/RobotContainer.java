@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
-import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
@@ -41,8 +40,7 @@ public class RobotContainer {
   final CommandXboxController mechController = new CommandXboxController(1);
   final CommandXboxController driverController = new CommandXboxController(0);
 
- 
-  SendableChooser<Command> autonomousSelector = new SendableChooser<>();
+  final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
 
   public RobotContainer() {
     configureBindings();

@@ -65,6 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
     private Pose2d pose;
 
     SwerveAutoBuilder autoBuilder;
+
     public DriveSubsystem() {
         DriveConstants.setOffsets();
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");

@@ -19,17 +19,20 @@ public class LEDSubsystem extends SubsystemBase {
     led.setLength(ledBuffer.getLength());
     led.setData(ledBuffer);
     led.start();
+    setLeds();
   }
 
   public void setLeds() {
     statusLEDOne();
-    led.setData(ledBuffer);
   }
 
   public void statusLEDOne () {//make this into if for example arm extends, change led color to red or something
-    if (true) {
-      //setAllLeds(Color.kRed);
-    }
+    setAllLeds(Color.kBlue);
+  }
+
+  public void killLeds() {
+    setAllLeds(Color.kBlack);
+    led.stop();
   }
 
   public void setAllLeds(/*int r, int g, int b*/ Color color) {
@@ -40,7 +43,6 @@ public class LEDSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    setLeds();
+    led.setData(ledBuffer);
   }
 }

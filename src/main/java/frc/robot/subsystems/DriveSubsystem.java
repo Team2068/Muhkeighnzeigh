@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -109,15 +110,8 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
-        autoBuilder = new SwerveAutoBuilder(
-                this::getPose,
-                this::resetOdometry,
-                new PIDConstants(AutoConstants.kPXController, 0, 0.01),
-                new PIDConstants(AutoConstants.kPThetaController, 0, 0.01),
-                this::drive,
-                Paths.eventMap,
-                true, // (true) Automatically reverse path depending on alliance color
-                this);
+        autoBuilder = new SwerveAutoBuilder(this::getPose, this::resetOdometry, new PIDConstants(AutoConstants.kPXController, 0, 0.01), new PIDConstants(AutoConstants.kPThetaController, 0, 0.01), this::drive, Paths.eventMap, true, this);
+
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);
         zeroGyro();
     }
@@ -246,15 +240,15 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command followPath(PathPlannerTrajectory path) {
-        return autoBuilder.followPath(path).beforeStarting(() -> resetOdometry(path.getInitialHolonomicPose()));
+        return autoBuilder.followPath(path).beforeStarting(() -> resetOdometry(PathPlannerTrajectory.transformTrajectoryForAlliance(path, DriverStation.getAlliance()).getInitialHolonomicPose()));
     }
 
     public Command followPathWithEvents(PathPlannerTrajectory path) {
-        return autoBuilder.followPathWithEvents(path);
+        return autoBuilder.followPathWithEvents(path).beforeStarting(() -> resetOdometry(PathPlannerTrajectory.transformTrajectoryForAlliance(path, DriverStation.getAlliance()).getInitialHolonomicPose()));
     }
 
     public Command followPathGroupWithEvents(List<PathPlannerTrajectory> path) {
-        return autoBuilder.fullAuto(path);
+        return autoBuilder.fullAuto(path).beforeStarting(() -> resetOdometry(PathPlannerTrajectory.transformTrajectoryForAlliance(path.get(0), DriverStation.getAlliance()).getInitialHolonomicPose()));
     }
 
     public Command followPathGroup(List<PathPlannerTrajectory> path) {

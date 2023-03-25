@@ -38,7 +38,7 @@ public class SetArmPosition extends CommandBase {
 
     // SmartDashboard.putNumber("SAP PID", pidOutput);
     // SmartDashboard.putNumber("SAP FF", ffOutput);
-    SmartDashboard.putNumber("SAP Voltage", newOutput);
+    // SmartDashboard.putNumber("SAP Voltage", newOutput);
     
     armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
     lastPosition = currentPosition;

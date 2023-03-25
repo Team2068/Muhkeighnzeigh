@@ -19,15 +19,7 @@ public class LEDSubsystem extends SubsystemBase {
     led.setLength(ledBuffer.getLength());
     led.setData(ledBuffer);
     led.start();
-    setLeds();
-  }
-
-  public void setLeds() {
-    statusLEDOne();
-  }
-
-  public void statusLEDOne () {//make this into if for example arm extends, change led color to red or something
-    setAllLeds(Color.kBlue);
+    setAllLeds(new Color(0, 0, 0.25));
   }
 
   public void killLeds() {
@@ -39,10 +31,6 @@ public class LEDSubsystem extends SubsystemBase {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setLED(i, color);
     }
-  }
-
-  @Override
-  public void periodic() {
     led.setData(ledBuffer);
   }
 }

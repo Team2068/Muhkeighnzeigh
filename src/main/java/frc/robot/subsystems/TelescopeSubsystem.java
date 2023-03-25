@@ -4,13 +4,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TelescopeConstants;
 
 public class TelescopeSubsystem extends SubsystemBase {
     private CANSparkMax telescopeMotor = new CANSparkMax(TelescopeConstants.TELESCOPE_MOTOR, MotorType.kBrushless);
-
     public TelescopeSubsystem() {
         telescopeMotor.setIdleMode(IdleMode.kBrake);
     }
@@ -24,6 +24,10 @@ public class TelescopeSubsystem extends SubsystemBase {
     }
 
     public void retractTelescope(double speed) {
+        if(getPosition() <= 0) {
+            DriverStation.reportWarning("Retract stopped, position <= 0", false);
+            return;
+        }
         telescopeMotor.set(-speed);
     }
 

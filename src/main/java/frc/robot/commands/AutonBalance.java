@@ -6,43 +6,67 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonBalance extends SequentialCommandGroup {
-  private final double kP = 0.3;
+  private final double kP = 0.25;
 
   private class Balance extends PIDCommand {
     DriveSubsystem driveSubsystem;
+    Timer balancedTimer;
 
     public Balance(DriveSubsystem driveSubsystem, double setpoint) {
-      super(new PIDController(kP, 0, 0), driveSubsystem.pigeon2::getRoll, setpoint, output -> {
-        driveSubsystem.drive(new ChassisSpeeds(-output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0,0));
+      super(new PIDController(kP, 0.5, 0), driveSubsystem.pigeon2::getRoll, setpoint, output -> {
+        driveSubsystem.drive(new ChassisSpeeds(-output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0, 0));
       }, driveSubsystem);
       this.driveSubsystem = driveSubsystem;
+      balancedTimer = new Timer();
+
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(m_controller.getPositionError()) < 1;
+      return balancedTimer.get() >= 0.5;
     }
+
+    @Override
+    public void execute() {
+      super.execute();
+      if(Math.abs(m_controller.getPositionError()) < 1 && balancedTimer.get() > 0) {
+        balancedTimer.start();
+      }
+      balancedTimer.restart();
+    }
+
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
-        System.out.println("Robot Balanced!");
-        driveSubsystem.drive(new ChassisSpeeds());
+      super.end(interrupted);
+      System.out.println("Robot Balanced!");
+      driveSubsystem.drive(new ChassisSpeeds());
     }
   }
 
   public AutonBalance(DriveSubsystem driveSubsystem, boolean reversed) {
     // Since we cannot zero the ROLL of the gyro, take the initial roll
-    // Before we balance (the roll when the robot is flat) and make this our setpoint
+    // Before we balance (the roll when the robot is flat) and make this our
+    // setpoint
     final double initialRoll = driveSubsystem.pigeon2.getRoll();
+    final double initialX = driveSubsystem.getPose().getX();
     addCommands(
-      new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds((reversed) ? -0.6 : 0.6, 0, 0)).withTimeout(2),
-      new Balance(driveSubsystem, initialRoll)
-    );
+        new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds((reversed) ? -1.5 : 1.5, 0, 0)).until(
+            () -> {
+              System.out.println("waiting until we hit");
+              System.out.println(driveSubsystem.pigeon2.getRoll());
+              double deltaAngle = Math.abs(Math.abs(driveSubsystem.pigeon2.getRoll()) - Math.abs(initialRoll));
+              double deltaX = Math.abs(driveSubsystem.getPose().getX() - initialX);
+              System.out.println("deltaAngle: " + deltaAngle);
+              System.out.println("deltaX: " + deltaX);
+              return deltaAngle > 5 || deltaX > 10;
+            }),
+        new Balance(driveSubsystem, initialRoll));
   }
 }

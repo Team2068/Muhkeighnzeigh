@@ -110,6 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry(
                 kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
+        pose = new Pose2d();
         autoBuilder = new SwerveAutoBuilder(this::getPose, this::resetOdometry, new PIDConstants(AutoConstants.kPXController, 0, 0.01), new PIDConstants(AutoConstants.kPThetaController, 0, 0.01), this::drive, Paths.eventMap, true, this);
 
         pigeon2.configMountPose(AxisDirection.PositiveX, AxisDirection.NegativeZ);

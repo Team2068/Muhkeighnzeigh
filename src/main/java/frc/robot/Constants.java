@@ -144,7 +144,7 @@ public final class Constants {
 
   public static final class TelescopeConstants {
     public static final int TELESCOPE_MOTOR = 12;
-    public static final double TELESCOPE_SPEED = 0.5;
+    public static final double TELESCOPE_SPEED = 0.8;
 
     public static final double HIGH_POSITION = 90;
     public static final double LOW_POSITION = 10;
@@ -158,7 +158,7 @@ public final class Constants {
     public static final PathPlannerTrajectory funny = PathPlanner.loadPath("Funny", PATH_CONSTRAINTS);
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", PATH_CONSTRAINTS);
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", PATH_CONSTRAINTS); 
-    public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(1, 1));
+    public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 2));
     public static final PathPlannerTrajectory leaveCommunityPark = PathPlanner.loadPath("(Scenario 10) Leave C and Park", PATH_CONSTRAINTS); 
     public static final List<PathPlannerTrajectory> picking = PathPlanner.loadPathGroup("(Scenario 0) pickup and go", PATH_CONSTRAINTS); 
     public static final List<PathPlannerTrajectory> flatSidePickup = PathPlanner.loadPathGroup("(Scenario 11) Flat Side Pickup One", PATH_CONSTRAINTS);

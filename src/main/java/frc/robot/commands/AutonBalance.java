@@ -6,40 +6,32 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonBalance extends SequentialCommandGroup {
-  private final double kP = 0.25;
+  private final double kP = 0.2;
 
   private class Balance extends PIDCommand {
     DriveSubsystem driveSubsystem;
-    Timer balancedTimer;
 
     public Balance(DriveSubsystem driveSubsystem, double setpoint) {
-      super(new PIDController(kP, 0.5, 0), driveSubsystem.pigeon2::getRoll, setpoint, output -> {
+      super(new PIDController(kP, 0.23, 0.01), driveSubsystem.pigeon2::getRoll, setpoint, output -> {
         driveSubsystem.drive(new ChassisSpeeds(-output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0, 0));
       }, driveSubsystem);
       this.driveSubsystem = driveSubsystem;
-      balancedTimer = new Timer();
-
     }
 
     @Override
     public boolean isFinished() {
-      return balancedTimer.get() >= 0.5;
+      return Math.abs(m_controller.getPositionError()) < 0.25;
     }
 
     @Override
     public void execute() {
       super.execute();
-      if(Math.abs(m_controller.getPositionError()) < 1 && balancedTimer.get() > 0) {
-        balancedTimer.start();
-      }
-      balancedTimer.restart();
     }
 
     @Override

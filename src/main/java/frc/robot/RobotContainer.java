@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
+import frc.robot.Constants.PhotonConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.Photonvision;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
@@ -34,8 +36,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  // private final Photonvision photonvision = new
-  // Photonvision(PhotonConstants.CAM_NAME);
+  final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
   final DriveSubsystem driveSubsystem = new DriveSubsystem();
   final LEDSubsystem ledSubsystem = new LEDSubsystem();
   final ArmSubsystem armSubsystem = new ArmSubsystem();
@@ -158,6 +159,7 @@ public class RobotContainer {
     driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
+    driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
     driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));

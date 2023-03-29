@@ -168,11 +168,13 @@ public final class Constants {
   public static class PhotonConstants {
     public static final int REFLECTIVE_TAPE_PIPELINE_INDEX = 0;
     public static final int APRILTAG_PIPELINE_INDEX = 1;
-    public static final double CAM_HEIGHT = 0.1524; //replace with actual height of camera in meters
+    public static final double CAM_HEIGHT = 0.1524; //replace with actual height of camera in meters 
     public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
     public static final double AIMBOT_OFFSET = -15.85;
+    public static final int FORWARD_ANGLE =  1;
+    public static final int BACKWARD_ANGLE = 110;
   }
 
   public static class LEDConstants {

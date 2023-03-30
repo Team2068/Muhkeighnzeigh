@@ -6,12 +6,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class SetArmPosition extends CommandBase {
-  private final PIDController controller = new PIDController(0.07, 0, 0);
+  private final PIDController controller = new PIDController(0.07, 0.06, 0);
   private final ArmSubsystem armSubsystem;
   private double lastPosition = 0;
 
@@ -32,8 +31,7 @@ public class SetArmPosition extends CommandBase {
     var currentPosition = armSubsystem.getArmPosition();
 
     double pidOutput = controller.calculate(currentPosition);
-    double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint),
-        (Math.toRadians(currentPosition) - Math.toRadians(lastPosition)) / controller.getPeriod());
+    double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint));
     double newOutput = (pidOutput) + -ffOutput;
 
     // SmartDashboard.putNumber("SAP PID", pidOutput);
@@ -59,11 +57,6 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
     System.out.println("exiting!!!");
     armSubsystem.set(0);
   }

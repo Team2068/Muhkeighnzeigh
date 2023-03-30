@@ -14,6 +14,7 @@ import frc.robot.commands.ScoreLow;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
+import frc.robot.commands.SetArmProfiled;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -121,7 +122,10 @@ public class RobotContainer {
 
     // mechController.x().onTrue(new SetClawPosition(clawSubsystem,
     // ClawConstants.FLAT_POSITION));
-    mechController.a().onTrue(new InstantCommand(armCommand::cancel));
+    mechController.a().onTrue(new InstantCommand(() -> {
+      armCommand.cancel();
+      armSubsystem.setVoltage(0);
+    }));
     // mechController.b().onTrue(new SetClawPosition(clawSubsystem,
     // ClawConstants.CARRY_POSITION));
     mechController.y().onTrue(armCommand);
@@ -160,7 +164,12 @@ public class RobotContainer {
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
-    driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    driverController.a().onTrue(
+    new SequentialCommandGroup(  
+      new SetArmProfiled(90, armSubsystem, telescopeSubsystem),
+      new InstantCommand(() -> armCommand.updateSetpoint(90)),
+      armCommand));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->

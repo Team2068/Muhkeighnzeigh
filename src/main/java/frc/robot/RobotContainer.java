@@ -26,6 +26,7 @@ import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
@@ -43,19 +45,28 @@ public class RobotContainer {
   final ClawSubsystem clawSubsystem = new ClawSubsystem();
   final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
 
-  final CommandXboxController mechController = new CommandXboxController(1);
-  final CommandXboxController driverController = new CommandXboxController(0);
-
+  final CommandXboxController mechController = new CommandXboxController(0);
+  //final CommandXboxController driverController = new CommandXboxController(0);
+  final Joystick leftJoystick = new Joystick(1);
+  final Joystick rightJoystick = new Joystick(2);
   final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
+  final JoystickButton resetOdometryButton = new JoystickButton(leftJoystick, 3);
+  final JoystickButton zeroGyroButton = new JoystickButton(leftJoystick, 2);
+  final JoystickButton fieldOrientedButton = new JoystickButton(leftJoystick, 4);
+  final JoystickButton slowModeButton = new JoystickButton(leftJoystick, 1);
 
   public RobotContainer() {
     configureBindings();
     initEventMap();
     configureAutonomous();
-    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
-        () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
+    () -> - modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+   () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    // driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
+    //     () -> -modifyAxis(leftJoystick.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        //() -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
     // SmartDashboard.putData("Kill LEDs", new
@@ -156,12 +167,12 @@ public class RobotContainer {
     // mechController.povRight().onTrue(new ScoreHigh(armSubsystem,
     // telescopeSubsystem, clawSubsystem));
 
-    driverController.x().whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
-    driverController.y().whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-    driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
-    driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
-    driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
-    driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+   resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+   fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
+    // driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
+    // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->
@@ -193,7 +204,7 @@ public class RobotContainer {
   }
 
   private static double modifyAxis(double value) {
-    value = deadband(value, 0.1); // Deadband
+    value = deadband(value, 0.05); // Deadband
     value = Math.copySign(value * value, value); // Square the axis
     return value;
   }

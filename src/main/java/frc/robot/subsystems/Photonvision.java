@@ -16,6 +16,8 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class Photonvision extends SubsystemBase {
   PhotonCamera camera;
@@ -110,7 +112,7 @@ public class Photonvision extends SubsystemBase {
   }
 
   public boolean isFlipped () {
-    return mount.getAngle() == PhotonConstants.BACKWARD_ANGLE;
+    return mount.getAngle() > 90;
   }
 
   @Override
@@ -121,6 +123,12 @@ public class Photonvision extends SubsystemBase {
       return;
 
     updateData();
+
+    // System.out.println(mount.getAngle());
+    // System.out.println(isFlipped());
+
+    SmartDashboard.putNumber("servo angle", mount.getAngle());
+    SmartDashboard.putBoolean("isFlipped", isFlipped());
 
     //SmartDashboard.putNumber("distance", Units.metersToInches(getDistance(camera.getLatestResult())));
     //System.out.println(mount.getAngle());

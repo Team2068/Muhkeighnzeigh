@@ -14,6 +14,7 @@ import frc.robot.commands.ScoreLow;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
+import frc.robot.commands.Aimbot;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 
 public class RobotContainer {
   final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
@@ -161,6 +163,7 @@ public class RobotContainer {
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
     driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    driverController.rightBumper().onTrue(new Aimbot(photonvision, driveSubsystem));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->

@@ -17,6 +17,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants {
@@ -71,7 +72,7 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(65);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(51);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
@@ -180,6 +181,8 @@ public final class Constants {
   public static class LEDConstants {
     public static final int LED_PORT = 0;
     public static final int LED_LENGTH = 3000;
+    public static final Color YELLOW_LOW_POWER = new Color(0.2, 0.15, 0);
+    public static final Color BLUE_LOW_POWER = new Color(0, 0, 0.25);
   }
 
   public static class GameConstants {

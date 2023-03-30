@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.ClawConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.Paths;
 import frc.robot.Constants.PhotonConstants;
 import frc.robot.commands.AutonBalance;
@@ -27,7 +28,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -74,7 +74,6 @@ public class RobotContainer {
         new WaitCommand(1),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         driveSubsystem.followPath(Paths.leaveCommunity)));
-    // driveSubsystem.followPathWithEvents(Paths.picking, Paths.eventMap)
     autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
         new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
         new WaitCommand(1),
@@ -95,9 +94,8 @@ public class RobotContainer {
         driveSubsystem.followPath(Paths.leaveCommunity),
         new AutonBalance(driveSubsystem, false)));
     autonomousSelector.addOption("We BALL auto", new SequentialCommandGroup(
-      new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
-      driveSubsystem.followPathGroupWithEvents(Paths.weBall)
-    ));
+        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+        driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
   }
 
   public void initEventMap() {
@@ -107,7 +105,8 @@ public class RobotContainer {
         new InstantCommand(clawSubsystem::closeClaw)));
     Paths.eventMap.put("closeclaw", new InstantCommand(clawSubsystem::closeClaw));
     Paths.eventMap.put("openclaw", new InstantCommand(clawSubsystem::closeClaw));
-    Paths.eventMap.put("intakeposition", new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION).withTimeout(1));
+    Paths.eventMap.put("intakeposition",
+        new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION).withTimeout(1));
     Paths.eventMap.put("print", new PrintCommand("PRINTINTINTINTTINTIN"));
     Paths.eventMap.put("liftarm", new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(1));
     Paths.eventMap.put("scorehigh", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem)
@@ -126,7 +125,8 @@ public class RobotContainer {
     // ClawConstants.CARRY_POSITION));
     mechController.y().onTrue(armCommand);
 
-    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
+    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw)
+        .andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(LEDConstants.YELLOW_LOW_POWER))));
     // mechController.rightTrigger().onTrue(new
     // SetTelescopePosition(telescopeSubsystem, armSubsystem,
     // TelescopeConstants.HIGH_POSITION));
@@ -134,7 +134,8 @@ public class RobotContainer {
     // InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new
     // InstantCommand(telescopeSubsystem::stopTelescope));
 
-    mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
+    mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw)
+        .andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(LEDConstants.BLUE_LOW_POWER))));
     // mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem,
     // armSubsystem, clawSubsystem));
     mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope))
@@ -170,8 +171,17 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AutonBalance(driveSubsystem, false);
-    // return autonomousSelector.getSelected();
+    InstantCommand postAutonomous = new InstantCommand(() -> {
+      if (!driveSubsystem.isFieldOriented())
+        driveSubsystem.toggleFieldOriented();
+
+      // Since we start the robot with "forward" facing towards the drivers,
+      // Add 180 to the gyro's rotation so that "forward" is facing downfield
+      // This makes forward (field oriented) away from the driver, as intended.
+      driveSubsystem.pigeon2.addYaw(180);
+    }, driveSubsystem);
+    return new AutonBalance(driveSubsystem, false).withTimeout(14.5).andThen(postAutonomous);
+    // return autonomousSelector.getSelected().andThen(postAutonomous);
   }
 
   private static double deadband(double value, double deadband) {

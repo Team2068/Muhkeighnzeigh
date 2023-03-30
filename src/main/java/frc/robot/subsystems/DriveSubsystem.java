@@ -221,18 +221,10 @@ public class DriveSubsystem extends SubsystemBase {
         slowMode = !slowMode;
     }
 
-    public void maxSpeed() {
-        MAX_VOLTAGE = 12;
+    public ChassisSpeeds getChassisSpeeds() {
+        return chassisSpeeds;
     }
-
-    public void normalSpeed() {
-        MAX_VOLTAGE = 9;
-    }
-
-    public void minSpeed() {
-        MAX_VOLTAGE = 5;
-    }
-
+    
     public void resetSteerPositions() {
         frontLeftModule.set(0, 0);
         frontRightModule.set(0, 0);
@@ -275,9 +267,4 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putString("Drive Mode", fieldOriented ? "Field" : "Robot");
         SmartDashboard.putString("Drive Speed", slowMode ? "Slow" : "Normal");
     }
-
-    public ChassisSpeeds getChassisSpeeds() {
-        return chassisSpeeds;
-    }
-
 }

@@ -11,19 +11,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "0,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Pigeon rotation",
-              "_title": "Pigeon rotation",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "1,2": {
             "size": [
               1,
@@ -40,7 +27,7 @@
           "0,0": {
             "size": [
               2,
-              2
+              1
             ],
             "content": {
               "_type": "List Layout",
@@ -126,11 +113,25 @@
                   "_title": "Pigeon Roll",
                   "_glyph": 148,
                   "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Pigeon Yaw",
+                  "_title": "Pigeon Yaw",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Pigeon rotation",
+                  "_title": "Pigeon rotation",
+                  "_glyph": 148,
+                  "_showGlyph": false
                 }
               ]
             }
           },
-          "4,0": {
+          "2,2": {
             "size": [
               2,
               2
@@ -173,7 +174,7 @@
               ]
             }
           },
-          "6,0": {
+          "4,0": {
             "size": [
               2,
               2
@@ -190,7 +191,7 @@
               "Visuals/Counter clockwise": false
             }
           },
-          "8,0": {
+          "4,2": {
             "size": [
               2,
               2
@@ -233,7 +234,7 @@
               ]
             }
           },
-          "2,3": {
+          "0,3": {
             "size": [
               1,
               1
@@ -246,7 +247,7 @@
               "_showGlyph": false
             }
           },
-          "2,2": {
+          "1,3": {
             "size": [
               1,
               1
@@ -255,19 +256,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Robot Configuration",
               "_title": "Robot Configuration",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "1,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/InstantCommand",
-              "_title": "Flip Limelight",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -285,46 +273,7 @@
               "_showGlyph": false
             }
           },
-          "3,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/SAP Voltage",
-              "_title": "SAP Voltage",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "4,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Claw Voltage",
-              "_title": "Claw Voltage",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "5,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Pigeon Yaw",
-              "_title": "Pigeon Yaw",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,2": {
+          "0,1": {
             "size": [
               2,
               1
@@ -337,43 +286,25 @@
               "_showGlyph": false
             }
           },
-          "8,2": {
+          "6,0": {
             "size": [
-              1,
-              1
+              4,
+              4
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PPSwerveControllerCommand/xErrorMeters",
-              "_title": "PPSwerveControllerCommand/xErrorMeters",
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
               "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PPSwerveControllerCommand/yErrorMeters",
-              "_title": "PPSwerveControllerCommand/yErrorMeters",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "3,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PPSwerveControllerCommand/rotationErrorDegrees",
-              "_title": "PPSwerveControllerCommand/rotationErrorDegrees",
-              "_glyph": 148,
-              "_showGlyph": false
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
             }
           }
         }

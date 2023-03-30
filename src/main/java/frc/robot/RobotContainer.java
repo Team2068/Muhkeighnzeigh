@@ -50,10 +50,10 @@ public class RobotContainer {
   final Joystick leftJoystick = new Joystick(1);
   final Joystick rightJoystick = new Joystick(2);
   final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
-  final JoystickButton resetOdometryButton = new JoystickButton(leftJoystick, 3);
-  final JoystickButton zeroGyroButton = new JoystickButton(leftJoystick, 2);
-  final JoystickButton fieldOrientedButton = new JoystickButton(leftJoystick, 4);
-  final JoystickButton slowModeButton = new JoystickButton(leftJoystick, 1);
+  final JoystickButton resetOdometryButton = new JoystickButton(rightJoystick, 3);
+  final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
+  final JoystickButton fieldOrientedButton = new JoystickButton(rightJoystick, 4);
+  final JoystickButton slowModeButton = new JoystickButton(rightJoystick, 1);
 
   public RobotContainer() {
     configureBindings();
@@ -168,7 +168,7 @@ public class RobotContainer {
     // telescopeSubsystem, clawSubsystem));
 
    resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
-zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
    fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     // driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));

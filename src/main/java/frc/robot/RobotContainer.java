@@ -191,8 +191,8 @@ syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
       // This makes forward (field oriented) away from the driver, as intended.
       driveSubsystem.pigeon2.addYaw(180);
     }, driveSubsystem);
-    return new AutonBalance(driveSubsystem, false).withTimeout(14.5).andThen(postAutonomous);
-    // return autonomousSelector.getSelected().andThen(postAutonomous);
+    // return new AutonBalance(driveSubsystem, false).withTimeout(14.5).andThen(postAutonomous);
+    return autonomousSelector.getSelected().andThen(postAutonomous);
   }
 
   private static double deadband(double value, double deadband) {

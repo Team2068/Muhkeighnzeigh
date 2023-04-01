@@ -55,6 +55,7 @@ public class RobotContainer {
     configureBindings();
     initEventMap();
     configureAutonomous();
+    photonvision.
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -173,8 +174,8 @@ public class RobotContainer {
     // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     driverController.leftBumper().onTrue(
     new SequentialCommandGroup(  
-      new SetArmProfiled(90, armSubsystem, telescopeSubsystem),
-      new InstantCommand(() -> armCommand.updateSetpoint(90)),
+      new SetArmProfiled(-107, armSubsystem, telescopeSubsystem),
+      new InstantCommand(() -> armCommand.updateSetpoint(-107)),
       armCommand));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));

@@ -173,8 +173,8 @@ public final class Constants {
     public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
-    public static final double AIMBOT_OFFSET_FORWARD = 10.61;
-    public static final double AIMBOT_OFFSET_BACKWARD = -11.13;
+    public static final double AIMBOT_OFFSET_BACKWARD = 5.67;
+    public static final double AIMBOT_OFFSET_FORWARD = -11.13;
     public static final int FORWARD_ANGLE =  0;
     public static final int BACKWARD_ANGLE = 135;
   }
@@ -206,6 +206,6 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double speed = 1;
-    public static final double minimumAdjustment = 3;
+    public static final double minimumAdjustment = 2.5;
   }
 }

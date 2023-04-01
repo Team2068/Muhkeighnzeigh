@@ -14,11 +14,11 @@ public class SetArmPosition extends CommandBase {
   private final ArmSubsystem armSubsystem;
 
   public SetArmPosition(ArmSubsystem armSubsystem, double angleDegrees) {
-    this.armSubsystem = armSubsystem;
-    addRequirements(armSubsystem);
-
     controller.setSetpoint(angleDegrees);
     controller.setTolerance(0); // 5 degree tolerance
+   
+    this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   } 
 
   @Override

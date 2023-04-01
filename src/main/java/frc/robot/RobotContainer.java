@@ -22,8 +22,6 @@ import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Photonvision;
 
-import com.pathplanner.lib.server.PathPlannerServer;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -119,13 +117,15 @@ public class RobotContainer {
 
   private void configureBindings() {
     SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
+    SetArmProfiled profiledArm = new SetArmProfiled(73, armSubsystem);
 
     // mechController.x().onTrue(new SetClawPosition(clawSubsystem,
     // ClawConstants.FLAT_POSITION));
-    mechController.a().onTrue(new InstantCommand(() -> {
-      armCommand.cancel();
-      armSubsystem.setVoltage(0);
-    }));
+    mechController.a().onTrue(new InstantCommand(armCommand::cancel));
+    // mechController.a().onTrue(new InstantCommand(() -> {
+    //   armCommand.cancel();
+    //   armSubsystem.setVoltage(0);
+    // }));
     // mechController.b().onTrue(new SetClawPosition(clawSubsystem,
     // ClawConstants.CARRY_POSITION));
     mechController.y().onTrue(armCommand);
@@ -164,16 +164,10 @@ public class RobotContainer {
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
-    // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    driverController.a().onTrue(
-    new SequentialCommandGroup(  
-      new SetArmProfiled(-35, armSubsystem, telescopeSubsystem),
-      new InstantCommand(() -> armCommand.updateSetpoint(-35)),
-      armCommand));
-    // driverController.povRight().onTrue(new
-    // InstantCommand(ledSubsystem::killLeds));
-    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->
-    // photonvision.togglePipeline()));
+    driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    driverController.leftBumper().onTrue(profiledArm.updateSetpoint(-35));
+    // driverController.povRight().onTrue(new InstantCommand(ledSubsystem::killLeds));
+    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision,
     // driveSubsystem));
   }
@@ -184,9 +178,7 @@ public class RobotContainer {
   }
 
   private static double deadband(double value, double deadband) {
-
-    if (Math.abs(value) <= deadband)
-      return 0.0;
+    if (Math.abs(value) <= deadband) return 0.0;
     deadband *= (value > 0.0) ? 1 : -1;
     return (value + deadband) / (1.0 + deadband);
   }

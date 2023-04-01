@@ -55,7 +55,7 @@ public class RobotContainer {
     configureBindings();
     initEventMap();
     configureAutonomous();
-    photonvision.
+    photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,

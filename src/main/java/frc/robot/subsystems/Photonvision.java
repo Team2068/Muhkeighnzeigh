@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Photonvision extends SubsystemBase {
   public PhotonCamera camera;
-  Servo mount = new Servo(PhotonConstants.SERVO_PORT);
+  public Servo mount = new Servo(PhotonConstants.SERVO_PORT);
 
   public Photonvision(String camName) {
     camera = new PhotonCamera(camName);

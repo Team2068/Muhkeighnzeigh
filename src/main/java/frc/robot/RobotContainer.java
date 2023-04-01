@@ -167,8 +167,8 @@ public class RobotContainer {
     // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     driverController.a().onTrue(
     new SequentialCommandGroup(  
-      new SetArmProfiled(90, armSubsystem, telescopeSubsystem),
-      new InstantCommand(() -> armCommand.updateSetpoint(90)),
+      new SetArmProfiled(-35, armSubsystem, telescopeSubsystem),
+      new InstantCommand(() -> armCommand.updateSetpoint(-35)),
       armCommand));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));

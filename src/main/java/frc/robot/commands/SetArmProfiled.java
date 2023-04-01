@@ -18,10 +18,10 @@ import frc.robot.utilities.DebugTable;
 public class SetArmProfiled extends CommandBase {
 
   PIDController controller = new PIDController(0.07, 0.06, 0);
+  TelescopeSubsystem telescope;
   Timer timer = new Timer();
   TrapezoidProfile profile;
   ArmSubsystem arm;
-  TelescopeSubsystem telescope;
 
   double targetAngle;
 
@@ -41,7 +41,7 @@ public class SetArmProfiled extends CommandBase {
     DebugTable.set("Max Vel", maxVelocity);
     DebugTable.set("Max Accel",maxAcceleration);
     profile = new TrapezoidProfile(
-      new Constraints(360, 12),
+      new Constraints(360, 160),
       // new Constraints(maxVelocity, maxAcceleration),
       new TrapezoidProfile.State(targetAngle, 0),
       new TrapezoidProfile.State(arm.getArmPosition(), 0));

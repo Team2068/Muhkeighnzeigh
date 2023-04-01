@@ -12,7 +12,6 @@ import frc.robot.subsystems.ArmSubsystem;
 public class SetArmPosition extends CommandBase {
   private final PIDController controller = new PIDController(0.07, 0.06, 0);
   private final ArmSubsystem armSubsystem;
-  private double lastPosition = 0;
 
   public SetArmPosition(ArmSubsystem armSubsystem, double angleDegrees) {
     this.armSubsystem = armSubsystem;
@@ -27,8 +26,8 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void execute() {
-    var setpoint = controller.getSetpoint();
-    var currentPosition = armSubsystem.getArmPosition();
+    double setpoint = controller.getSetpoint();
+    double currentPosition = armSubsystem.getArmPosition();
 
     double pidOutput = controller.calculate(currentPosition);
     double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint));
@@ -39,7 +38,6 @@ public class SetArmPosition extends CommandBase {
     // SmartDashboard.putNumber("SAP Voltage", newOutput);
     
     armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
-    lastPosition = currentPosition;
   }
 
   public void updateSetpoint(double angleDegrees) {

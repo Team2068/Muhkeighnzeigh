@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +18,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
     // NOTE: found values using http://reca.lc/arm
-    private final ArmFeedforward feedforward = new ArmFeedforward(0, 3.5, 50);
+    public final ArmFeedforward feedforward = new ArmFeedforward(0, 4.5, 50);
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
@@ -30,9 +32,27 @@ public class ArmSubsystem extends SubsystemBase {
         arm1Motor.setSmartCurrentLimit(60);
         arm2Motor.setSmartCurrentLimit(60);
 
+        arm1Motor.getEncoder().setPositionConversionFactor(360/32); // TODO: Check Conversion factor
+        arm2Motor.getEncoder().setPositionConversionFactor(360/32);
+
+        arm1Motor.getPIDController().setP(0.07);
+        arm2Motor.getPIDController().setP(0.07);
+
         arm1Motor.setInverted(true);
+        arm2Motor.follow(arm1Motor);
 
         ArmConstants.setOffsets();
+    }
+
+    public void syncEncoders(){
+        double angle = getArmPosition();
+        arm1Motor.getEncoder().setPosition(angle);
+        arm2Motor.getEncoder().setPosition(angle);
+    }
+
+    public void setReference(double setpoint){
+        arm1Motor.getPIDController().setReference(setpoint, ControlType.kPosition);
+        arm2Motor.getPIDController().setReference(setpoint, ControlType.kPosition);
     }
 
     public void setVoltage(double voltage) {
@@ -59,8 +79,12 @@ public class ArmSubsystem extends SubsystemBase {
         return -((abs > ArmConstants.ARM_LIMIT && abs < 1) ? (deg - 360) : deg);
     }
 
-    public double calculateFeedforward(double positionRadians, double velocity) {
+    public double calculateFeedforward(double positionRadians) {
         return feedforward.calculate(positionRadians, 0);
+    }
+
+    public double getMaxAcceleration(double angle){
+        return feedforward.maxAchievableAcceleration(12, Units.degreesToRadians(angle), Units.degreesToRadians(360));
     }
 
     @Override

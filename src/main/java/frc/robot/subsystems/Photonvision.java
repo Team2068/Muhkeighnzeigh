@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Photonvision extends SubsystemBase {
-  PhotonCamera camera;
+  public PhotonCamera camera;
   Servo mount = new Servo(PhotonConstants.SERVO_PORT);
 
   public Photonvision(String camName) {
@@ -124,14 +124,7 @@ public class Photonvision extends SubsystemBase {
 
     updateData();
 
-    // System.out.println(mount.getAngle());
-    // System.out.println(isFlipped());
-
     SmartDashboard.putNumber("servo angle", mount.getAngle());
     SmartDashboard.putBoolean("isFlipped", isFlipped());
-
-    //SmartDashboard.putNumber("distance", Units.metersToInches(getDistance(camera.getLatestResult())));
-    //System.out.println(mount.getAngle());
-    //System.out.println(mount.get());
   }
 }

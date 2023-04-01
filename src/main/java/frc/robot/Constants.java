@@ -72,7 +72,7 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(51);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(25);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
@@ -174,7 +174,7 @@ public final class Constants {
     public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
     public static final double AIMBOT_OFFSET_FORWARD = 10.61;
-    public static final double AIMBOT_OFFSET_BACKWARD = 6.13;
+    public static final double AIMBOT_OFFSET_BACKWARD = -11.13;
     public static final int FORWARD_ANGLE =  0;
     public static final int BACKWARD_ANGLE = 135;
   }
@@ -202,10 +202,10 @@ public final class Constants {
   }
 
   public static class AimbotConstants {
-    public static final double kP = 1.0; //try the kp ki kd values above
+    public static final double kP = 0.25; //try the kp ki kd values above
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double speed = 0.5;
-    public static final double minimumAdjustment = 0.5;
+    public static final double speed = 1;
+    public static final double minimumAdjustment = 3;
   }
 }

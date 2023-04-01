@@ -10,9 +10,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class SetArmPosition extends CommandBase {
-  private final PIDController controller = new PIDController(0.07, 0, 0);
+  private final PIDController controller = new PIDController(0.07, 0.06, 0);
   private final ArmSubsystem armSubsystem;
-  private double lastPosition = 0;
 
   public SetArmPosition(ArmSubsystem armSubsystem, double angleDegrees) {
     this.armSubsystem = armSubsystem;
@@ -27,12 +26,11 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void execute() {
-    var setpoint = controller.getSetpoint();
-    var currentPosition = armSubsystem.getArmPosition();
+    double setpoint = controller.getSetpoint();
+    double currentPosition = armSubsystem.getArmPosition();
 
     double pidOutput = controller.calculate(currentPosition);
-    double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint),
-        (Math.toRadians(currentPosition) - Math.toRadians(lastPosition)) / controller.getPeriod());
+    double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint));
     double newOutput = (pidOutput) + -ffOutput;
 
     // SmartDashboard.putNumber("SAP PID", pidOutput);
@@ -40,7 +38,6 @@ public class SetArmPosition extends CommandBase {
     // SmartDashboard.putNumber("SAP Voltage", newOutput);
     
     armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
-    lastPosition = currentPosition;
   }
 
   public void updateSetpoint(double angleDegrees) {
@@ -58,11 +55,6 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
-    System.out.println("exiting!!!");
     System.out.println("exiting!!!");
     armSubsystem.set(0);
   }

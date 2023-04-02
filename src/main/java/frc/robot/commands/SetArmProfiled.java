@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Photonvision;
 import frc.robot.utilities.DebugTable;
 
 public class SetArmProfiled extends CommandBase {
@@ -22,12 +23,14 @@ public class SetArmProfiled extends CommandBase {
   Timer timer = new Timer();
   TrapezoidProfile profile;
   ArmSubsystem arm;
+  Photonvision photon;
 
   double targetAngle;
 
-  public SetArmProfiled(double angle, ArmSubsystem arm) {
+  public SetArmProfiled(double angle, ArmSubsystem arm, Photonvision vision) {
     targetAngle = angle;
     this.arm = arm;
+    photon = vision;
     addRequirements(arm);
   }
 
@@ -57,6 +60,7 @@ public class SetArmProfiled extends CommandBase {
   }
 
   public Command updateSetpoint(double targetAngle){
+    photon.rotateMount(targetAngle);
     profile = new TrapezoidProfile( constraints,
       new State(targetAngle, 0),
       new State(arm.getArmPosition(), 0));
@@ -67,7 +71,9 @@ public class SetArmProfiled extends CommandBase {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    arm.stop();
+  }
 
   @Override
   public boolean isFinished() {

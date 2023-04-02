@@ -15,6 +15,7 @@ import frc.robot.commands.ScoreLow;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
+import frc.robot.commands.Aimbot;
 import frc.robot.commands.SetArmProfiled;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -53,6 +54,7 @@ public class RobotContainer {
     configureBindings();
     initEventMap();
     configureAutonomous();
+    photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -150,6 +152,20 @@ public class RobotContainer {
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
     driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+
+    driverController.rightBumper().onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem)).withTimeout(1.5));
+    
+    // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    // driverController.leftBumper().onTrue(
+    // new SequentialCommandGroup(  
+    //   new SetArmProfiled(-107, armSubsystem, telescopeSubsystem),
+    //   new InstantCommand(() -> armCommand.updateSetpoint(-107)),
+    //   armCommand));
+    // driverController.povRight().onTrue(new
+    // InstantCommand(ledSubsystem::killLeds));
+    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->
+    // photonvision.togglePipeline()));
+    
     // driverController.povRight().onTrue(new InstantCommand(ledSubsystem::killLeds));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision,

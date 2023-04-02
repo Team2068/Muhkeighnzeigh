@@ -18,8 +18,7 @@
       "stopEvent": {
         "names": [
           "Starting Point",
-          "scorelow",
-          "print"
+          "scorelow"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "deadline",

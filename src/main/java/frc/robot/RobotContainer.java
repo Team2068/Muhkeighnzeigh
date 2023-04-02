@@ -5,24 +5,22 @@
 package frc.robot;
 
 import frc.robot.Constants.ClawConstants;
-import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.Paths;
 import frc.robot.Constants.PhotonConstants;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
 import frc.robot.commands.ScoreLow;
-import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
+import frc.robot.commands.SetArmProfiled;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Photonvision;
-
-import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.wpilibj.util.Color;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
@@ -36,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 
 public class RobotContainer {
   final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
@@ -59,6 +58,7 @@ public class RobotContainer {
     configureBindings();
     initEventMap();
     configureAutonomous();
+    photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
     () -> - modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
     () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
@@ -127,38 +127,25 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
+    // SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
+    SetArmProfiled armCommand = new SetArmProfiled(90, armSubsystem, photonvision);
 
-    // mechController.x().onTrue(new SetClawPosition(clawSubsystem,
-    // ClawConstants.FLAT_POSITION));
-    mechController.a().onTrue(new InstantCommand(armCommand::cancel));
-    // mechController.b().onTrue(new SetClawPosition(clawSubsystem,
-    // ClawConstants.CARRY_POSITION));
-    mechController.y().onTrue(armCommand);
+    mechController.a().onTrue(new InstantCommand(armCommand::stop));
+    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-15)));
+    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(90)));
+    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
 
-    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw)
-        .andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(LEDConstants.YELLOW_LOW_POWER))));
-    // mechController.rightTrigger().onTrue(new
-    // SetTelescopePosition(telescopeSubsystem, armSubsystem,
-    // TelescopeConstants.HIGH_POSITION));
-    // mechController.rightTrigger().whileTrue(new
-    // InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new
-    // InstantCommand(telescopeSubsystem::stopTelescope));
-
-    mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw)
-        .andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(LEDConstants.BLUE_LOW_POWER))));
-    // mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem,
-    // armSubsystem, clawSubsystem));
+    mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
+    
     mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    // mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem,
-    // ClawConstants.INTAKE_POSITION));
-    // mechController.povRight().onTrue(new
-    // InstantCommand(armCommand::flipPosition));
+    
+    armSubsystem.setDefaultCommand(armCommand);
+
     clawSubsystem.setDefaultCommand(new InstantCommand(
         () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,
             -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
@@ -167,9 +154,9 @@ public class RobotContainer {
     // mechController.povRight().onTrue(new ScoreHigh(armSubsystem,
     // telescopeSubsystem, clawSubsystem));
 
-   resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
-syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-   fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+    syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     // driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
     // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
@@ -177,6 +164,9 @@ syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     // InstantCommand(ledSubsystem::killLeds));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->
     // photonvision.togglePipeline()));
+    
+    // driverController.povRight().onTrue(new InstantCommand(ledSubsystem::killLeds));
+    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision,
     // driveSubsystem));
   }
@@ -196,9 +186,7 @@ syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
   }
 
   private static double deadband(double value, double deadband) {
-
-    if (Math.abs(value) <= deadband)
-      return 0.0;
+    if (Math.abs(value) <= deadband) return 0.0;
     deadband *= (value > 0.0) ? 1 : -1;
     return (value + deadband) / (1.0 + deadband);
   }

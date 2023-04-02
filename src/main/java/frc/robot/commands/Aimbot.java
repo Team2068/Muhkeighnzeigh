@@ -12,27 +12,18 @@ import frc.robot.Constants.PhotonConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Aimbot extends PIDCommand {
-  /** Creates a new Aimbot. */
   DriveSubsystem driveSubsystem;
   Photonvision photonvision;
 
-  public Aimbot(Photonvision photonvision, DriveSubsystem driveSubsystem, boolean rotating) {
+  public Aimbot(Photonvision photonvision, DriveSubsystem driveSubsystem) {
     super(
-        // The controller that the command will use
         new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
-        // This should return the measurement
-        () -> photonvision.data.targetYaw,
+        () -> photonvision.data.targetYaw, // Measurement
         // This should return the setpoint (can also be a constant)
         () -> ((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET_BACKWARD : PhotonConstants.AIMBOT_OFFSET_FORWARD),
-        // This uses the output
         output -> {
-          driveSubsystem.drive(new ChassisSpeeds(0, 
-                                                  ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 
-                                                  0));
+          driveSubsystem.drive(new ChassisSpeeds(0, ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
         });
 
     this.driveSubsystem = driveSubsystem;
@@ -50,4 +41,3 @@ public class Aimbot extends PIDCommand {
     driveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
   }
 }
-// lol hahahah uheguyavfgyavsyhaevgfyhsaebj WEINER 

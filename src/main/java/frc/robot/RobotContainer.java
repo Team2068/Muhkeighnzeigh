@@ -16,6 +16,7 @@ import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
 import frc.robot.commands.Aimbot;
+import frc.robot.commands.AimbotAngle;
 import frc.robot.commands.SetArmProfiled;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -169,7 +170,7 @@ public class RobotContainer {
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
     driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    driverController.rightBumper().onTrue(new Aimbot(photonvision, driveSubsystem, false));
+    driverController.rightBumper().onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5).andThen(new AimbotAngle(photonvision, driveSubsystem)).withTimeout(1.5));
     
     // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     driverController.leftBumper().onTrue(

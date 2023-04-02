@@ -108,7 +108,10 @@ public class Photonvision extends SubsystemBase {
 
   public void rotateMount() {
     mount.setAngle((mount.getAngle() == PhotonConstants.FORWARD_ANGLE) ? PhotonConstants.BACKWARD_ANGLE : PhotonConstants.FORWARD_ANGLE );
-  
+  }
+
+  public void rotateMount(double armAngle){
+    mount.setAngle((armAngle < 0) ? PhotonConstants.BACKWARD_ANGLE : PhotonConstants.FORWARD_ANGLE);
   }
 
   public boolean isFlipped () {

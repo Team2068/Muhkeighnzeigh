@@ -12,35 +12,25 @@ import frc.robot.Constants.PhotonConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AimbotAngle extends PIDCommand {
-  /** Creates a new Aimbot. */
   DriveSubsystem driveSubsystem;
   Photonvision photonvision;
+
   public AimbotAngle(Photonvision photonvision, DriveSubsystem driveSubsystem) {
     super(
-        // The controller that the command will use
         new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
-        // This should return the measurement
-        () -> photonvision.data.targetYaw,
+        () -> photonvision.data.targetYaw, // Measurement
         // This should return the setpoint (can also be a constant)
-        () -> PhotonConstants.AIMBOT_OFFSET_BACKWARD, //((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET_FORWARD : PhotonConstants.AIMBOT_OFFSET_BACKWARD),
-        // This uses the output
+        () -> ((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET_BACKWARD : PhotonConstants.AIMBOT_OFFSET_FORWARD),
         output -> {
-          driveSubsystem.drive(new ChassisSpeeds(0, 
-                                                0, 
-                                                output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND
-                                                ));
+          driveSubsystem.drive(new ChassisSpeeds(0, 0, ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * driveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
         });
-    // Use addRequirements() here to declare subsystem dependencies.
+
     this.driveSubsystem = driveSubsystem;
     this.photonvision = photonvision;
     addRequirements(driveSubsystem, photonvision);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return Math.abs(getController().getPositionError()) < Constants.AimbotConstants.minimumAdjustment || !photonvision.camera.getLatestResult().hasTargets();
@@ -51,4 +41,3 @@ public class AimbotAngle extends PIDCommand {
     driveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
   }
 }
-// lol hahahah uheguyavfgyavsyhaevgfyhsaebj WEINER 

@@ -20,7 +20,7 @@ public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax wristMotor = new CANSparkMax(ClawConstants.WRIST_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
     private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0.001, 0, 0);
-    private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 8, 9);
+    private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 9, 10);
     private final Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
 

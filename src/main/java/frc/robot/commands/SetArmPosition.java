@@ -14,11 +14,11 @@ public class SetArmPosition extends CommandBase {
   private final ArmSubsystem armSubsystem;
 
   public SetArmPosition(ArmSubsystem armSubsystem, double angleDegrees) {
-    this.armSubsystem = armSubsystem;
-    addRequirements(armSubsystem);
-
     controller.setSetpoint(angleDegrees);
     controller.setTolerance(0); // 5 degree tolerance
+   
+    this.armSubsystem = armSubsystem;
+    addRequirements(armSubsystem);
   } 
 
   @Override
@@ -33,9 +33,9 @@ public class SetArmPosition extends CommandBase {
     double ffOutput = armSubsystem.calculateFeedforward(Math.toRadians(setpoint));
     double newOutput = (pidOutput) + -ffOutput;
 
-    // SmartDashboard.putNumber("SAP PID", pidOutput);
-    // SmartDashboard.putNumber("SAP FF", ffOutput);
-    // SmartDashboard.putNumber("SAP Voltage", newOutput);
+    // DebugTable.set("SAP PID", pidOutput);
+    // DebugTable.set("SAP FF", ffOutput);
+    // DebugTable.set("SAP Voltage", newOutput);
     
     armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
   }
@@ -55,7 +55,6 @@ public class SetArmPosition extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println("exiting!!!");
     armSubsystem.set(0);
   }
 

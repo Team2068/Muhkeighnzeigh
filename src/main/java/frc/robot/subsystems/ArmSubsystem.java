@@ -17,8 +17,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax arm2Motor = new CANSparkMax(ArmConstants.ARM_2_MOTOR, MotorType.kBrushless);
 
     private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
-    // NOTE: found values using http://reca.lc/arm
-    public final ArmFeedforward feedforward = new ArmFeedforward(0, 4.5, 50);
+    public final ArmFeedforward feedforward = new ArmFeedforward(0, 4.5, 50); // NOTE: found values using http://reca.lc/arm
 
     public ArmSubsystem() {
         armEncoder.setDutyCycleRange(0, 1);
@@ -34,9 +33,6 @@ public class ArmSubsystem extends SubsystemBase {
 
         arm1Motor.getEncoder().setPositionConversionFactor(360/32); // TODO: Check Conversion factor
         arm2Motor.getEncoder().setPositionConversionFactor(360/32);
-
-        arm1Motor.getPIDController().setP(0.07);
-        arm2Motor.getPIDController().setP(0.07);
 
         arm1Motor.setInverted(true);
         arm2Motor.follow(arm1Motor);

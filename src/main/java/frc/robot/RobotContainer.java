@@ -117,11 +117,11 @@ public class RobotContainer {
 
   private void configureBindings() {
     // SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
-    SetArmProfiled profiledArm = new SetArmProfiled(90, armSubsystem, photonvision);
+    SetArmProfiled armCommand = new SetArmProfiled(90, armSubsystem, photonvision);
 
-    mechController.a().onTrue(new InstantCommand(profiledArm::stop));
-    mechController.x().onTrue(new InstantCommand(()->profiledArm.setAngle(-15)));
-    mechController.y().onTrue(new InstantCommand(()->profiledArm.setAngle(90)));
+    mechController.a().onTrue(new InstantCommand(armCommand::stop));
+    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-15)));
+    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(90)));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
 
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
@@ -132,7 +132,7 @@ public class RobotContainer {
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
     
-    armSubsystem.setDefaultCommand(profiledArm);
+    armSubsystem.setDefaultCommand(armCommand);
 
     clawSubsystem.setDefaultCommand(new InstantCommand(
         () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,

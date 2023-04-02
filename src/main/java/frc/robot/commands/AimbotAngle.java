@@ -12,18 +12,18 @@ import frc.robot.Constants.PhotonConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
 
-public class Aimbot extends PIDCommand {
+public class AimbotAngle extends PIDCommand {
   DriveSubsystem driveSubsystem;
   Photonvision photonvision;
 
-  public Aimbot(Photonvision photonvision, DriveSubsystem driveSubsystem) {
+  public AimbotAngle(Photonvision photonvision, DriveSubsystem driveSubsystem) {
     super(
         new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
         () -> photonvision.data.targetYaw, // Measurement
         // This should return the setpoint (can also be a constant)
         () -> ((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET_BACKWARD : PhotonConstants.AIMBOT_OFFSET_FORWARD),
         output -> {
-          driveSubsystem.drive(new ChassisSpeeds(0, ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
+          driveSubsystem.drive(new ChassisSpeeds(0, 0, ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * driveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
         });
 
     this.driveSubsystem = driveSubsystem;

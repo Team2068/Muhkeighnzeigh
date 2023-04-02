@@ -15,6 +15,11 @@ import frc.robot.commands.ScoreLow;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
+import frc.robot.commands.Aimbot;
+<<<<<<< Updated upstream
+import frc.robot.commands.AimbotAngle;
+=======
+>>>>>>> Stashed changes
 import frc.robot.commands.SetArmProfiled;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -22,8 +27,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Photonvision;
-
-import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
@@ -35,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 
 public class RobotContainer {
   final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
@@ -53,6 +57,7 @@ public class RobotContainer {
     configureBindings();
     initEventMap();
     configureAutonomous();
+    photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
         () -> -modifyAxis(driverController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -127,9 +132,9 @@ public class RobotContainer {
     }));
     // mechController.b().onTrue(new SetClawPosition(clawSubsystem,
     // ClawConstants.CARRY_POSITION));
-    mechController.y().onTrue(armCommand);
+    mechController.y().onTrue(new SetArmProfiled(73, armSubsystem, telescopeSubsystem));
 
-    mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw)
+        mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw)
         .andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(LEDConstants.YELLOW_LOW_POWER))));
     // mechController.rightTrigger().onTrue(new
     // SetTelescopePosition(telescopeSubsystem, armSubsystem,
@@ -165,11 +170,23 @@ public class RobotContainer {
     driverController.b().whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
+    driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+<<<<<<< Updated upstream
+    driverController.rightBumper().onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5).andThen(new AimbotAngle(photonvision, driveSubsystem)).withTimeout(1.5));
+=======
+    driverController.rightBumper().onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem)).withTimeout(1.5));
+>>>>>>> Stashed changes
+    
     // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    driverController.a().onTrue(
+    driverController.leftBumper().onTrue(
     new SequentialCommandGroup(  
-      new SetArmProfiled(-35, armSubsystem, telescopeSubsystem),
-      new InstantCommand(() -> armCommand.updateSetpoint(-35)),
+<<<<<<< Updated upstream
+      new SetArmProfiled(90, armSubsystem, telescopeSubsystem),
+      new InstantCommand(() -> armCommand.updateSetpoint(90)),
+=======
+      new SetArmProfiled(-107, armSubsystem, telescopeSubsystem),
+      new InstantCommand(() -> armCommand.updateSetpoint(-107)),
+>>>>>>> Stashed changes
       armCommand));
     // driverController.povRight().onTrue(new
     // InstantCommand(ledSubsystem::killLeds));

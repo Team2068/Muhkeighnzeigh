@@ -16,10 +16,12 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class Photonvision extends SubsystemBase {
-  PhotonCamera camera;
-  Servo mount = new Servo(PhotonConstants.SERVO_PORT);
+  public PhotonCamera camera;
+  public Servo mount = new Servo(PhotonConstants.SERVO_PORT);
 
   public Photonvision(String camName) {
     camera = new PhotonCamera(camName);
@@ -106,11 +108,14 @@ public class Photonvision extends SubsystemBase {
 
   public void rotateMount() {
     mount.setAngle((mount.getAngle() == PhotonConstants.FORWARD_ANGLE) ? PhotonConstants.BACKWARD_ANGLE : PhotonConstants.FORWARD_ANGLE );
-  
+  }
+
+  public void rotateMount(double armAngle){
+    mount.setAngle((armAngle < 0) ? PhotonConstants.BACKWARD_ANGLE : PhotonConstants.FORWARD_ANGLE);
   }
 
   public boolean isFlipped () {
-    return mount.getAngle() == PhotonConstants.BACKWARD_ANGLE;
+    return mount.getAngle() > 90;
   }
 
   @Override
@@ -122,8 +127,7 @@ public class Photonvision extends SubsystemBase {
 
     updateData();
 
-    //SmartDashboard.putNumber("distance", Units.metersToInches(getDistance(camera.getLatestResult())));
-    //System.out.println(mount.getAngle());
-    //System.out.println(mount.get());
+    SmartDashboard.putNumber("servo angle", mount.getAngle());
+    SmartDashboard.putBoolean("isFlipped", isFlipped());
   }
 }

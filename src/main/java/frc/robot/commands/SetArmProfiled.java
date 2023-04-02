@@ -70,7 +70,7 @@ public class SetArmProfiled extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // arm.stop();
-    // arm.setVoltage(-0.7); // telescope = 0
+    arm.setVoltage(-0.7); // telescope = 0
     // double armExtensionMultiplier = MathUtil.interpolate(1, 2.325, telescope.getPosition() / 90);
     // arm.setVoltage(-0.7 * armExtensionMultiplier); // telescope = 1
   }

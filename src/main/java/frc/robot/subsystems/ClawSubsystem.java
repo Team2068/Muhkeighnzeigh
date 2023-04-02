@@ -22,7 +22,6 @@ public class ClawSubsystem extends SubsystemBase {
     private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 9, 10);
     private final Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-
     public ClawSubsystem() {
         clawEncoder.setDutyCycleRange(0, 1);
 

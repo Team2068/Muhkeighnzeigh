@@ -115,8 +115,8 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
-    public static final int INTAKE_MOTOR = 13;
-    public static final int WRIST_MOTOR = 14;
+    public static final int WRIST_MOTOR = 13;
+    public static final int INTAKE_MOTOR = 14;
     public static final int WRIST_VOLTAGE = 4;
 
     public static final double WRIST_OFFSET = -0.06;

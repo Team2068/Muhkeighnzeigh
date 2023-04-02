@@ -68,7 +68,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
     // SmartDashboard.putData("Kill LEDs", new InstantCommand(ledSubsystem::killLeds, ledSubsystem));
-    // PathPlannerServer.startServer(5811);
+    // PathPlannerServer.startServer(5811); // DEBUGGING
   }
 
   private void configureAutonomous() {
@@ -78,31 +78,31 @@ public class RobotContainer {
     autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem, false));
     autonomousSelector.addOption("Leave Community", driveSubsystem.followPath(Paths.leaveCommunity));
     autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new WaitCommand(1),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         driveSubsystem.followPath(Paths.leaveCommunity)));
     autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new WaitCommand(1),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
     autonomousSelector.addOption("Door Dash",
         driveSubsystem.followPathGroupWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Leave Community + Park", new SequentialCommandGroup(
         new InstantCommand(clawSubsystem::closeClaw),
-        new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem),
+        new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem, photonvision),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION),
         driveSubsystem.followPath(Paths.leaveCommunityPark),
         new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Torch Auto", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
         driveSubsystem.followPath(Paths.leaveCommunity),
         new AutonBalance(driveSubsystem, false)));
     autonomousSelector.addOption("We BALL auto", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem),
+        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
   }
 
@@ -118,46 +118,38 @@ public class RobotContainer {
         new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION).withTimeout(1));
     Paths.eventMap.put("print", new PrintCommand("PRINTINTINTINTTINTIN"));
     Paths.eventMap.put("liftarm", new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(1));
-    Paths.eventMap.put("scorehigh", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem)
+    Paths.eventMap.put("scorehigh", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem, photonvision)
         .andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
-    Paths.eventMap.put("scorelow", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem)
+    Paths.eventMap.put("scorelow", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision)
         .andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
   }
 
   private void configureBindings() {
-    // SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
-    SetArmProfiled armCommand = new SetArmProfiled(90, armSubsystem, photonvision);
+    SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, photonvision);
 
     armSubsystem.setDefaultCommand(armCommand);
 
     mechController.a().onTrue(new InstantCommand(armCommand::stop));
-    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-15)));
-    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(90)));
+    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-73)));
+    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(73)));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
     
     mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
-    mechController.povLeft().onTrue(new InstantCommand(clawSubsystem::output)); // outputting
-    mechController.povRight().onTrue(new InstantCommand(clawSubsystem::intake)); // intaking
-    // mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));
-    // mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
-    // mechController.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
-
     clawSubsystem.setDefaultCommand(new InstantCommand(
       () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,
           -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
-      clawSubsystem));
+      clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY()))));
 
-    aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5).andThen(new AimbotAngle(photonvision,driveSubsystem)));
+    aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5).andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
+    fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-    fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
   }
 

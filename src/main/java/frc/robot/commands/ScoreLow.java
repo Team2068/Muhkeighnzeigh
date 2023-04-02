@@ -12,11 +12,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class ScoreLow extends SequentialCommandGroup {
-  public ScoreLow(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
+  public ScoreLow(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
+    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, vision);
     addCommands(
       new ParallelCommandGroup(
         armCommand,

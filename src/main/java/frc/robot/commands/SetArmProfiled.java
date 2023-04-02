@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import javax.swing.GroupLayout.SequentialGroup;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -12,10 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Photonvision;
 import frc.robot.utilities.DebugTable;
@@ -73,8 +69,6 @@ public class SetArmProfiled extends CommandBase {
     photon.rotateMount(angle);
     controller.reset();
     timer.reset();
-
-    // return this;
   }
 
   public void stop(){
@@ -90,6 +84,5 @@ public class SetArmProfiled extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
-    // return profile.isFinished(timer.get()) || Math.abs(targetAngle - arm.getArmPosition()) < 1 ;
   }
 }

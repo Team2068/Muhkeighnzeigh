@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -40,8 +41,9 @@ public class SetArmPosition extends CommandBase {
     armSubsystem.setVoltage(MathUtil.clamp(newOutput, -12, 12));
   }
 
-  public void updateSetpoint(double angleDegrees) {
+  public Command updateSetpoint(double angleDegrees) {
     controller.setSetpoint(angleDegrees);
+    return this;
   }
 
   public void flipPosition() {

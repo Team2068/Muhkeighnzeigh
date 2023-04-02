@@ -116,41 +116,24 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
-    SetArmProfiled profiledArm = new SetArmProfiled(73, armSubsystem);
+    // SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
+    SetArmProfiled profiledArm = new SetArmProfiled(90, armSubsystem, photonvision);
 
-    // mechController.x().onTrue(new SetClawPosition(clawSubsystem,
-    // ClawConstants.FLAT_POSITION));
-    mechController.a().onTrue(new InstantCommand(armCommand::cancel));
-    // mechController.a().onTrue(new InstantCommand(() -> {
-    //   armCommand.cancel();
-    //   armSubsystem.setVoltage(0);
-    // }));
-    // mechController.b().onTrue(new SetClawPosition(clawSubsystem,
-    // ClawConstants.CARRY_POSITION));
-    mechController.y().onTrue(armCommand);
-
+    mechController.a().onTrue(new InstantCommand(profiledArm::stop));
+    mechController.x().onTrue(new InstantCommand(()->profiledArm.setAngle(-15)));
+    mechController.y().onTrue(new InstantCommand(()->profiledArm.setAngle(90)));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
-    // mechController.rightTrigger().onTrue(new
-    // SetTelescopePosition(telescopeSubsystem, armSubsystem,
-    // TelescopeConstants.HIGH_POSITION));
-    // mechController.rightTrigger().whileTrue(new
-    // InstantCommand(telescopeSubsystem::extendTelescope)).whileFalse(new
-    // InstantCommand(telescopeSubsystem::stopTelescope));
 
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
-    // mechController.leftTrigger().onTrue(new ScoreLow(telescopeSubsystem,
-    // armSubsystem, clawSubsystem));
     mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    // mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem,
-    // ClawConstants.INTAKE_POSITION));
-    // mechController.povRight().onTrue(new
-    // InstantCommand(armCommand::flipPosition));
+    
+    armSubsystem.setDefaultCommand(profiledArm);
+
     clawSubsystem.setDefaultCommand(new InstantCommand(
         () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,
             -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
@@ -165,7 +148,6 @@ public class RobotContainer {
     driverController.rightTrigger().onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
     driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    driverController.leftBumper().onTrue(profiledArm.updateSetpoint(-35));
     // driverController.povRight().onTrue(new InstantCommand(ledSubsystem::killLeds));
     // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
     // driverController.rightBumper().whileTrue(new Aimbot(photonvision,

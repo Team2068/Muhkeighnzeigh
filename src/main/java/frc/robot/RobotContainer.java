@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
 import frc.robot.Constants.PhotonConstants;
+import frc.robot.commands.Aimbot;
+import frc.robot.commands.AimbotAngle;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
@@ -45,10 +47,10 @@ public class RobotContainer {
   final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
 
   final CommandXboxController mechController = new CommandXboxController(0);
-  //final CommandXboxController driverController = new CommandXboxController(0);
   final Joystick leftJoystick = new Joystick(1);
   final Joystick rightJoystick = new Joystick(2);
   final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
+  final JoystickButton aimButton = new JoystickButton(leftJoystick, 2);
   final JoystickButton resetOdometryButton = new JoystickButton(rightJoystick, 3);
   final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
   final JoystickButton fieldOrientedButton = new JoystickButton(rightJoystick, 4);
@@ -60,17 +62,12 @@ public class RobotContainer {
     configureAutonomous();
     photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
-    () -> - modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    () -> -modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
     () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-   () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-    // driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem,
-    //     () -> -modifyAxis(leftJoystick.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        //() -> -modifyAxis(driverController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -modifyAxis(driverController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
-    // SmartDashboard.putData("Kill LEDs", new
-    // InstantCommand(ledSubsystem::killLeds, ledSubsystem));
+    // SmartDashboard.putData("Kill LEDs", new InstantCommand(ledSubsystem::killLeds, ledSubsystem));
     // PathPlannerServer.startServer(5811);
   }
 
@@ -113,6 +110,7 @@ public class RobotContainer {
     Paths.eventMap.put("pickup", new SequentialCommandGroup(
         new InstantCommand(clawSubsystem::openClaw),
         new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION).withTimeout(1),
+        new InstantCommand(clawSubsystem::intake),
         new InstantCommand(clawSubsystem::closeClaw)));
     Paths.eventMap.put("closeclaw", new InstantCommand(clawSubsystem::closeClaw));
     Paths.eventMap.put("openclaw", new InstantCommand(clawSubsystem::closeClaw));
@@ -130,11 +128,12 @@ public class RobotContainer {
     // SetArmPosition armCommand = new SetArmPosition(armSubsystem, 73);
     SetArmProfiled armCommand = new SetArmProfiled(90, armSubsystem, photonvision);
 
+    armSubsystem.setDefaultCommand(armCommand);
+
     mechController.a().onTrue(new InstantCommand(armCommand::stop));
     mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-15)));
     mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(90)));
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
-
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
     
     mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope))
@@ -143,32 +142,23 @@ public class RobotContainer {
     mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope))
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    
-    armSubsystem.setDefaultCommand(armCommand);
+
+    mechController.povLeft().onTrue(new InstantCommand(clawSubsystem::output)); // outputting
+    mechController.povRight().onTrue(new InstantCommand(clawSubsystem::intake)); // intaking
+    // mechController.povLeft().onTrue(new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION));
+    // mechController.povRight().onTrue(new InstantCommand(armCommand::flipPosition));
+    // mechController.povRight().onTrue(new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem));
 
     clawSubsystem.setDefaultCommand(new InstantCommand(
-        () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,
-            -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
-        clawSubsystem));
+      () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,
+          -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
+      clawSubsystem));
 
-    // mechController.povRight().onTrue(new ScoreHigh(armSubsystem,
-    // telescopeSubsystem, clawSubsystem));
-
+    aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5).andThen(new AimbotAngle(photonvision,driveSubsystem)));
     resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
-    // driverController.leftTrigger().onTrue(new InstantCommand(photonvision::rotateMount));
-    // driverController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    // driverController.povRight().onTrue(new
-    // InstantCommand(ledSubsystem::killLeds));
-    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() ->
-    // photonvision.togglePipeline()));
-    
-    // driverController.povRight().onTrue(new InstantCommand(ledSubsystem::killLeds));
-    // driverController.leftTrigger().toggleOnTrue(new InstantCommand(() -> photonvision.togglePipeline()));
-    // driverController.rightBumper().whileTrue(new Aimbot(photonvision,
-    // driveSubsystem));
   }
 
   public Command getAutonomousCommand() {
@@ -181,7 +171,6 @@ public class RobotContainer {
       // This makes forward (field oriented) away from the driver, as intended.
       driveSubsystem.pigeon2.addYaw(180);
     }, driveSubsystem);
-    // return new AutonBalance(driveSubsystem, false).withTimeout(14.5).andThen(postAutonomous);
     return autonomousSelector.getSelected().andThen(postAutonomous);
   }
 

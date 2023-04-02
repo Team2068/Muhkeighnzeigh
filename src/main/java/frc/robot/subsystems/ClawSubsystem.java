@@ -12,12 +12,11 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.ChassisConfiguration;
 import frc.robot.Constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax wristMotor = new CANSparkMax(ClawConstants.WRIST_MOTOR, MotorType.kBrushless);
+    private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
     private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0.001, 0, 0);
     private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 9, 10);
@@ -27,8 +26,10 @@ public class ClawSubsystem extends SubsystemBase {
     public ClawSubsystem() {
         clawEncoder.setDutyCycleRange(0, 1);
 
+        intakeMotor.setIdleMode(IdleMode.kCoast);
         wristMotor.setIdleMode(IdleMode.kBrake);
 
+        intakeMotor.setOpenLoopRampRate(.4);
         wristMotor.setOpenLoopRampRate(.4);
 
         wristMotor.setSmartCurrentLimit(40);
@@ -40,8 +41,20 @@ public class ClawSubsystem extends SubsystemBase {
         wristMotor.setVoltage(voltage);
     }
 
-    public void setWristSpeed(double speed) {
+    public void setWristSpeed(double speed){
         wristMotor.set(speed);
+    }
+
+    public void setIntakeSpeed(double speed) {
+        intakeMotor.set(speed);
+    }
+
+    public void intake(){
+        intakeMotor.set(-1);
+    }
+
+    public void output(){
+        intakeMotor.set(0.1);
     }
 
     public void openClaw() {
@@ -53,7 +66,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void stopClaw() {
-        wristMotor.set(0);
+        intakeMotor.set(0);
     }
 
     public double getClawPosition() {
@@ -68,8 +81,7 @@ public class ClawSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(Constants.getChassisConfiguration() == ChassisConfiguration.MAIN)
-            SmartDashboard.putString("Claw State", (clawSolenoid.get() == Value.kReverse) ? "Open" : "Closed");
+        SmartDashboard.putString("Claw State", (clawSolenoid.get() == Value.kReverse) ? "Open" : "Closed");
         SmartDashboard.putNumber("Claw Position", getClawPosition());
         SmartDashboard.putNumber("Claw Abs Position", clawEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Claw Power", wristMotor.getBusVoltage());

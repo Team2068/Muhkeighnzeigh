@@ -17,6 +17,7 @@ public class Pickup2 extends SequentialCommandGroup {
       new SetArmPosition(armSubsystem, 18), 
       new InstantCommand(armSubsystem::stop),
       new InstantCommand(clawSubsystem::openClaw),
+      new InstantCommand(clawSubsystem::intake),
       new SetClawPosition(clawSubsystem, 175),
       new InstantCommand(() -> { if (pickingCone) clawSubsystem.closeClaw();}),
       new WaitCommand(0.5),

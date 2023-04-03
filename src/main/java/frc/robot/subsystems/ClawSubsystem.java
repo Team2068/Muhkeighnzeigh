@@ -26,17 +26,18 @@ public class ClawSubsystem extends SubsystemBase {
         clawEncoder.setDutyCycleRange(0, 1);
 
         intakeMotor.setIdleMode(IdleMode.kCoast);
-        wristMotor.setIdleMode(IdleMode.kBrake);
+        wristMotor.setIdleMode(IdleMode.kCoast);
 
         intakeMotor.setOpenLoopRampRate(.4);
-        wristMotor.setOpenLoopRampRate(.4);
+        wristMotor.setOpenLoopRampRate(0);
 
-        wristMotor.setSmartCurrentLimit(40);
+        wristMotor.setSmartCurrentLimit(15  );
 
         compressor.enableDigital();
     }
 
     public void setWristVoltage(double voltage) {
+        if (getClawPosition() > 134 && voltage > 0) return;
         wristMotor.setVoltage(voltage);
     }
 

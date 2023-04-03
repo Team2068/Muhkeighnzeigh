@@ -72,7 +72,7 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(25);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(330);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
@@ -117,9 +117,9 @@ public final class Constants {
   public static final class ClawConstants {
     public static final int WRIST_MOTOR = 13;
     public static final int INTAKE_MOTOR = 14;
-    public static final int WRIST_VOLTAGE = 4;
+    public static final double WRIST_VOLTAGE = 10;
 
-    public static final double WRIST_OFFSET = -0.06;
+    public static final double WRIST_OFFSET = -0.47;
     public static final double INTAKE_SPEED = .75;
     public static final double WRIST_SPEED = .5;
 

@@ -8,7 +8,6 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
 import frc.robot.Constants.PhotonConstants;
 import frc.robot.commands.Aimbot;
-import frc.robot.commands.AimbotAngle;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
@@ -37,7 +36,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-
 public class RobotContainer {
   final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
   final DriveSubsystem driveSubsystem = new DriveSubsystem();
@@ -46,10 +44,12 @@ public class RobotContainer {
   final ClawSubsystem clawSubsystem = new ClawSubsystem();
   final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
 
+  final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
   final CommandXboxController mechController = new CommandXboxController(0);
+  final CommandXboxController driveController = new CommandXboxController(3);
+ 
   final Joystick leftJoystick = new Joystick(1);
   final Joystick rightJoystick = new Joystick(2);
-  final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
   final JoystickButton aimButton = new JoystickButton(leftJoystick, 2);
   final JoystickButton resetOdometryButton = new JoystickButton(rightJoystick, 3);
   final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
@@ -60,11 +60,12 @@ public class RobotContainer {
     configureBindings();
     initEventMap();
     configureAutonomous();
+    photonvision.camera.setPipelineIndex(1);
     photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
-    () -> -modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    () -> -modifyAxis(driveController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    () -> -modifyAxis(driveController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    () -> -modifyAxis(driveController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
     // SmartDashboard.putData("Kill LEDs", new InstantCommand(ledSubsystem::killLeds, ledSubsystem));
@@ -125,13 +126,15 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, photonvision);
+    SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, telescopeSubsystem, photonvision);
 
     armSubsystem.setDefaultCommand(armCommand);
 
     mechController.a().onTrue(new InstantCommand(armCommand::stop));
+    mechController.b().onTrue(new InstantCommand(()->armCommand.setAngle(0)));
     mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-73)));
     mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(73)));
+
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
     
@@ -146,11 +149,15 @@ public class RobotContainer {
           -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
       clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY()))));
 
-    aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5).andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
+    aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
     fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
+    driveController.a().onTrue(new InstantCommand(driveSubsystem::toggleFieldOriented));
+    driveController.b().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
+    driveController.y().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    driveController.x().onTrue(new Aimbot(photonvision, driveSubsystem));
   }
 
   public Command getAutonomousCommand() {

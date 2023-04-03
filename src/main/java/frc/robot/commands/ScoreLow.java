@@ -17,7 +17,7 @@ import frc.robot.subsystems.TelescopeSubsystem;
 
 public class ScoreLow extends SequentialCommandGroup {
   public ScoreLow(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
-    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, vision);
+    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, telescopeSubsystem, vision);
     addCommands(
       new ParallelCommandGroup(
         armCommand,

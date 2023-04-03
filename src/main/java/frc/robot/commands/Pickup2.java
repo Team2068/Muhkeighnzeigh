@@ -10,12 +10,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.Photonvision;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Pickup2 extends SequentialCommandGroup {
-  public Pickup2(Boolean pickingCone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
+  public Pickup2(Boolean pickingCone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision, TelescopeSubsystem telescopeSubsystem) {
     addCommands(
-      new SetArmProfiled(18, armSubsystem, vision), 
+      new SetArmProfiled(18, armSubsystem, telescopeSubsystem, vision), 
       new InstantCommand(armSubsystem::stop),
       new InstantCommand(clawSubsystem::openClaw),
       new InstantCommand(clawSubsystem::intake),

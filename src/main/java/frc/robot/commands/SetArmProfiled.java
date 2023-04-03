@@ -14,23 +14,26 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Photonvision;
+import frc.robot.subsystems.TelescopeSubsystem;
 import frc.robot.utilities.DebugTable;
 
 public class SetArmProfiled extends CommandBase {
 
-  Constraints constraints = new Constraints(360, 320);
+  Constraints constraints = new Constraints(360, 12);
   PIDController controller = new PIDController(0.07, 0.06, 0);
   Timer timer = new Timer();
   TrapezoidProfile profile;
   ArmSubsystem arm;
   Photonvision photon;
+  TelescopeSubsystem telescope; 
 
   double targetAngle;
   boolean stopped;
 
-  public SetArmProfiled(double angle, ArmSubsystem arm, Photonvision vision) {
+  public SetArmProfiled(double angle, ArmSubsystem arm, TelescopeSubsystem telescope, Photonvision vision) {
     targetAngle = angle;
     this.arm = arm;
+    this.telescope = telescope;
     photon = vision;
     addRequirements(arm, vision);
   }
@@ -56,12 +59,13 @@ public class SetArmProfiled extends CommandBase {
     DebugTable.set("Output", output);
     DebugTable.set("Current Position", expected.position);
     DebugTable.set("Leftover Profile Time", profile.timeLeftUntil(targetAngle));
-
-    arm.setVoltage(MathUtil.clamp(output, -12, 12));
+    double extFactor = MathUtil.clamp((telescope.getPosition()/24), 0,0.75);
+    arm.setVoltage(MathUtil.clamp(output - extFactor, -12, 12));
     // arm.setReference(current.position); // NOTE: May use our own if this doesn't go too well
   }
 
   public void setAngle(double angle){
+    stopped = false;
     profile = new TrapezoidProfile(constraints,
       new State(angle, 0),
       new State(arm.getArmPosition(), 0));

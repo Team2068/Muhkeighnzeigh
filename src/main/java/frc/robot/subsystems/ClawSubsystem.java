@@ -16,7 +16,7 @@ import frc.robot.Constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase {
     private final CANSparkMax wristMotor = new CANSparkMax(ClawConstants.WRIST_MOTOR, MotorType.kBrushless);
-    private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushless);
+    private final CANSparkMax intakeMotor = new CANSparkMax(ClawConstants.INTAKE_MOTOR, MotorType.kBrushed);
     private final DutyCycleEncoder clawEncoder = new DutyCycleEncoder(1);
     private final SimpleMotorFeedforward clawFeedforward = new SimpleMotorFeedforward(0.001, 0, 0);
     private final DoubleSolenoid clawSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 9, 10);
@@ -26,9 +26,9 @@ public class ClawSubsystem extends SubsystemBase {
         clawEncoder.setDutyCycleRange(0, 1);
 
         intakeMotor.setIdleMode(IdleMode.kCoast);
-        wristMotor.setIdleMode(IdleMode.kCoast);
+        wristMotor.setIdleMode(IdleMode.kBrake);
 
-        intakeMotor.setOpenLoopRampRate(.4);
+        // intakeMotor.setOpenLoopRampRate(.4);
         wristMotor.setOpenLoopRampRate(0);
 
         wristMotor.setSmartCurrentLimit(15  );
@@ -37,7 +37,10 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void setWristVoltage(double voltage) {
-        if (getClawPosition() > 134 && voltage > 0) return;
+        if(getClawPosition() >= 135  && voltage < 0) {
+            wristMotor.setVoltage(0);
+            return;
+        }
         wristMotor.setVoltage(voltage);
     }
 

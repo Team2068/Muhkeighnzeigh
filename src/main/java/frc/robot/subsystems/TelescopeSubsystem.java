@@ -24,7 +24,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     }
 
     public void retractTelescope(double speed) {
-        if(getPosition() <= 0) {
+        if(getPosition() <= 1) {
             DriverStation.reportWarning("Retract stopped, position <= 0", false);
             return;
         }
@@ -32,7 +32,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     }
 
     public void retractTelescope() {
-        telescopeMotor.set(-TelescopeConstants.TELESCOPE_SPEED);
+        retractTelescope(TelescopeConstants.TELESCOPE_SPEED);
     }
 
     public void stopTelescope() {

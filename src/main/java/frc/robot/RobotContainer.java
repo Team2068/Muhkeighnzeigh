@@ -11,7 +11,7 @@ import frc.robot.commands.Aimbot;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ScoreHigh;
-import frc.robot.commands.ScoreLow;
+import frc.robot.commands.ScoreMid;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
 import frc.robot.commands.SetArmProfiled;
@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,7 +56,7 @@ public class RobotContainer {
   final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
   final JoystickButton fieldOrientedButton = new JoystickButton(rightJoystick, 4);
   final JoystickButton slowModeButton = new JoystickButton(rightJoystick, 1);
-
+  final JoystickButton zeroGyroButton = new JoystickButton(leftJoystick,3);
   public RobotContainer() {
     configureBindings();
     initEventMap();
@@ -66,6 +67,9 @@ public class RobotContainer {
     () -> -modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
     () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
     () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    // () -> -modifyAxis(driveController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    // () -> -modifyAxis(driveController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    // () -> -modifyAxis(driveController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
     // SmartDashboard.putData("Kill LEDs", new InstantCommand(ledSubsystem::killLeds, ledSubsystem));
@@ -79,12 +83,12 @@ public class RobotContainer {
     autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem, false));
     autonomousSelector.addOption("Leave Community", driveSubsystem.followPath(Paths.leaveCommunity));
     autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+        new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new WaitCommand(1),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         driveSubsystem.followPath(Paths.leaveCommunity)));
     autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+        new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new WaitCommand(1),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
     autonomousSelector.addOption("Door Dash",
@@ -97,13 +101,13 @@ public class RobotContainer {
         driveSubsystem.followPath(Paths.leaveCommunityPark),
         new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Torch Auto", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+        new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
         driveSubsystem.followPath(Paths.leaveCommunity),
         new AutonBalance(driveSubsystem, false)));
     autonomousSelector.addOption("We BALL auto", new SequentialCommandGroup(
-        new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+        new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
   }
 
@@ -121,19 +125,20 @@ public class RobotContainer {
     Paths.eventMap.put("liftarm", new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(1));
     Paths.eventMap.put("scorehigh", new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem, photonvision)
         .andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
-    Paths.eventMap.put("scorelow", new ScoreLow(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision)
+    Paths.eventMap.put("scorelow", new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision)
         .andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
   }
 
   private void configureBindings() {
-    SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, telescopeSubsystem, photonvision);
+    DriverStation.silenceJoystickConnectionWarning(true);
+    SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, telescopeSubsystem, photonvision::rotateMount);
 
     armSubsystem.setDefaultCommand(armCommand);
 
     mechController.a().onTrue(new InstantCommand(armCommand::stop));
     mechController.b().onTrue(new InstantCommand(()->armCommand.setAngle(0)));
-    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-73)));
-    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(73)));
+    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-70)));
+    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(70)));
 
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
@@ -145,10 +150,10 @@ public class RobotContainer {
         .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
 
     clawSubsystem.setDefaultCommand(new InstantCommand(
-      () -> clawSubsystem.setWristVoltage(MathUtil.clamp(mechController.getLeftY() * ClawConstants.WRIST_VOLTAGE,
+      () -> clawSubsystem.setWristVoltage(MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
           -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
       clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY()))));
-
+    zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
     fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
@@ -157,7 +162,7 @@ public class RobotContainer {
     driveController.a().onTrue(new InstantCommand(driveSubsystem::toggleFieldOriented));
     driveController.b().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
     driveController.y().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    driveController.x().onTrue(new Aimbot(photonvision, driveSubsystem));
+    driveController.x().onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));
   }
 
   public Command getAutonomousCommand() {

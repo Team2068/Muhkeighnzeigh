@@ -731,27 +731,6 @@
               "imageHeight": 0
             }
           },
-          "6,0": {
-            "size": [
-              4,
-              4
-            ],
-            "content": {
-              "_type": "Camera Stream",
-              "_source0": "camera_server://photonvision_Port_1181_MJPEG_Server",
-              "_title": "photonvision_Port_1181_MJPEG_Server",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Crosshair/Show crosshair": true,
-              "Crosshair/Crosshair color": "#FFFFFFFF",
-              "Controls/Show controls": true,
-              "Controls/Rotation": "NONE",
-              "compression": -1.0,
-              "fps": -1,
-              "imageWidth": 0,
-              "imageHeight": 0
-            }
-          },
           "0,0": {
             "size": [
               1,
@@ -764,15 +743,36 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "6,0": {
+            "size": [
+              4,
+              4
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": 0.800000011920929,
-    "y": 0.800000011920929,
-    "width": 1534.4000244140625,
-    "height": 814.4000244140625
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 838.4000244140625
   }
 }

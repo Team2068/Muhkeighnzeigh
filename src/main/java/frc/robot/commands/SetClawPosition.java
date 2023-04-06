@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
 
 public class SetClawPosition extends CommandBase {
-    private final PIDController clawController = new PIDController(0.55, 1.2, 0); // old kp 0.4
+    private final PIDController clawController = new PIDController(0.6, 1.2, 0); // old kp 0.4
     private final ClawSubsystem clawSubsystem;
     private double lastClawPosition = 0;
 
@@ -15,7 +15,6 @@ public class SetClawPosition extends CommandBase {
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
         clawController.setSetpoint(angleDegrees);
-        clawController.setTolerance(1);
     }
 
     @Override
@@ -45,6 +44,6 @@ public class SetClawPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(clawController.getPositionError()) < 15;
+        return Math.abs(clawController.getPositionError()) < 3;
     }
 }

@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonBalance extends SequentialCommandGroup {
   private final double kP = 0.2;
+  Timer timeBalanced = new Timer();
 
   private class Balance extends PIDCommand {
     DriveSubsystem driveSubsystem;
@@ -22,23 +24,30 @@ public class AutonBalance extends SequentialCommandGroup {
         driveSubsystem.drive(new ChassisSpeeds(-output * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0, 0));
       }, driveSubsystem);
       this.driveSubsystem = driveSubsystem;
+      timeBalanced.reset();
     }
 
     @Override
     public boolean isFinished() {
-      return Math.abs(m_controller.getPositionError()) < 0.25;
+      // return Math.abs(m_controller.getPositionError()) < 0.25;
+      if (Math.abs(m_controller.getPositionError()) < 0.25 && timeBalanced.get() < 0.05)
+        timeBalanced.start();
+      else
+        timeBalanced.stop();
+      return timeBalanced.hasElapsed(1);
     }
 
     @Override
     public void execute() {
       super.execute();
+      System.out.println("Balance timer: " + timeBalanced.get());
     }
 
     @Override
     public void end(boolean interrupted) {
       super.end(interrupted);
       System.out.println("Robot Balanced!");
-      driveSubsystem.drive(new ChassisSpeeds());
+      driveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
     }
   }
 
@@ -49,7 +58,7 @@ public class AutonBalance extends SequentialCommandGroup {
     final double initialRoll = driveSubsystem.pigeon2.getRoll();
     final double initialX = driveSubsystem.getPose().getX();
     addCommands(
-        new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds((reversed) ? -1.5 : 1.5, 0, 0)).until(
+        new DefaultDriveCommand(driveSubsystem, new ChassisSpeeds((reversed) ? -1.6 : 1.6, 0, 0)).until(
             () -> {
               System.out.println("waiting until we hit");
               System.out.println(driveSubsystem.pigeon2.getRoll());

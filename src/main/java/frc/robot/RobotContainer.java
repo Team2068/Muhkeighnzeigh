@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -49,14 +50,14 @@ public class RobotContainer {
   final CommandXboxController mechController = new CommandXboxController(0);
   final CommandXboxController driveController = new CommandXboxController(3);
  
-  final Joystick leftJoystick = new Joystick(1);
-  final Joystick rightJoystick = new Joystick(2);
-  final JoystickButton aimButton = new JoystickButton(leftJoystick, 2);
-  final JoystickButton resetOdometryButton = new JoystickButton(rightJoystick, 3);
-  final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
-  final JoystickButton fieldOrientedButton = new JoystickButton(rightJoystick, 4);
-  final JoystickButton slowModeButton = new JoystickButton(rightJoystick, 1);
-  final JoystickButton zeroGyroButton = new JoystickButton(leftJoystick,3);
+  // final Joystick leftJoystick = new Joystick(1);
+  // final Joystick rightJoystick = new Joystick(2);
+  // final JoystickButton aimButton = new JoystickButton(leftJoystick, 2);
+  // final JoystickButton resetOdometryButton = new JoystickButton(rightJoystick, 3);
+  // final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
+  // final JoystickButton fieldOrientedButton = new JoystickButton(rightJoystick, 4);
+  // final JoystickButton slowModeButton = new JoystickButton(rightJoystick, 1);
+  // final JoystickButton zeroGyroButton = new JoystickButton(leftJoystick,3);
   public RobotContainer() {
     configureBindings();
     initEventMap();
@@ -64,12 +65,12 @@ public class RobotContainer {
     photonvision.camera.setPipelineIndex(1);
     photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
-    () -> -modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-    // () -> -modifyAxis(driveController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    // () -> -modifyAxis(driveController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    // () -> -modifyAxis(driveController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    // () -> -modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    // () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    // () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    () -> -modifyAxis(driveController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    () -> -modifyAxis(driveController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    () -> -modifyAxis(driveController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
     // SmartDashboard.putData("Kill LEDs", new InstantCommand(ledSubsystem::killLeds, ledSubsystem));
@@ -81,16 +82,17 @@ public class RobotContainer {
         driveSubsystem.followPath(Paths.park),
         new AutonBalance(driveSubsystem, false)));
     autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem, false));
+    autonomousSelector.addOption("Only Park Reversed", new AutonBalance(driveSubsystem, true));
     autonomousSelector.addOption("Leave Community", driveSubsystem.followPath(Paths.leaveCommunity));
     autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new WaitCommand(1),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         driveSubsystem.followPath(Paths.leaveCommunity)));
-    autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
-        new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
-        new WaitCommand(1),
-        new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
+    // autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
+    //     new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+    //     new WaitCommand(1),
+    //     new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
     autonomousSelector.addOption("Door Dash",
         driveSubsystem.followPathGroupWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Leave Community + Park", new SequentialCommandGroup(
@@ -100,7 +102,7 @@ public class RobotContainer {
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION),
         driveSubsystem.followPath(Paths.leaveCommunityPark),
         new AutonBalance(driveSubsystem, true)));
-    autonomousSelector.addOption("Torch Auto", new SequentialCommandGroup(
+    autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
@@ -129,9 +131,10 @@ public class RobotContainer {
         .andThen(new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
   }
 
+  SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, telescopeSubsystem, photonvision::rotateMount, true);
+
   private void configureBindings() {
     DriverStation.silenceJoystickConnectionWarning(true);
-    SetArmProfiled armCommand = new SetArmProfiled(73, armSubsystem, telescopeSubsystem, photonvision::rotateMount);
 
     armSubsystem.setDefaultCommand(armCommand);
 
@@ -153,12 +156,12 @@ public class RobotContainer {
       () -> clawSubsystem.setWristVoltage(MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
           -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
       clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY()))));
-    zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-    aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
-    fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
-    resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
-    syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-    slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
+    // zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    // aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
+    // fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
+    // resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
+    // syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
+    // slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
     driveController.a().onTrue(new InstantCommand(driveSubsystem::toggleFieldOriented));
     driveController.b().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
     driveController.y().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
@@ -176,6 +179,29 @@ public class RobotContainer {
       driveSubsystem.pigeon2.addYaw(180);
     }, driveSubsystem);
     return autonomousSelector.getSelected().andThen(postAutonomous);
+  }
+
+  public SequentialCommandGroup runSubsystemTests(){
+    driveSubsystem.syncEncoders();
+    driveSubsystem.resetOdometry();
+    System.out.println("Init...");
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> System.out.println("Starting...")),
+      new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds(10,0,0))),
+      new WaitCommand(0.5),
+      new InstantCommand(()-> armCommand.setAngle(75)),
+      new WaitCommand(0.5),
+      new InstantCommand(clawSubsystem::intake),
+      new WaitCommand(0.2),
+      new InstantCommand(clawSubsystem::output),
+      new InstantCommand(telescopeSubsystem::extendTelescope),
+      new WaitCommand(0.2),
+      new InstantCommand(telescopeSubsystem::retractTelescope),
+      new InstantCommand(armCommand::stop),
+      new InstantCommand(telescopeSubsystem::stopTelescope),
+      new InstantCommand(clawSubsystem::stopClaw),
+      new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds(0, 0, 0)))
+    );
   }
 
   private static double deadband(double value, double deadband) {

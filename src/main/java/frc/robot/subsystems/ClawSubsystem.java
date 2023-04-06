@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -39,8 +40,10 @@ public class ClawSubsystem extends SubsystemBase {
     public void setWristVoltage(double voltage) {
         if(getClawPosition() >= 135  && voltage < 0) {
             wristMotor.setVoltage(0);
+            DriverStation.reportWarning("Claw driving into itself!", false);
             return;
         } else if(getClawPosition() <= -67 && voltage > 0) {
+            DriverStation.reportWarning("Claw driving into itself!", false);
             wristMotor.setVoltage(0);
             return;
         }

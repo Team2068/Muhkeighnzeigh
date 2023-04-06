@@ -21,9 +21,9 @@ public class Aimbot extends PIDCommand {
         new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
         () -> photonvision.data.targetYaw, // Measurement
         // This should return the setpoint (can also be a constant)
-        () -> ((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET_BACKWARD : PhotonConstants.AIMBOT_OFFSET_FORWARD),
+        () -> PhotonConstants.AIMBOT_OFFSET_FORWARD,
         output -> {
-          driveSubsystem.drive(new ChassisSpeeds(0, ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
+          driveSubsystem.drive(new ChassisSpeeds(0, output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
         });
 
     this.driveSubsystem = driveSubsystem;

@@ -34,7 +34,7 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 9;
+    public static double MAX_VOLTAGE = 6;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /

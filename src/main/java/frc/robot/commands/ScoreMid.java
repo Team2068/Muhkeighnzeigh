@@ -17,7 +17,7 @@ import frc.robot.subsystems.TelescopeSubsystem;
 
 public class ScoreMid extends SequentialCommandGroup {
   public ScoreMid(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
-    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, telescopeSubsystem, vision::rotateMount);
+    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, telescopeSubsystem, vision::rotateMount, false);
     addCommands(
       new ParallelCommandGroup(
         armCommand,
@@ -25,10 +25,13 @@ public class ScoreMid extends SequentialCommandGroup {
         new SequentialCommandGroup(
           new WaitCommand(0.25),
           new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION),
-          new SetClawPosition(clawSubsystem, 0).withTimeout(0.5),
-          new InstantCommand(clawSubsystem::openClaw)
+          new SetClawPosition(clawSubsystem, -90).withTimeout(0.5),
+          new InstantCommand(clawSubsystem::openClaw),
+          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5))
         )
-      ).withTimeout(2)
+      ).withTimeout(2),
+      new InstantCommand(clawSubsystem::stopClaw),
+      new InstantCommand(() -> clawSubsystem.setWristVoltage(0))
     );
   }
 }

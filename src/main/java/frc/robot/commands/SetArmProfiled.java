@@ -30,11 +30,12 @@ public class SetArmProfiled extends CommandBase {
   double targetAngle;
   boolean stopped;
 
-  public SetArmProfiled(double angle, ArmSubsystem arm, TelescopeSubsystem telescope, Consumer<Double> flip) {
+  public SetArmProfiled(double angle, ArmSubsystem arm, TelescopeSubsystem telescope, Consumer<Double> flip, boolean stop) {
     targetAngle = angle;
     this.arm = arm;
     this.telescope = telescope;
     this.flip = flip;
+    stopped = stop;
     addRequirements(arm);
   }
 
@@ -51,8 +52,7 @@ public class SetArmProfiled extends CommandBase {
 
   @Override
   public void execute() {
-    if (stopped)
-      return;
+    if (stopped) return;
     State expected = profile.calculate(timer.get());
 
     double output = controller.calculate(arm.getArmPosition(), expected.position);
@@ -66,8 +66,10 @@ public class SetArmProfiled extends CommandBase {
 
   public void setAngle(double angle) {
     stopped = false;
-    // constraints.maxAcceleration = (angle < 0 && targetAngle > 0) ?
-    profile = new TrapezoidProfile(constraints,
+    long mask = 1 << 63;
+
+    profile = new TrapezoidProfile(
+        new Constraints(360, ( (((long)angle) & mask) != (((long)targetAngle) & mask)) ? 50 : 100),
         new State(angle, 0),
         new State(arm.getArmPosition(), 0));
 

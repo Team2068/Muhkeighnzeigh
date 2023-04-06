@@ -40,6 +40,9 @@ public class ClawSubsystem extends SubsystemBase {
         if(getClawPosition() >= 135  && voltage < 0) {
             wristMotor.setVoltage(0);
             return;
+        } else if(getClawPosition() <= -67 && voltage > 0) {
+            wristMotor.setVoltage(0);
+            return;
         }
         wristMotor.setVoltage(voltage);
     }

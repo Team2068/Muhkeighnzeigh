@@ -22,7 +22,7 @@ public class SetTelescopePosition extends PIDCommand {
         position,
         output -> {
           // Don't extend into the ground please
-          if(Math.abs(armSubsystem.getArmPosition()) >= 120) {
+          if(Math.abs(armSubsystem.getArmPosition()) >= 130) {
             DriverStation.reportWarning("Angle too shallow to extend!", false);
             return;
           }

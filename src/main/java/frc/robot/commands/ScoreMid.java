@@ -23,13 +23,14 @@ public class ScoreMid extends SequentialCommandGroup {
         armCommand,
         new PrintCommand("Starting Low..."),
         new SequentialCommandGroup(
-          new WaitCommand(0.25),
+          new WaitCommand(0.5),
           new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION),
-          new SetClawPosition(clawSubsystem, -90).withTimeout(0.5),
+          new SetClawPosition(clawSubsystem, -50).withTimeout(0.5),
           new InstantCommand(clawSubsystem::openClaw),
-          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5))
+          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)),
+          new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)
         )
-      ).withTimeout(2),
+      ).withTimeout(3),
       new InstantCommand(clawSubsystem::stopClaw),
       new InstantCommand(() -> clawSubsystem.setWristVoltage(0))
     );

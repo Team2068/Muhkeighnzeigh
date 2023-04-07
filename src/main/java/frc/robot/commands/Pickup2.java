@@ -16,12 +16,10 @@ import frc.robot.subsystems.TelescopeSubsystem;
 public class Pickup2 extends SequentialCommandGroup {
   public Pickup2(Boolean pickingCone, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision, TelescopeSubsystem telescopeSubsystem) {
     addCommands(
-      new SetArmProfiled(18, armSubsystem, telescopeSubsystem, vision::rotateMount, false), 
-      new InstantCommand(armSubsystem::stop),
       new InstantCommand(clawSubsystem::openClaw),
       new InstantCommand(clawSubsystem::intake),
-      new SetClawPosition(clawSubsystem, 175),
-      new InstantCommand(() -> { if (pickingCone) clawSubsystem.closeClaw();}),
+      new SetClawPosition(clawSubsystem, 50),
+      // new InstantCommand(() -> { if (pickingCone) clawSubsystem.closeClaw();}),
       new WaitCommand(0.5),
       new InstantCommand(clawSubsystem::stopClaw)
     );

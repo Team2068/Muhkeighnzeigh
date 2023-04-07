@@ -19,6 +19,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.utilities.DebugTable;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Photonvision;
 import edu.wpi.first.wpilibj.util.Color;
@@ -36,7 +37,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   final Photonvision photonvision = new Photonvision(PhotonConstants.CAM_NAME);
@@ -47,8 +47,8 @@ public class RobotContainer {
   final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
 
   final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
-  final CommandXboxController mechController = new CommandXboxController(0);
-  final CommandXboxController driveController = new CommandXboxController(3);
+  public final CommandXboxController mechController = new CommandXboxController(0);
+  public final CommandXboxController driveController = new CommandXboxController(3);
  
   // final Joystick leftJoystick = new Joystick(1);
   // final Joystick rightJoystick = new Joystick(2);
@@ -81,33 +81,39 @@ public class RobotContainer {
     autonomousSelector.setDefaultOption("Drive to side + Park", new SequentialCommandGroup(
         driveSubsystem.followPath(Paths.park),
         new AutonBalance(driveSubsystem, false)));
-    autonomousSelector.addOption("Only Park", new AutonBalance(driveSubsystem, false));
+    autonomousSelector.addOption("Only Park", new SequentialCommandGroup(new InstantCommand(() -> armCommand.setAngle(75)), new AutonBalance(driveSubsystem, false)));
     autonomousSelector.addOption("Only Park Reversed", new AutonBalance(driveSubsystem, true));
     autonomousSelector.addOption("Leave Community", driveSubsystem.followPath(Paths.leaveCommunity));
     autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new WaitCommand(1),
-        new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
+        new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION),
         driveSubsystem.followPath(Paths.leaveCommunity)));
-    // autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
-    //     new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
-    //     new WaitCommand(1),
-    //     new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)));
+    autonomousSelector.addOption("frfr", new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision));
     autonomousSelector.addOption("Door Dash",
         driveSubsystem.followPathGroupWithEvents(Paths.picking).andThen(new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Leave Community + Park", new SequentialCommandGroup(
+        new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         new InstantCommand(clawSubsystem::closeClaw),
         new ScoreHigh(armSubsystem, telescopeSubsystem, clawSubsystem, photonvision),
-        new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION),
         driveSubsystem.followPath(Paths.leaveCommunityPark),
         new AutonBalance(driveSubsystem, true)));
+    autonomousSelector.addOption("Score Mid + Park", new SequentialCommandGroup(
+      new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+      new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION),
+      new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
-        new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0),
         new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
         driveSubsystem.followPath(Paths.leaveCommunity),
         new AutonBalance(driveSubsystem, false)));
+    autonomousSelector.addOption("Score Mider", new SequentialCommandGroup(
+      new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
+      new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
+      new InstantCommand(clawSubsystem::openClaw),
+      driveSubsystem.followPathGroupWithEvents(Paths.cooking)
+    ));
     autonomousSelector.addOption("We BALL auto", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
@@ -117,10 +123,10 @@ public class RobotContainer {
     Paths.eventMap.put("pickup", new SequentialCommandGroup(
         new InstantCommand(clawSubsystem::openClaw),
         new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION).withTimeout(1),
-        new InstantCommand(clawSubsystem::intake),
-        new InstantCommand(clawSubsystem::closeClaw)));
+        new InstantCommand(clawSubsystem::intake)));
     Paths.eventMap.put("closeclaw", new InstantCommand(clawSubsystem::closeClaw));
-    Paths.eventMap.put("openclaw", new InstantCommand(clawSubsystem::closeClaw));
+    Paths.eventMap.put("openclaw", new InstantCommand(clawSubsystem::openClaw));
+    Paths.eventMap.put("stopintake", new InstantCommand(clawSubsystem::stopClaw));
     Paths.eventMap.put("intakeposition",
         new SetClawPosition(clawSubsystem, ClawConstants.INTAKE_POSITION).withTimeout(1));
     Paths.eventMap.put("print", new PrintCommand("PRINTINTINTINTTINTIN"));
@@ -140,8 +146,8 @@ public class RobotContainer {
 
     mechController.a().onTrue(new InstantCommand(armCommand::stop));
     mechController.b().onTrue(new InstantCommand(()->armCommand.setAngle(0)));
-    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-70)));
-    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(70)));
+    mechController.x().onTrue(new InstantCommand(()->armCommand.setAngle(-75)));
+    mechController.y().onTrue(new InstantCommand(()->armCommand.setAngle(60)));
 
     mechController.rightBumper().onTrue(new InstantCommand(clawSubsystem::openClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0.2, 0.15, 0)))));
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));

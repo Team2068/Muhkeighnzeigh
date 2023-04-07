@@ -72,7 +72,7 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(253);
+        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(207);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
@@ -85,7 +85,7 @@ public final class Constants {
 
       int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
       double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
-      for (int i = 0; i < arr.length; i++){
+      for (int i = arr.length-1; i > 0 ; i--){
         CANCoder coder = new CANCoder(i);
         coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         coder.configMagnetOffset(offsets[i]);
@@ -125,7 +125,7 @@ public final class Constants {
 
     public static final double INTAKE_POSITION = 75;
     public static final double FLAT_POSITION = 90;
-    public static final double CARRY_POSITION = 175;
+    public static final double CARRY_POSITION = 138;
   }
 
   public static final class AutoConstants {
@@ -136,7 +136,7 @@ public final class Constants {
 
     public static final double kPXController = 2;
     public static final double kPYController = 2;
-    public static final double kPThetaController = 2;
+    public static final double kPThetaController = 2.5;
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
@@ -160,6 +160,7 @@ public final class Constants {
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", PATH_CONSTRAINTS);
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", PATH_CONSTRAINTS); 
     public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 2));
+    public static final List<PathPlannerTrajectory> cooking = PathPlanner.loadPathGroup("(Scenario 8) Exit Zone + Cooking", new PathConstraints(2, 1.5));
     public static final PathPlannerTrajectory leaveCommunityPark = PathPlanner.loadPath("(Scenario 10) Leave C and Park", PATH_CONSTRAINTS); 
     public static final List<PathPlannerTrajectory> picking = PathPlanner.loadPathGroup("(Scenario 0) pickup and go", PATH_CONSTRAINTS); 
     public static final List<PathPlannerTrajectory> flatSidePickup = PathPlanner.loadPathGroup("(Scenario 11) Flat Side Pickup One", PATH_CONSTRAINTS);
@@ -173,8 +174,6 @@ public final class Constants {
     public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
-    public static final double AIMBOT_OFFSET_BACKWARD = 5.67;
-    public static final double AIMBOT_OFFSET_FORWARD = -11.13;
     public static final int FORWARD_ANGLE =  0;
     public static final int BACKWARD_ANGLE = 135;
   }

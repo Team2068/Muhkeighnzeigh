@@ -27,7 +27,8 @@ public class ScoreHigh extends SequentialCommandGroup {
           new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
           new SetClawPosition(clawSubsystem, -30).withTimeout(0.5),
           new InstantCommand(clawSubsystem::openClaw),
-          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5))
+          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)),
+          new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)
         )
       ).withTimeout(4),
       new InstantCommand(clawSubsystem::stopClaw)

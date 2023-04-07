@@ -38,14 +38,13 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void setWristVoltage(double voltage) {
-        if(getClawPosition() >= 135  && voltage < 0) {
+        if((getClawPosition() >= 145  && voltage < 0) || (getClawPosition() <= -67 && voltage > 0)) {
             wristMotor.setVoltage(0);
             DriverStation.reportWarning("Claw driving into itself!", false);
             return;
-        } else if(getClawPosition() <= -67 && voltage > 0) {
-            DriverStation.reportWarning("Claw driving into itself!", false);
+        }else if (getClawPosition() == -169.5) {
+            DriverStation.reportError("CLAW DISCONNECTED", false);
             wristMotor.setVoltage(0);
-            return;
         }
         wristMotor.setVoltage(voltage);
     }
@@ -81,7 +80,7 @@ public class ClawSubsystem extends SubsystemBase {
     public double getClawPosition() {
         double abs = clawEncoder.getAbsolutePosition();
         double deg = (abs - ClawConstants.WRIST_OFFSET) * 360;
-        return -((abs > 0.1 && abs < 1) ? (deg - 360) : deg);
+        return -((abs > 0.08 && abs < 1) ? (deg - 360) : deg);
     }
 
     public double calculateClawFeedforward(double velocity) {

@@ -105,9 +105,7 @@ public class RobotContainer {
       new AutonBalance(driveSubsystem, true)));
     autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
-        new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
-        driveSubsystem.followPath(Paths.leaveCommunity),
-        new AutonBalance(driveSubsystem, false)));
+        new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5)));
     autonomousSelector.addOption("Score Mider", new SequentialCommandGroup(
       new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
       new SetClawPosition(clawSubsystem, ClawConstants.CARRY_POSITION).withTimeout(0.5),
@@ -161,17 +159,18 @@ public class RobotContainer {
     clawSubsystem.setDefaultCommand(new InstantCommand(
       () -> clawSubsystem.setWristVoltage(MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
           -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
-      clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY()))));
+      clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY() * 2))));
     // zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     // aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
     // fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
     // resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
     // syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     // slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
-    driveController.a().onTrue(new InstantCommand(driveSubsystem::toggleFieldOriented));
-    driveController.b().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
-    driveController.y().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-    driveController.x().onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));
+    driveController.b().onTrue(new InstantCommand(driveSubsystem::toggleFieldOriented));
+    driveController.y().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
+    driveController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
+    driveController.x().onTrue(new InstantCommand(driveSubsystem::zeroGyro));
+
   }
 
   public Command getAutonomousCommand() {

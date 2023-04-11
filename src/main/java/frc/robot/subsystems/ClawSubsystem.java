@@ -33,7 +33,7 @@ public class ClawSubsystem extends SubsystemBase {
         wristMotor.setOpenLoopRampRate(0);
 
         wristMotor.setSmartCurrentLimit(15  );
-
+       
         compressor.enableDigital();
     }
 

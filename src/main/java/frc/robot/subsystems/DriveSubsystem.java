@@ -5,9 +5,6 @@ import java.util.List;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
-import com.swervedrivespecialties.swervelib.SwerveModule;
-import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper.GearRatio;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import frc.robot.SwerveModule;
 
 public class DriveSubsystem extends SubsystemBase {
     public static double MAX_VOLTAGE = 7.5;
@@ -70,38 +68,34 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem() {
         DriveConstants.setOffsets();
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-        frontLeftModule = Mk4SwerveModuleHelper.createNeo(
+        frontLeftModule = new SwerveModule(
                 tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
                         .withPosition(0, 0),
-                GearRatio.L2,
                 DriveConstants.FRONT_LEFT_DRIVE_MOTOR,
                 DriveConstants.FRONT_LEFT_TURN_MOTOR,
                 DriveConstants.FRONT_LEFT_ENCODER,
                 DriveConstants.FRONT_LEFT_ENCODER_OFFSET);
-        frontRightModule = Mk4SwerveModuleHelper.createNeo(
+        frontRightModule = new SwerveModule(
                 tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
                         .withPosition(2, 0),
-                GearRatio.L2,
                 DriveConstants.FRONT_RIGHT_DRIVE_MOTOR,
                 DriveConstants.FRONT_RIGHT_TURN_MOTOR,
                 DriveConstants.FRONT_RIGHT_ENCODER,
                 DriveConstants.FRONT_RIGHT_ENCODER_OFFSET);
-        backLeftModule = Mk4SwerveModuleHelper.createNeo(
+        backLeftModule = new SwerveModule(
                 tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
                         .withPosition(4, 0),
-                GearRatio.L2,
                 DriveConstants.BACK_LEFT_DRIVE_MOTOR,
                 DriveConstants.BACK_LEFT_TURN_MOTOR,
                 DriveConstants.BACK_LEFT_ENCODER,
                 DriveConstants.BACK_LEFT_ENCODER_OFFSET);
-        backRightModule = Mk4SwerveModuleHelper.createNeo(
+        backRightModule = new SwerveModule(
                 tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                         .withSize(2, 4)
                         .withPosition(6, 0),
-                GearRatio.L2,
                 DriveConstants.BACK_RIGHT_DRIVE_MOTOR,
                 DriveConstants.BACK_RIGHT_TURN_MOTOR,
                 DriveConstants.BACK_RIGHT_ENCODER,

@@ -37,6 +37,7 @@ public class SwerveModule{
         steerEncoder.configFactoryDefault();
         steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360); // NOTE: Might want to test putting it between [-180,180]
         steerEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+        steerEncoder.configSensorDirection(true);
         steerEncoder.configMagnetOffset(offset);
         steerEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100, 250);
 
@@ -49,8 +50,8 @@ public class SwerveModule{
         driveMotor.getEncoder().setVelocityConversionFactor(DRIVE_CONVERSION_FACTOR / 60.0);
         driveMotor.getEncoder().setPositionConversionFactor(DRIVE_CONVERSION_FACTOR);
 
-        steerMotor.getEncoder().setPositionConversionFactor(360 * STEER_REDUCTION);
-        steerMotor.getEncoder().setVelocityConversionFactor(360 * STEER_REDUCTION / 60);
+        steerMotor.getEncoder().setPositionConversionFactor(180 * STEER_REDUCTION);
+        steerMotor.getEncoder().setVelocityConversionFactor(180 * STEER_REDUCTION / 60);
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
         driveMotor.setInverted(true);
@@ -58,14 +59,15 @@ public class SwerveModule{
 
         driveMotor.enableVoltageCompensation(12);
 
-        steerMotor.getPIDController().setP(1.0);
-        steerMotor.getPIDController().setI(0.0);
-        steerMotor.getPIDController().setD(0.1);
-        // steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
+        steerMotor.getPIDController().setP(0.1);
+        steerMotor.getPIDController().setSmartMotionAllowedClosedLoopError((1/steerMotor.getEncoder().getCountsPerRevolution()) * steerMotor.getEncoder().getPositionConversionFactor(),0);
+
+        steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
 
         RevUtils.checkNeoError(steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
         RevUtils.checkNeoError(steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
         RevUtils.checkNeoError(steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
+        RevUtils.checkNeoError(steerMotor.burnFlash(), "Error Flashing Steer Motor");
 
         tab.addDouble("Absolute Angle", steerEncoder::getAbsolutePosition);
         tab.addDouble("Current Angle", steerMotor.getEncoder()::getPosition);
@@ -73,13 +75,25 @@ public class SwerveModule{
         tab.addDouble("Velocity", steerMotor.getEncoder()::getVelocity);
     }
 
-    public void resetEncoders(){
+    public void resetDrivePosition() {
         driveMotor.getEncoder().setPosition(0);
+    }
+
+    public void resetSteerPosition(){
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
     }
 
+    public double getDrivePosition(){
+        return driveMotor.getEncoder().getPosition();
+    }
+
+    public double getSteerAngle(){
+        return steerMotor.getEncoder().getPosition(); // May Switch to absolute Encoder
+    }
+
     public void set(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
-        steerMotor.getPIDController().setReference(0, ControlType.kPosition);
+        desiredAngle = targetAngle;
+        steerMotor.getPIDController().setReference(0, CANSparkMax.ControlType.kPosition);
     }
 
     public void setX(double driveVolts, double targetAngle){

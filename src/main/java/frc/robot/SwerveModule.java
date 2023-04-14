@@ -6,14 +6,13 @@ package frc.robot;
 
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.swervedrivespecialties.swervelib.rev.RevUtils;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
@@ -22,9 +21,9 @@ public class SwerveModule{
     public final CANSparkMax steerMotor;
     public final CANCoder steerEncoder; 
 
+    final double WHEEL_DIAMETER = 0.10033; // Metres
     final double DRIVE_REDUCTION = (15.0 / 32.0) * (10.0 / 60.0);
     final double STEER_REDUCTION = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
-    final double WHEEL_DIAMETER = 0.10033; // Metres
     final double DRIVE_CONVERSION_FACTOR = Math.PI * WHEEL_DIAMETER * DRIVE_REDUCTION;
 
     double desiredAngle;
@@ -54,20 +53,17 @@ public class SwerveModule{
         steerMotor.getEncoder().setVelocityConversionFactor(180 * STEER_REDUCTION / 60);
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
+        // TODO: change both to false for testing
         driveMotor.setInverted(true);
         steerMotor.setInverted(true);
 
-        driveMotor.enableVoltageCompensation(12);
+        steerMotor.enableVoltageCompensation(12);
 
-        steerMotor.getPIDController().setP(0.1);
-        steerMotor.getPIDController().setSmartMotionAllowedClosedLoopError((1/steerMotor.getEncoder().getCountsPerRevolution()) * steerMotor.getEncoder().getPositionConversionFactor(),0);
-
+        steerMotor.getPIDController().setP(1.0);
+        steerMotor.getPIDController().setD(0.1);
         steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
 
-        RevUtils.checkNeoError(steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
-        RevUtils.checkNeoError(steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
-        RevUtils.checkNeoError(steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
-        RevUtils.checkNeoError(steerMotor.burnFlash(), "Error Flashing Steer Motor");
+        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
 
         tab.addDouble("Absolute Angle", steerEncoder::getAbsolutePosition);
         tab.addDouble("Current Angle", steerMotor.getEncoder()::getPosition);

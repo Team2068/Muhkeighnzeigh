@@ -47,14 +47,6 @@ public class RobotContainer {
   public final CommandXboxController mechController = new CommandXboxController(0);
   public final CommandXboxController driveController = new CommandXboxController(3);
  
-  // final Joystick leftJoystick = new Joystick(1);
-  // final Joystick rightJoystick = new Joystick(2);
-  // final JoystickButton aimButton = new JoystickButton(leftJoystick, 2);
-  // final JoystickButton resetOdometryButton = new JoystickButton(rightJoystick, 3);
-  // final JoystickButton syncEncoders = new JoystickButton(rightJoystick, 2);
-  // final JoystickButton fieldOrientedButton = new JoystickButton(rightJoystick, 4);
-  // final JoystickButton slowModeButton = new JoystickButton(rightJoystick, 1);
-  // final JoystickButton zeroGyroButton = new JoystickButton(leftJoystick,3);
   public RobotContainer() {
     configureBindings();
     initEventMap();
@@ -62,9 +54,6 @@ public class RobotContainer {
     photonvision.camera.setPipelineIndex(1);
     photonvision.mount.setAngle(PhotonConstants.FORWARD_ANGLE);
     driveSubsystem.setDefaultCommand(new DefaultDriveCommand(driveSubsystem, 
-    // () -> -modifyAxis(leftJoystick.getY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    // () -> -modifyAxis(leftJoystick.getX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    // () -> -modifyAxis(rightJoystick.getX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     () -> -modifyAxis(driveController.getLeftY()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
     () -> -modifyAxis(driveController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
     () -> -modifyAxis(driveController.getRightX()) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
@@ -148,26 +137,20 @@ public class RobotContainer {
     mechController.leftBumper().onTrue(new InstantCommand(clawSubsystem::closeClaw).andThen(new InstantCommand(() -> ledSubsystem.setAllLeds(new Color(0 ,0, 0.25)))));
     
     mechController.leftTrigger().whileTrue(new InstantCommand(telescopeSubsystem::extendTelescope))
-        .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
-    mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
+      .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
     mechController.povDown().whileTrue(new InstantCommand(telescopeSubsystem::retractTelescope))
-        .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+      .whileFalse(new InstantCommand(telescopeSubsystem::stopTelescope));
+    mechController.povUp().onTrue(new InstantCommand(telescopeSubsystem::resetPosition));
 
     clawSubsystem.setDefaultCommand(new InstantCommand(
       () -> clawSubsystem.setWristVoltage(MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
           -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
       clawSubsystem).alongWith(new InstantCommand(() -> clawSubsystem.setIntakeSpeed(mechController.getRightY() * 2))));
-    // zeroGyroButton.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-    // aimButton.onTrue(new Aimbot(photonvision, driveSubsystem).withTimeout(1.5));//.andThen(new AimbotAngle(photonvision, driveSubsystem))); // NOTE: May remove Aimbot Angle
-    // fieldOrientedButton.whileTrue(new InstantCommand(() -> driveSubsystem.toggleFieldOriented()));
-    // resetOdometryButton.whileTrue(new InstantCommand(() -> driveSubsystem.resetOdometry()));
-    // syncEncoders.whileTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
-    // slowModeButton.onTrue(new InstantCommand(driveSubsystem::toggleSlowMode));
+
     driveController.b().onTrue(new InstantCommand(driveSubsystem::toggleFieldOriented));
     driveController.y().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
     driveController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
     driveController.x().onTrue(new InstantCommand(driveSubsystem::zeroGyro));
-
   }
 
   public Command getAutonomousCommand() {
@@ -183,26 +166,26 @@ public class RobotContainer {
     return autonomousSelector.getSelected().andThen(postAutonomous);
   }
 
-  public SequentialCommandGroup runSubsystemTests(){
+  public Command runSubsystemTests(){
     driveSubsystem.syncEncoders();
     driveSubsystem.resetOdometry();
     System.out.println("Init...");
     return new SequentialCommandGroup(
-      new InstantCommand(() -> System.out.println("Starting...")),
-      new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds(10,0,0))),
-      new WaitCommand(0.5),
-      new InstantCommand(()-> armCommand.setAngle(75)),
+      new PrintCommand("Starting..."),
+      new InstantCommand(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0))),
+      new InstantCommand(()->armCommand.setAngle(60)),
       new WaitCommand(0.5),
       new InstantCommand(clawSubsystem::intake),
-      new WaitCommand(0.2),
-      new InstantCommand(clawSubsystem::output),
+      new InstantCommand(clawSubsystem::openClaw),
       new InstantCommand(telescopeSubsystem::extendTelescope),
-      new WaitCommand(0.2),
+      new WaitCommand(0.5),
+      new InstantCommand(clawSubsystem::output),
+      new InstantCommand(clawSubsystem::closeClaw),
       new InstantCommand(telescopeSubsystem::retractTelescope),
-      new InstantCommand(armCommand::stop),
+      new WaitCommand(0.5),
+      new InstantCommand(armCommand::stop).alongWith(new InstantCommand(clawSubsystem::stopClaw)),
       new InstantCommand(telescopeSubsystem::stopTelescope),
-      new InstantCommand(clawSubsystem::stopClaw),
-      new InstantCommand(() -> driveSubsystem.drive(new ChassisSpeeds(0, 0, 0)))
+      new InstantCommand(()->driveSubsystem.drive(new ChassisSpeeds()))
     );
   }
 

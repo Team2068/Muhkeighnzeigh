@@ -72,10 +72,10 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(192);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
+        FRONT_LEFT_ENCODER_OFFSET = -366;
+        FRONT_RIGHT_ENCODER_OFFSET = -100;
+        BACK_LEFT_ENCODER_OFFSET = -164;
+        BACK_RIGHT_ENCODER_OFFSET = -40;
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);

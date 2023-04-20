@@ -32,7 +32,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.SwerveModule;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 7.5;
+    public static double MAX_VOLTAGE = 4;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -154,7 +154,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     private SwerveModulePosition getModulePosition(SwerveModule module) {
-        return new SwerveModulePosition(module.getDrivePosition(), Rotation2d.fromRadians(module.getSteerAngle()));
+        return new SwerveModulePosition(module.getDrivePosition(), Rotation2d.fromDegrees(module.getSteerAngle()));
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -189,14 +189,19 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] states) {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-        frontLeftModule.set((states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
-                states[0].angle.getRadians());
-        frontRightModule.set((states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
-                states[1].angle.getRadians());
-        backLeftModule.set((states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
-                states[2].angle.getRadians());
-        backRightModule.set((states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
-                states[3].angle.getRadians());
+        frontLeftModule.set(states[0]);
+        frontRightModule.set(states[1]);
+        backLeftModule.set(states[2]);
+        backRightModule.set(states[3]);
+
+        // frontLeftModule.set((states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
+        //         states[0].angle.getDegrees());
+        // frontRightModule.set((states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
+        //         states[1].angle.getDegrees());
+        // backLeftModule.set((states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
+        //         states[2].angle.getDegrees());
+        // backRightModule.set((states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND) * MAX_VOLTAGE,
+        //         states[3].angle.getDegrees());
     }
 
     public boolean isFieldOriented() {

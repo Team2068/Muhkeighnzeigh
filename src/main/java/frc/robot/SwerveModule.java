@@ -57,18 +57,20 @@ public class SwerveModule{
         steerMotor.getEncoder().setVelocityConversionFactor(Math.PI * STEER_REDUCTION / 60);
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
-        // TODO: change both to false for testing
         driveMotor.setInverted(true);
         steerMotor.setInverted(true);
 
         driveMotor.enableVoltageCompensation(12);
 
-        steerMotor.getPIDController().setP(0.1);
+        steerMotor.getPIDController().setP(1);
         steerMotor.getPIDController().setD(1.0);
 
-        // steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
+        steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
 
         steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
+        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+
 
         tab.addDouble("Absolute Angle", steerEncoder::getAbsolutePosition);
         tab.addDouble("Current Angle", () -> Math.toDegrees(steerMotor.getEncoder().getPosition()));
@@ -95,25 +97,23 @@ public class SwerveModule{
     public void setX(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
         // if (Math.abs(steerEncoder.getAbsolutePosition() - targetAngle) < 1) return;
         desiredAngle = targetAngle;
-        steerMotor.getPIDController().setReference(0, CANSparkMax.ControlType.kPosition);
+        steerMotor.getPIDController().setReference(Math.toRadians(targetAngle), CANSparkMax.ControlType.kPosition);
+        driveMotor.setVoltage(driveVolts);
     }
 
-    public void set(SwerveModuleState targetState){
-        targetState.speedMetersPerSecond = (targetState.speedMetersPerSecond/DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND) * DriveSubsystem.MAX_VOLTAGE;
-        SwerveModuleState.optimize(targetState, Rotation2d.fromDegrees(steerMotor.getEncoder().getPosition()));
-        driveMotor.set(targetState.speedMetersPerSecond);
-        steerMotor.getPIDController().setReference(targetState.angle.getRadians(), ControlType.kPosition);
-    }
-
-    public void set (double driveVolts, double targetAngle){
+    public void set(double driveVolts, double targetAngle){
         // Put in range of [0, 360)
-        targetAngle %= 360;
-        targetAngle += (targetAngle < 0.0) ? 360 : 0;
+        // targetAngle %= 360;
+        // targetAngle += (targetAngle < 0.0) ? 360 : 0;
+
+        desiredAngle = targetAngle; // For DebugTable
+        // targetAngle %= 360;
+        // targetAngle += (targetAngle < 0.0) ? 360 : 0;
 
         // double stateAngle = steerMotor.getEncoder().getPosition() % 360;
         // stateAngle += (stateAngle < 0.0) ? 360 : 0;
 
-        double diff = targetAngle - steerEncoder.getAbsolutePosition(); // TEST: May need to replace with stateAngle
+        double diff = targetAngle - (steerMotor.getEncoder().getPosition() /2); // TEST: May need to replace with stateAngle
         DebugTable.set(String.format("Module: %d  Diff", steerMotor.getDeviceId()), diff);
 
         if (diff > 90 || diff < -90){ // move to a closer angle and drive backwards 
@@ -121,12 +121,9 @@ public class SwerveModule{
             driveVolts *= -1.0;
         }
 
-        desiredAngle = targetAngle; // For DebugTable
-
         // double currentModAngle = steerEncoder.getAbsolutePosition() % 360;
         // currentModAngle += (currentModAngle < 0.0) ? 360 : 0;
-        double currentAngleRadians = Math.toRadians(targetAngle);
         driveMotor.setVoltage(driveVolts);
-        steerMotor.getPIDController().setReference(currentAngleRadians, ControlType.kPosition);
+        steerMotor.getPIDController().setReference(Math.toRadians(targetAngle), ControlType.kPosition);
     }
 }

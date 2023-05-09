@@ -58,7 +58,7 @@ public class SwerveModule{
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
         driveMotor.setInverted(true);
-        steerMotor.setInverted(true);
+        steerMotor.setInverted(false);
 
         driveMotor.enableVoltageCompensation(12);
 
@@ -93,13 +93,13 @@ public class SwerveModule{
         return steerMotor.getEncoder().getPosition(); // May Switch to absolute Encoder
     }
 
-    public void set(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
+    public void setX(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
         desiredAngle = targetAngle;
         steerMotor.getPIDController().setReference(Math.toRadians(targetAngle), CANSparkMax.ControlType.kPosition);
         driveMotor.setVoltage(driveVolts);
     }
 
-    public void setX(double driveVolts, double targetAngle){
+    public void set(double driveVolts, double targetAngle){
         // Put in range of [0, 360)
         // targetAngle %= 360;
         // targetAngle += (targetAngle < 0.0) ? 360 : 0;

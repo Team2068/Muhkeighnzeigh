@@ -83,13 +83,12 @@ public final class Constants {
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
       }
 
-      // int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
-      // double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
-      // for (int i = arr.length-1; i > 0 ; i--){
-      //   CANCoder coder = new CANCoder(i);
-      //   coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-      //   coder.configMagnetOffset(offsets[i]);
-      
+      int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
+      double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
+      for (int i = arr.length-1; i > 0 ; i--){
+        CANCoder coder = new CANCoder(i);
+        coder.configMagnetOffset(offsets[i]);
+      }
 
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
     }

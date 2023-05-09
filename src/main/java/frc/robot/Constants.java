@@ -72,7 +72,7 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -260;
+        FRONT_LEFT_ENCODER_OFFSET = -210;
         FRONT_RIGHT_ENCODER_OFFSET = -100;
         BACK_LEFT_ENCODER_OFFSET = -164;
         BACK_RIGHT_ENCODER_OFFSET = -40;
@@ -83,14 +83,13 @@ public final class Constants {
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
       }
 
-      int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
-      double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
-      for (int i = arr.length-1; i > 0 ; i--){
-        CANCoder coder = new CANCoder(i);
-        coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-        coder.configMagnetOffset(offsets[i]);
-        coder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-      }
+      // int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
+      // double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
+      // for (int i = arr.length-1; i > 0 ; i--){
+      //   CANCoder coder = new CANCoder(i);
+      //   coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+      //   coder.configMagnetOffset(offsets[i]);
+      
 
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
     }

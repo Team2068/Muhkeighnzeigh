@@ -38,10 +38,10 @@ public class SwerveModule{
         steerEncoder = new CANCoder(steerCANID);
 
         steerEncoder.configFactoryDefault();
+        steerEncoder.configMagnetOffset(offset);
+        steerEncoder.configSensorDirection(false);
         steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360); // NOTE: Might want to test putting it between [-180,180]
         steerEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-        steerEncoder.configSensorDirection(true);
-        steerEncoder.configMagnetOffset(offset);
         steerEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100, 250);
 
         steerMotor.setSmartCurrentLimit(20);
@@ -62,15 +62,14 @@ public class SwerveModule{
 
         driveMotor.enableVoltageCompensation(12);
 
-        steerMotor.getPIDController().setP(1);
+        steerMotor.getPIDController().setP(0.1);
         steerMotor.getPIDController().setD(1.0);
 
         steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
 
         steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
-        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
-        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
-
+        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+        steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
         tab.addDouble("Absolute Angle", steerEncoder::getAbsolutePosition);
         tab.addDouble("Current Angle", () -> Math.toDegrees(steerMotor.getEncoder().getPosition()));
@@ -94,14 +93,13 @@ public class SwerveModule{
         return steerMotor.getEncoder().getPosition(); // May Switch to absolute Encoder
     }
 
-    public void setX(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
-        // if (Math.abs(steerEncoder.getAbsolutePosition() - targetAngle) < 1) return;
+    public void set(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
         desiredAngle = targetAngle;
         steerMotor.getPIDController().setReference(Math.toRadians(targetAngle), CANSparkMax.ControlType.kPosition);
         driveMotor.setVoltage(driveVolts);
     }
 
-    public void set(double driveVolts, double targetAngle){
+    public void setX(double driveVolts, double targetAngle){
         // Put in range of [0, 360)
         // targetAngle %= 360;
         // targetAngle += (targetAngle < 0.0) ? 360 : 0;

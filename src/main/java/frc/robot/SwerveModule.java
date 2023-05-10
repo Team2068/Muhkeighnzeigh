@@ -4,21 +4,16 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoderStatusFrame;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utilities.DebugTable;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule{
     public final CANSparkMax driveMotor;
@@ -50,10 +45,10 @@ public class SwerveModule{
         steerMotor.setIdleMode(IdleMode.kBrake);
         driveMotor.setIdleMode(IdleMode.kCoast);
 
-        driveMotor.getEncoder().setVelocityConversionFactor(DRIVE_CONVERSION_FACTOR / 60.0);
         driveMotor.getEncoder().setPositionConversionFactor(DRIVE_CONVERSION_FACTOR);
+        driveMotor.getEncoder().setVelocityConversionFactor(DRIVE_CONVERSION_FACTOR / 60.0);
 
-        steerMotor.getEncoder().setPositionConversionFactor(Math.PI * STEER_REDUCTION);
+        steerMotor.getEncoder().setPositionConversionFactor(Math.PI * STEER_REDUCTION); // NOTE: May need to multiply by 2
         steerMotor.getEncoder().setVelocityConversionFactor(Math.PI * STEER_REDUCTION / 60);
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
@@ -93,34 +88,23 @@ public class SwerveModule{
         return steerMotor.getEncoder().getPosition(); // May Switch to absolute Encoder
     }
 
-    public void setX(double driveVolts, double targetAngle){ // DEBUG: Remove once confirmed PID gains are valid
-        desiredAngle = targetAngle;
-        steerMotor.getPIDController().setReference(Math.toRadians(targetAngle), CANSparkMax.ControlType.kPosition);
-        driveMotor.setVoltage(driveVolts);
-    }
-
     public void set(double driveVolts, double targetAngle){
         // Put in range of [0, 360)
-        // targetAngle %= 360;
-        // targetAngle += (targetAngle < 0.0) ? 360 : 0;
+        targetAngle %= 360;
+        targetAngle += (targetAngle < 0.0) ? 360 : 0;
 
-        desiredAngle = targetAngle; // For DebugTable
-        // targetAngle %= 360;
-        // targetAngle += (targetAngle < 0.0) ? 360 : 0;
+        desiredAngle = targetAngle;
 
         // double stateAngle = steerMotor.getEncoder().getPosition() % 360;
         // stateAngle += (stateAngle < 0.0) ? 360 : 0;
 
-        double diff = targetAngle - (steerMotor.getEncoder().getPosition() /2); // TEST: May need to replace with stateAngle
-        DebugTable.set(String.format("Module: %d  Diff", steerMotor.getDeviceId()), diff);
+        double diff = targetAngle - steerEncoder.getAbsolutePosition(); // NOTE: may replace with stateAngle
 
         if (diff > 90 || diff < -90){ // move to a closer angle and drive backwards 
-            targetAngle += 180; 
+            targetAngle = (targetAngle + 180) % 360; 
             driveVolts *= -1.0;
         }
 
-        // double currentModAngle = steerEncoder.getAbsolutePosition() % 360;
-        // currentModAngle += (currentModAngle < 0.0) ? 360 : 0;
         driveMotor.setVoltage(driveVolts);
         steerMotor.getPIDController().setReference(Math.toRadians(targetAngle), ControlType.kPosition);
     }

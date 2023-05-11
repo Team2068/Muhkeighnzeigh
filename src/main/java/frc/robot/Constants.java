@@ -7,9 +7,6 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.List;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -72,7 +69,7 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -164;
+        FRONT_LEFT_ENCODER_OFFSET = -150;
         FRONT_RIGHT_ENCODER_OFFSET = -99;
         BACK_LEFT_ENCODER_OFFSET = -164;
         BACK_RIGHT_ENCODER_OFFSET = -40;
@@ -81,13 +78,6 @@ public final class Constants {
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
-      }
-
-      int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
-      double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
-      for (int i = arr.length-1; i > 0 ; i--){
-        CANCoder coder = new CANCoder(i);
-        coder.configMagnetOffset(offsets[i]);
       }
 
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");

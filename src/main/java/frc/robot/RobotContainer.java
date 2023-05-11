@@ -101,6 +101,7 @@ public class RobotContainer {
     autonomousSelector.addOption("We BALL auto", new SequentialCommandGroup(
         new ScoreMid(telescopeSubsystem, armSubsystem, clawSubsystem, photonvision),
         driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
+    autonomousSelector.addOption("Loop", driveSubsystem.followPath(Paths.loop));
   }
 
   public void initEventMap() {

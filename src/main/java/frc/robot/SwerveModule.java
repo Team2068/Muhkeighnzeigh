@@ -26,6 +26,7 @@ public class SwerveModule{
     final double DRIVE_CONVERSION_FACTOR = Math.PI * WHEEL_DIAMETER * DRIVE_REDUCTION;
 
     double desiredAngle;
+    double angleDiff;
 
     public SwerveModule(ShuffleboardLayout tab, int driveID, int steerID, int steerCANID, double offset){
         driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
@@ -70,6 +71,7 @@ public class SwerveModule{
         tab.addDouble("Current Angle", () -> Math.toDegrees(steerMotor.getEncoder().getPosition()));
         tab.addDouble("Target Angle", () -> desiredAngle);
         tab.addDouble("Velocity", steerMotor.getEncoder()::getVelocity);
+        tab.addDouble("Angle Difference", () -> angleDiff);
     }
 
     public void resetDrivePosition() {
@@ -98,9 +100,9 @@ public class SwerveModule{
         // double stateAngle = steerMotor.getEncoder().getPosition() % 360;
         // stateAngle += (stateAngle < 0.0) ? 360 : 0;
 
-        double diff = targetAngle - steerEncoder.getAbsolutePosition(); // NOTE: may replace with stateAngle
+        angleDiff = targetAngle - steerEncoder.getAbsolutePosition(); // NOTE: may replace with stateAngle
 
-        if (diff > 90 || diff < -90){ // move to a closer angle and drive backwards 
+        if (angleDiff > 90 || angleDiff < -90){ // move to a closer angle and drive backwards 
             targetAngle = (targetAngle + 180) % 360; 
             driveVolts *= -1.0;
         }

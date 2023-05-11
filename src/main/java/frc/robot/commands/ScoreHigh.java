@@ -10,28 +10,25 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.TelescopeConstants;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.Photonvision;
-import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.utilities.IO;
 
 public class ScoreHigh extends SequentialCommandGroup {
-  public ScoreHigh(ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
-    SetArmProfiled armCommand = new SetArmProfiled(70, armSubsystem, telescopeSubsystem, vision::rotateMount, false);
+  public ScoreHigh(IO io) {
+    SetArmProfiled armCommand = new SetArmProfiled(60, io.arm, io.telescope, io.photon::rotateMount, false);
     addCommands(
       new ParallelCommandGroup(
         armCommand,
         new PrintCommand("Starting High..."),
         new SequentialCommandGroup(
           new WaitCommand(0.5),
-          new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
-          new SetClawPosition(clawSubsystem, -30).withTimeout(0.5),
-          new InstantCommand(clawSubsystem::openClaw),
-          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)),
-          new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)
+          new SetTelescopePosition(io.telescope, io.arm, TelescopeConstants.HIGH_POSITION),
+          new SetClawPosition(io.claw, -30).withTimeout(0.5),
+          new InstantCommand(io.claw::openClaw),
+          new InstantCommand(() -> io.claw.setIntakeSpeed(-0.5)),
+          new SetTelescopePosition(io.telescope, io.arm, 0)
         )
       ).withTimeout(4),
-      new InstantCommand(clawSubsystem::stopClaw)
+      new InstantCommand(io.claw::stopClaw)
     );
   }
 }

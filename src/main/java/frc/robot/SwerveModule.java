@@ -48,8 +48,8 @@ public class SwerveModule{
         driveMotor.getEncoder().setPositionConversionFactor(DRIVE_CONVERSION_FACTOR);
         driveMotor.getEncoder().setVelocityConversionFactor(DRIVE_CONVERSION_FACTOR / 60.0);
 
-        steerMotor.getEncoder().setPositionConversionFactor(Math.PI * STEER_REDUCTION); // NOTE: May need to multiply by 2
-        steerMotor.getEncoder().setVelocityConversionFactor(Math.PI * STEER_REDUCTION / 60);
+        steerMotor.getEncoder().setPositionConversionFactor(2 * Math.PI * STEER_REDUCTION); // NOTE: May need to multiply by 2
+        steerMotor.getEncoder().setVelocityConversionFactor(2 * Math.PI * STEER_REDUCTION / 60);
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
         driveMotor.setInverted(true);
@@ -58,9 +58,8 @@ public class SwerveModule{
         driveMotor.enableVoltageCompensation(12);
 
         steerMotor.getPIDController().setP(0.1);
+        steerMotor.getPIDController().setI(0.0);
         steerMotor.getPIDController().setD(1.0);
-
-        steerMotor.getPIDController().setFeedbackDevice(steerMotor.getEncoder());
 
         steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
         steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);

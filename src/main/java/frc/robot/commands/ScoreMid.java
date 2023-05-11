@@ -10,29 +10,26 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.TelescopeConstants;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.Photonvision;
-import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.utilities.IO;
 
 public class ScoreMid extends SequentialCommandGroup {
-  public ScoreMid(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
-    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, telescopeSubsystem, vision::rotateMount, false);
+  public ScoreMid(IO io) {
+    SetArmProfiled armCommand = new SetArmProfiled(75,io.arm, io.telescope, io.photon::rotateMount, false);
     addCommands(
       new ParallelCommandGroup(
         armCommand,
         new PrintCommand("Starting Low..."),
         new SequentialCommandGroup(
           new WaitCommand(0.5),
-          new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION),
-          new SetClawPosition(clawSubsystem, -50).withTimeout(0.5),
-          new InstantCommand(clawSubsystem::openClaw),
-          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)),
-          new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)
+          new SetTelescopePosition(io.telescope, io.arm, TelescopeConstants.LOW_POSITION),
+          new SetClawPosition(io.claw, -50).withTimeout(0.5),
+          new InstantCommand(io.claw::openClaw),
+          new InstantCommand(() -> io.claw.setIntakeSpeed(-0.5)),
+          new SetTelescopePosition(io.telescope, io.arm, 0)
         )
       ).withTimeout(3),
-      new InstantCommand(clawSubsystem::stopClaw),
-      new InstantCommand(() -> clawSubsystem.setWristVoltage(0))
+      new InstantCommand(io.claw::stopClaw),
+      new InstantCommand(() -> io.claw.setWristVoltage(0))
     );
   }
 }

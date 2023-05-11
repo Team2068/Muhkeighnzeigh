@@ -13,8 +13,8 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(4);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(4);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(6);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(6);
 
     public DefaultDriveCommand(DriveSubsystem driveSubsystem, ChassisSpeeds chassisSpeeds) {
         this(driveSubsystem, () -> chassisSpeeds.vxMetersPerSecond, () -> chassisSpeeds.vyMetersPerSecond, () -> chassisSpeeds.omegaRadiansPerSecond);
@@ -34,19 +34,18 @@ public class DefaultDriveCommand extends CommandBase {
    
     @Override
     public void execute() {
-        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble()) * ((driveSubsystem.isSlowMode()) ? 0.25 : 1);
-        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble()) * ((driveSubsystem.isSlowMode()) ? 0.25 : 1);
+        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble()) * ((driveSubsystem.isSlowMode()) ? 0.4 : 1);
+        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble()) * ((driveSubsystem.isSlowMode()) ? 0.4 : 1);
         double rotationSpeed = m_rotationSupplier.getAsDouble() * 0.7;
 
-        if(driveSubsystem.isFieldOriented()) {
+        if(driveSubsystem.isFieldOriented())
             driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, driveSubsystem.getGyroscopeRotation()));
-        } else {
+        else
             driveSubsystem.drive(new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed));
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        driveSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+        driveSubsystem.drive(new ChassisSpeeds());
     }
 }

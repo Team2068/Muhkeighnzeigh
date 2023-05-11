@@ -6,24 +6,29 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.PhotonConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Photonvision;
+import frc.robot.utilities.DebugTable;
 
 public class Aimbot extends PIDCommand {
   DriveSubsystem driveSubsystem;
   Photonvision photonvision;
+
+  public static double AIMBOT_OFFSET_BACKWARD = 5.67;
+  public static double AIMBOT_OFFSET_FORWARD = -11.13;
 
   public Aimbot(Photonvision photonvision, DriveSubsystem driveSubsystem) {
     super(
         new PIDController(Constants.AimbotConstants.kP, Constants.AimbotConstants.kI, Constants.AimbotConstants.kD),
         () -> photonvision.data.targetYaw, // Measurement
         // This should return the setpoint (can also be a constant)
-        () -> ((photonvision.isFlipped()) ? PhotonConstants.AIMBOT_OFFSET_BACKWARD : PhotonConstants.AIMBOT_OFFSET_FORWARD),
+        () ->  (Double)DebugTable.get("Aimbot_Offset_Forward", -11.13), //later replace this w actual offset after tested
         output -> {
-          driveSubsystem.drive(new ChassisSpeeds(0, ((photonvision.isFlipped()) ? -1 : 1) * output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
+          driveSubsystem.drive(new ChassisSpeeds(0, output * Constants.AimbotConstants.speed * Constants.DRIVE_MAX_VELOCITY_METERS_PER_SECOND, 0));
         });
 
     this.driveSubsystem = driveSubsystem;

@@ -12,22 +12,27 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 
-public class ScoreLow extends SequentialCommandGroup {
-  public ScoreLow(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem) {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 75);
+public class ScoreMid extends SequentialCommandGroup {
+  public ScoreMid(TelescopeSubsystem telescopeSubsystem, ArmSubsystem armSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
+    SetArmProfiled armCommand = new SetArmProfiled(75,armSubsystem, telescopeSubsystem, vision::rotateMount, false);
     addCommands(
       new ParallelCommandGroup(
         armCommand,
         new PrintCommand("Starting Low..."),
         new SequentialCommandGroup(
-          new WaitCommand(0.25),
+          new WaitCommand(0.5),
           new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.LOW_POSITION),
-          new SetClawPosition(clawSubsystem, 0).withTimeout(0.5),
-          new InstantCommand(clawSubsystem::openClaw)
+          new SetClawPosition(clawSubsystem, -50).withTimeout(0.5),
+          new InstantCommand(clawSubsystem::openClaw),
+          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)),
+          new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)
         )
-      ).withTimeout(2)
+      ).withTimeout(3),
+      new InstantCommand(clawSubsystem::stopClaw),
+      new InstantCommand(() -> clawSubsystem.setWristVoltage(0))
     );
   }
 }

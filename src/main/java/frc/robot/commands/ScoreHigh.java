@@ -12,11 +12,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class ScoreHigh extends SequentialCommandGroup {
-  public ScoreHigh(ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem, ClawSubsystem clawSubsystem) {
-    SetArmPosition armCommand = new SetArmPosition(armSubsystem, 70);
+  public ScoreHigh(ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem, ClawSubsystem clawSubsystem, Photonvision vision) {
+    SetArmProfiled armCommand = new SetArmProfiled(70, armSubsystem, telescopeSubsystem, vision::rotateMount, false);
     addCommands(
       new ParallelCommandGroup(
         armCommand,
@@ -24,10 +25,13 @@ public class ScoreHigh extends SequentialCommandGroup {
         new SequentialCommandGroup(
           new WaitCommand(0.5),
           new SetTelescopePosition(telescopeSubsystem, armSubsystem, TelescopeConstants.HIGH_POSITION),
-          new SetClawPosition(clawSubsystem, 0).withTimeout(0.5),
-          new InstantCommand(clawSubsystem::openClaw)
+          new SetClawPosition(clawSubsystem, -30).withTimeout(0.5),
+          new InstantCommand(clawSubsystem::openClaw),
+          new InstantCommand(() -> clawSubsystem.setIntakeSpeed(-0.5)),
+          new SetTelescopePosition(telescopeSubsystem, armSubsystem, 0)
         )
-      ).withTimeout(4)
+      ).withTimeout(4),
+      new InstantCommand(clawSubsystem::stopClaw)
     );
   }
 }

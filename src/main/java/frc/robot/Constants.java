@@ -7,9 +7,6 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.List;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -72,24 +69,15 @@ public final class Constants {
 
     public static final void setOffsets() { 
       if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(25);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(100);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(164);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(44);
+        FRONT_LEFT_ENCODER_OFFSET = -150;
+        FRONT_RIGHT_ENCODER_OFFSET = -99;
+        BACK_LEFT_ENCODER_OFFSET = -164;
+        BACK_RIGHT_ENCODER_OFFSET = -40;
       } else {
         FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
         FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
         BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
         BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
-      }
-
-      int[] arr = {FRONT_LEFT_ENCODER, FRONT_RIGHT_ENCODER, BACK_LEFT_ENCODER, BACK_RIGHT_ENCODER};
-      double[] offsets = {FRONT_LEFT_ENCODER_OFFSET, FRONT_RIGHT_ENCODER_OFFSET, BACK_LEFT_ENCODER_OFFSET, BACK_RIGHT_ENCODER_OFFSET};
-      for (int i = 0; i < arr.length; i++){
-        CANCoder coder = new CANCoder(i);
-        coder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-        coder.configMagnetOffset(offsets[i]);
-        coder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
       }
 
       SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
@@ -117,15 +105,15 @@ public final class Constants {
   public static final class ClawConstants {
     public static final int WRIST_MOTOR = 13;
     public static final int INTAKE_MOTOR = 14;
-    public static final int WRIST_VOLTAGE = 4;
+    public static final double WRIST_VOLTAGE = 10;
 
-    public static final double WRIST_OFFSET = -0.06;
+    public static final double WRIST_OFFSET = -0.47;
     public static final double INTAKE_SPEED = .75;
     public static final double WRIST_SPEED = .5;
 
     public static final double INTAKE_POSITION = 75;
     public static final double FLAT_POSITION = 90;
-    public static final double CARRY_POSITION = 175;
+    public static final double CARRY_POSITION = 138;
   }
 
   public static final class AutoConstants {
@@ -136,7 +124,7 @@ public final class Constants {
 
     public static final double kPXController = 2;
     public static final double kPYController = 2;
-    public static final double kPThetaController = 2;
+    public static final double kPThetaController = 2.5;
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
@@ -160,6 +148,7 @@ public final class Constants {
     public static final PathPlannerTrajectory loop = PathPlanner.loadPath("Loop", PATH_CONSTRAINTS);
     public static final PathPlannerTrajectory park = PathPlanner.loadPath("(Scenario 7) Dock Only", PATH_CONSTRAINTS); 
     public static final PathPlannerTrajectory leaveCommunity = PathPlanner.loadPath("(Scenario 8) Exit Zone", new PathConstraints(2, 2));
+    public static final List<PathPlannerTrajectory> cooking = PathPlanner.loadPathGroup("(Scenario 8) Exit Zone + Cooking", new PathConstraints(2, 1.5));
     public static final PathPlannerTrajectory leaveCommunityPark = PathPlanner.loadPath("(Scenario 10) Leave C and Park", PATH_CONSTRAINTS); 
     public static final List<PathPlannerTrajectory> picking = PathPlanner.loadPathGroup("(Scenario 0) pickup and go", PATH_CONSTRAINTS); 
     public static final List<PathPlannerTrajectory> flatSidePickup = PathPlanner.loadPathGroup("(Scenario 11) Flat Side Pickup One", PATH_CONSTRAINTS);
@@ -173,8 +162,6 @@ public final class Constants {
     public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
     public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
-    public static final double AIMBOT_OFFSET_BACKWARD = 5.67;
-    public static final double AIMBOT_OFFSET_FORWARD = -11.13;
     public static final int FORWARD_ANGLE =  0;
     public static final int BACKWARD_ANGLE = 135;
   }

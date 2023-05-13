@@ -13,7 +13,6 @@ import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
 import frc.robot.utilities.IO;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -114,26 +113,7 @@ public class RobotContainer {
   }
 
   public Command runSubsystemTests(){
-    io.driveSubsystem.syncEncoders();
-    io.driveSubsystem.resetOdometry();
-    System.out.println("Init...");
-    return new SequentialCommandGroup(
-      new PrintCommand("Starting..."),
-      new InstantCommand(()->io.driveSubsystem.drive(new ChassisSpeeds(10,0,0))),
-      new InstantCommand(()->io.armCommand.setAngle(60)),
-      new WaitCommand(0.5),
-      new InstantCommand(io.claw::intake),
-      new InstantCommand(io.claw::openClaw),
-      new InstantCommand(io.telescope::extendTelescope),
-      new WaitCommand(0.5),
-      new InstantCommand(io.claw::output),
-      new InstantCommand(io.claw::closeClaw),
-      new InstantCommand(io.telescope::retractTelescope),
-      new WaitCommand(0.5),
-      new InstantCommand(io.armCommand::stop).alongWith(new InstantCommand(io.claw::stopClaw)),
-      new InstantCommand(io.telescope::stopTelescope),
-      new InstantCommand(()->io.driveSubsystem.drive(new ChassisSpeeds()))
-    );
+    return io.runSystemsCheck();
   }
 
   public void syncEncodersDisabled() {

@@ -1,9 +1,10 @@
 package frc.robot.utilities;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.PhotonConstants;
@@ -38,42 +39,64 @@ public class IO {
                 () -> -modifyAxis(driveController.getLeftX()) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                 () -> -modifyAxis(driveController.getRightX())* DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
         arm.setDefaultCommand(armCommand);
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     public void configTeleop() {
+        mechController.a().onTrue(General.Instant(armCommand::stop));
+        mechController.b().onTrue(General.Instant(() -> armCommand.setAngle(0)));
+        mechController.x().onTrue(General.Instant(() -> armCommand.setAngle(-60)));
+        mechController.y().onTrue(General.Instant(() -> armCommand.setAngle(60)));
+
+        mechController.leftBumper().onTrue(General.Instant(claw::closeClaw, () -> leds.setAllLeds(new Color(0, 0, 0.25))));
+        mechController.rightBumper().onTrue(General.Instant(claw::openClaw, () -> leds.setAllLeds(new Color(0.2, 0.15, 0))));
+
+        mechController.leftTrigger()
+                .whileTrue(General.Instant(telescope::extendTelescope))
+                .whileFalse(General.Instant(telescope::stopTelescope));
+        mechController.povDown()
+                .whileTrue(General.Instant(telescope::retractTelescope))
+                .whileFalse(General.Instant(telescope::stopTelescope));
+        mechController.povUp().onTrue(General.Instant(telescope::resetPosition));
+
+        claw.setDefaultCommand(General.Instant(
+            () -> claw.setWristVoltage( MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE, -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)), 
+            () -> claw.setIntakeSpeed(mechController.getRightY() * 2)
+        ));
+
+        driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
+        driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
+        driveController.a().onTrue(General.Instant(driveSubsystem::syncEncoders));
+        driveController.x().onTrue(General.Instant(driveSubsystem::zeroGyro));
     }
 
     public void configTesting() {
-        DriverStation.silenceJoystickConnectionWarning(true);
+        driveController.a().onTrue(runSystemsCheck());
+        driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
+        driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
 
-        mechController.a().onTrue(new InstantCommand(armCommand::stop));
-        mechController.b().onTrue(new InstantCommand(() -> armCommand.setAngle(0)));
-        mechController.x().onTrue(new InstantCommand(() -> armCommand.setAngle(-75)));
-        mechController.y().onTrue(new InstantCommand(() -> armCommand.setAngle(60)));
+        driveController.leftBumper().onTrue(General.Instant(armCommand::stop));
+        driveController.rightBumper().onTrue(General.Instant(()->armCommand.setAngle(60)));
 
-        mechController.rightBumper().onTrue(new InstantCommand(claw::openClaw)
-                .andThen(new InstantCommand(() -> leds.setAllLeds(new Color(0.2, 0.15, 0)))));
-        mechController.leftBumper().onTrue(new InstantCommand(claw::closeClaw)
-                .andThen(new InstantCommand(() -> leds.setAllLeds(new Color(0, 0, 0.25)))));
+        driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, () -> leds.setAllLeds(new Color(0, 0, 0.25))));
+        driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, () -> leds.setAllLeds(new Color(0.2, 0.15, 0))));
+    }
 
-        mechController.leftTrigger().whileTrue(new InstantCommand(telescope::extendTelescope))
-                .whileFalse(new InstantCommand(telescope::stopTelescope));
-        mechController.povDown().whileTrue(new InstantCommand(telescope::retractTelescope))
-                .whileFalse(new InstantCommand(telescope::stopTelescope));
-        mechController.povUp().onTrue(new InstantCommand(telescope::resetPosition));
-
-        claw.setDefaultCommand(new InstantCommand(
-                () -> claw.setWristVoltage(
-                        MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
-                                -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
-                claw).alongWith(new InstantCommand(() -> claw.setIntakeSpeed(mechController.getRightY() * 2))));
-
-        driveController.b().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-        driveController.y().onTrue(new InstantCommand(driveSubsystem::resetOdometry));
-        driveController.a().onTrue(new InstantCommand(driveSubsystem::syncEncoders));
-        driveController.x().onTrue(new InstantCommand(driveSubsystem::zeroGyro));
-        driveController.rightBumper().onTrue(new InstantCommand(()->armCommand.setAngle(60)));
-        driveController.leftBumper().onTrue(new InstantCommand(armCommand::stop));
+    public Command runSystemsCheck(){
+        driveSubsystem.syncEncoders();
+        driveSubsystem.resetOdometry();
+        System.out.println("Init...");
+        return new SequentialCommandGroup(
+          new PrintCommand("Starting..."),
+          General.Instant(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0)),
+                          ()->armCommand.setAngle(60)),
+          new WaitCommand(0.5),
+          General.Instant(claw::intake, claw::openClaw, telescope::extendTelescope),
+          new WaitCommand(0.5),
+          General.Instant(claw::output, claw::closeClaw, telescope::retractTelescope),
+          new WaitCommand(0.5),
+          General.Instant(armCommand::stop, claw::stopClaw, telescope::stopTelescope, ()->driveSubsystem.drive(new ChassisSpeeds()))
+        );
     }
 
     private static double deadband(double value, double deadband) {

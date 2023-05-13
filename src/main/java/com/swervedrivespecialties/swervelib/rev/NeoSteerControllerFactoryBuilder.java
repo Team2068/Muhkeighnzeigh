@@ -5,7 +5,6 @@ import com.revrobotics.*;
 import com.swervedrivespecialties.swervelib.*;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoder;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;

@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.syncEncodersDisabled();
+    m_robotContainer.io.configTeleop();
   }
 
   /** This function is called periodically during operator control. */
@@ -93,7 +94,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_robotContainer.runSubsystemTests().schedule();
+    // m_robotContainer.runSubsystemTests().schedule();
+    m_robotContainer.io.configTesting(); // BUG: Testing mode seems to not run any controller commands, may need to rethink how we handle this
   }
 
   /** This function is called periodically during test mode. */

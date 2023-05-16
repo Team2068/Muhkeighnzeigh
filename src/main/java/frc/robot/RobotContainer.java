@@ -31,7 +31,6 @@ public class RobotContainer {
     initEventMap();
     configureAutonomous();
     io.configGlobal();
-    io.configTesting();
     
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();

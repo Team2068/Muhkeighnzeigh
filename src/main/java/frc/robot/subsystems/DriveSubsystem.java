@@ -31,7 +31,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.SwerveModule;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 7.5  ;
+    public static double MAX_VOLTAGE = 7.5;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /

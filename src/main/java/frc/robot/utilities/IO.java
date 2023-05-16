@@ -59,10 +59,10 @@ public class IO {
                 .whileFalse(General.Instant(telescope::stopTelescope));
         mechController.povUp().onTrue(General.Instant(telescope::resetPosition));
 
-        claw.setDefaultCommand(General.Instant(
-            () -> claw.setWristVoltage( MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE, -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)), 
-            () -> claw.setIntakeSpeed(mechController.getRightY() * 2)
-        ));
+        claw.setDefaultCommand(new InstantCommand(
+            () -> claw.setWristVoltage(MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
+                -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
+                claw).alongWith(new InstantCommand(() -> claw.setIntakeSpeed(mechController.getRightY() * 2))));
 
         driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
         driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));

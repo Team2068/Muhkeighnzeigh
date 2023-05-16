@@ -24,9 +24,9 @@ public class IO {
     public final ArmSubsystem arm = new ArmSubsystem();
     public final LEDSubsystem leds = new LEDSubsystem();
     public final ClawSubsystem claw = new ClawSubsystem();
+    public final Photonvision photon = new Photonvision();
     public final DriveSubsystem driveSubsystem = new DriveSubsystem();
     public final TelescopeSubsystem telescope = new TelescopeSubsystem();
-    public final Photonvision photon = new Photonvision(PhotonConstants.CAM_NAME);
 
     public SetArmProfiled armCommand = new SetArmProfiled(73, arm, telescope, photon::rotateMount, true);
 

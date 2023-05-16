@@ -127,8 +127,7 @@ public final class Constants {
     public static final double kPThetaController = 2.5;
 
     // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,
-        1);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,1);
   }
 
   public static final class TelescopeConstants {
@@ -160,7 +159,6 @@ public final class Constants {
     public static final int APRILTAG_PIPELINE_INDEX = 1;
     public static final double CAM_HEIGHT = 0.1524; //replace with actual height of camera in meters 
     public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
-    public static final String CAM_NAME = "OV5647";
     public static final int SERVO_PORT = 6; //change to actual port
     public static final int FORWARD_ANGLE =  0;
     public static final int BACKWARD_ANGLE = 135;

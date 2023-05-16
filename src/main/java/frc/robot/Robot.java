@@ -93,9 +93,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    CommandScheduler.enable(); // NOTE: Heard that the Command Scheduler isn't enabled during TestMode
     CommandScheduler.getInstance().cancelAll();
     // m_robotContainer.runSubsystemTests().schedule();
-    m_robotContainer.io.configTesting(); // BUG: Testing mode seems to not run any controller commands, may need to rethink how we handle this
+    m_robotContainer.io.configTesting();
   }
 
   /** This function is called periodically during test mode. */

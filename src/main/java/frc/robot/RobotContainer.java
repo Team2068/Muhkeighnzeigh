@@ -7,19 +7,17 @@ package frc.robot;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
-import frc.robot.commands.ScoreHigh;
-import frc.robot.commands.ScoreMid;
+import frc.robot.commands.Score;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;
+import frc.robot.utilities.General;
 import frc.robot.utilities.IO;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class RobotContainer {
 
@@ -34,66 +32,62 @@ public class RobotContainer {
     
     SmartDashboard.putData("Auto Selector", autonomousSelector);
     CameraServer.startAutomaticCapture();
-    // SmartDashboard.putData("Kill LEDs", new InstantCommand(ledSubsystem::killLeds, ledSubsystem));
-    // PathPlannerServer.startServer(5811); // DEBUGGING
   }
 
   private void configureAutonomous() {
     autonomousSelector.setDefaultOption("Drive to side + Park", new SequentialCommandGroup(
         io.driveSubsystem.followPath(Paths.park),
         new AutonBalance(io.driveSubsystem, false)));
-    autonomousSelector.addOption("Only Park", new SequentialCommandGroup(new InstantCommand(() -> io.armCommand.setAngle(75)), new AutonBalance(io.driveSubsystem, false)));
+    autonomousSelector.addOption("Only Park", new SequentialCommandGroup(General.Instant(() -> io.armCommand.setAngle(75)), new AutonBalance(io.driveSubsystem, false)));
     autonomousSelector.addOption("Only Park Reversed", new AutonBalance(io.driveSubsystem, true));
     autonomousSelector.addOption("Leave Community", io.driveSubsystem.followPath(Paths.leaveCommunity));
     autonomousSelector.addOption("Score Mid + Leave Community", new SequentialCommandGroup(
-        new ScoreMid(io),
-        new WaitCommand(1),
+        new Score(io, false),
         new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION),
         io.driveSubsystem.followPath(Paths.leaveCommunity)));
-    autonomousSelector.addOption("frfr", new ScoreMid(io));
+    autonomousSelector.addOption("frfr", new Score(io, false));
     autonomousSelector.addOption("Door Dash",
         io.driveSubsystem.followPathGroupWithEvents(Paths.picking).andThen(new AutonBalance(io.driveSubsystem, true)));
     autonomousSelector.addOption("Leave Community + Park", new SequentialCommandGroup(
-        new ScoreMid(io),
-        new InstantCommand(io.claw::closeClaw),
-        new ScoreHigh(io),
+      new Score(io, false),
+        General.Instant(io.claw::closeClaw),
+        new Score(io, true),
         new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION),
         io.driveSubsystem.followPath(Paths.leaveCommunityPark),
         new AutonBalance(io.driveSubsystem, true)));
     autonomousSelector.addOption("Score Mid + Park", new SequentialCommandGroup(
-      new ScoreMid(io),
+      new Score(io, false),
       new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION),
       new AutonBalance(io.driveSubsystem, true)));
     autonomousSelector.addOption("Score Mid", new SequentialCommandGroup(
-        new ScoreMid(io),
-        new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION).withTimeout(0.5)));
+      new Score(io, false),
+      new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION).withTimeout(0.5)));
     autonomousSelector.addOption("Score Mider", new SequentialCommandGroup(
-      new ScoreMid(io),
+      new Score(io, false),
       new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION).withTimeout(0.5),
-      new InstantCommand(io.claw::openClaw),
+      General.Instant(io.claw::openClaw),
       io.driveSubsystem.followPathGroupWithEvents(Paths.cooking)
     ));
     autonomousSelector.addOption("We BALL auto", new SequentialCommandGroup(
-        new ScoreMid(io),
-        io.driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
+      new Score(io, false),
+      io.driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
     autonomousSelector.addOption("Loop", io.driveSubsystem.followPath(Paths.loop));
   }
 
-  public void initEventMap() {
+  private void initEventMap() {
     Paths.eventMap.put("pickup", new SequentialCommandGroup(
-        new InstantCommand(io.claw::openClaw),
+        General.Instant(io.claw::openClaw),
         new SetClawPosition(io.claw, ClawConstants.INTAKE_POSITION).withTimeout(1),
-        new InstantCommand(io.claw::intake)));
-    Paths.eventMap.put("closeclaw", new InstantCommand(io.claw::closeClaw));
-    Paths.eventMap.put("openclaw", new InstantCommand(io.claw::openClaw));
-    Paths.eventMap.put("stopintake", new InstantCommand(io.claw::stopClaw));
+        General.Instant(io.claw::intake)));
+    Paths.eventMap.put("closeclaw", General.Instant(io.claw::closeClaw));
+    Paths.eventMap.put("openclaw", General.Instant(io.claw::openClaw));
+    Paths.eventMap.put("stopintake", General.Instant(io.claw::stopClaw));
     Paths.eventMap.put("intakeposition",
         new SetClawPosition(io.claw, ClawConstants.INTAKE_POSITION).withTimeout(1));
-    Paths.eventMap.put("print", new PrintCommand("PRINTINTINTINTTINTIN"));
     Paths.eventMap.put("liftarm", new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION).withTimeout(1));
-    Paths.eventMap.put("scorehigh", new ScoreHigh(io)
+    Paths.eventMap.put("scorehigh", new Score(io, true)
         .andThen(new SetTelescopePosition(io.telescope, io.arm, 0)));
-    Paths.eventMap.put("scorelow", new ScoreMid(io)
+    Paths.eventMap.put("scorelow", new Score(io, false)
         .andThen(new SetTelescopePosition(io.telescope,io.arm, 0)));
   }
 
@@ -109,13 +103,5 @@ public class RobotContainer {
       io.driveSubsystem.pigeon2.addYaw(180);
     }, io.driveSubsystem);
     return autonomousSelector.getSelected().andThen(postAutonomous);
-  }
-
-  public Command runSubsystemTests(){
-    return io.runSystemsCheck();
-  }
-
-  public void syncEncodersDisabled() {
-    io.driveSubsystem.syncEncoders();
   }
 }

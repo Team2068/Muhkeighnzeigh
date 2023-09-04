@@ -35,7 +35,7 @@ public class SwerveModule{
         steerEncoder.configFactoryDefault();
         steerEncoder.configMagnetOffset(offset);
         steerEncoder.configSensorDirection(false);
-        steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360); // NOTE: Might want to test putting it between [-180,180]
+        steerEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         steerEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         steerEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100, 250);
 
@@ -48,7 +48,7 @@ public class SwerveModule{
         driveMotor.getEncoder().setPositionConversionFactor(DRIVE_CONVERSION_FACTOR);
         driveMotor.getEncoder().setVelocityConversionFactor(DRIVE_CONVERSION_FACTOR / 60.0);
 
-        steerMotor.getEncoder().setPositionConversionFactor(2 * Math.PI * STEER_REDUCTION); // NOTE: May need to multiply by 2
+        steerMotor.getEncoder().setPositionConversionFactor(2 * Math.PI * STEER_REDUCTION);
         steerMotor.getEncoder().setVelocityConversionFactor(2 * Math.PI * STEER_REDUCTION / 60);
         steerMotor.getEncoder().setPosition(steerEncoder.getAbsolutePosition());
 
@@ -65,7 +65,7 @@ public class SwerveModule{
         steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         steerMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
-        tab.addDouble("Absolute Angle", steerEncoder::getAbsolutePosition);
+        tab.addDouble("Absolute Angle", steerEncoder::getAbsolutePosition); 
         tab.addDouble("Current Angle", () -> Math.toDegrees(steerMotor.getEncoder().getPosition()));
         tab.addDouble("Target Angle", () -> desiredAngle);
         tab.addDouble("Velocity", steerMotor.getEncoder()::getVelocity);

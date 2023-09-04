@@ -1,8 +1,11 @@
 package frc.robot.utilities;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -18,8 +21,8 @@ import frc.robot.subsystems.Photonvision;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class IO {
-    final CommandXboxController mechController = new CommandXboxController(0);
-    final CommandXboxController driveController = new CommandXboxController(3);
+    final CommandXboxController driveController = new CommandXboxController(0);
+    final CommandXboxController mechController = new CommandXboxController(1);
 
     public final ArmSubsystem arm = new ArmSubsystem();
     public final LEDSubsystem leds = new LEDSubsystem();
@@ -62,7 +65,7 @@ public class IO {
         claw.setDefaultCommand(new InstantCommand(
             () -> claw.setWristVoltage(MathUtil.clamp(modifyAxis(mechController.getLeftY()) * ClawConstants.WRIST_VOLTAGE,
                 -ClawConstants.WRIST_VOLTAGE, ClawConstants.WRIST_VOLTAGE)),
-                claw).alongWith(new InstantCommand(() -> claw.setIntakeSpeed(mechController.getRightY() * 2))));
+                claw).alongWith(General.Instant(() -> claw.setIntakeSpeed(mechController.getRightY() * 2))));
 
         driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
         driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
@@ -71,6 +74,9 @@ public class IO {
     }
 
     public void configTesting() {
+        SmartDashboard.putData("Kill LEDs", General.Instant(leds::killLeds));
+        PathPlannerServer.startServer(5811);
+
         driveController.a().onTrue(runSystemsCheck());
         driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
         driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
@@ -85,17 +91,20 @@ public class IO {
     public Command runSystemsCheck(){
         driveSubsystem.syncEncoders();
         driveSubsystem.resetOdometry();
-        System.out.println("Init...");
+
         return new SequentialCommandGroup(
           new PrintCommand("Starting..."),
+            // TODO: Extend the drive sys tests to cover moving forward, back, left, right, rotating clock-wise & counter clock-wise
           General.Instant(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0)),
                           ()->armCommand.setAngle(60)),
+          new WaitCommand(0.5),
+          General.Instant(()-> armCommand.setAngle(-60)),
           new WaitCommand(0.5),
           General.Instant(claw::intake, claw::openClaw, telescope::extendTelescope),
           new WaitCommand(0.5),
           General.Instant(claw::output, claw::closeClaw, telescope::retractTelescope),
-          new WaitCommand(0.5),
-          General.Instant(armCommand::stop, claw::stopClaw, telescope::stopTelescope, ()->driveSubsystem.drive(new ChassisSpeeds()))
+          new WaitCommand(0.6),
+          General.Instant(armCommand::stop, claw::stopClaw, telescope::stopTelescope, driveSubsystem::stop)
         );
     }
 

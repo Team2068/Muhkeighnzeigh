@@ -22,10 +22,9 @@ public final class Constants {
   public static final double DRIVE_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.2;
 
   public static int CURRENT_LIMIT = 30;
-
-  public enum ChassisConfiguration {
-    MAIN,
-    PRACTICE
+  
+  public static boolean isPracticeBot() {
+    return System.getenv("PRACTICE_ROBOT") != null;
   }
 
   public final static class ControllerConstants {
@@ -36,12 +35,7 @@ public final class Constants {
     public static final int POV_ANGLE_LEFT = 270;
     public static final int POV_ANGLE_RIGHT = 90;
   }
-
-  public static ChassisConfiguration getChassisConfiguration() {
-    return System.getenv("PRACTICE_ROBOT") != null ? ChassisConfiguration.PRACTICE : ChassisConfiguration.MAIN;
-  }
-
-  public static final class DriveConstants {
+    public static final class DriveConstants {
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(19.5);
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(21.5);
 
@@ -66,21 +60,16 @@ public final class Constants {
     public static double BACK_RIGHT_ENCODER_OFFSET;
 
     public static final int PIGEON_ID = 19;
-
+  
     public static final void setOffsets() { 
-      if (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) {
+      if (!isPracticeBot()) {
         FRONT_LEFT_ENCODER_OFFSET = -314;
         FRONT_RIGHT_ENCODER_OFFSET = -100;
         BACK_LEFT_ENCODER_OFFSET = -164;
         BACK_RIGHT_ENCODER_OFFSET = -53;
-      } else {
-        FRONT_LEFT_ENCODER_OFFSET = -Math.toRadians(359);
-        FRONT_RIGHT_ENCODER_OFFSET = -Math.toRadians(57);
-        BACK_LEFT_ENCODER_OFFSET = -Math.toRadians(221);
-        BACK_RIGHT_ENCODER_OFFSET = -Math.toRadians(46);
-      }
+      } else {}
 
-      SmartDashboard.putString("Robot Configuration", (Constants.getChassisConfiguration() == ChassisConfiguration.MAIN) ? "Main" : "Practice");
+      SmartDashboard.putString("Robot Configuration", (isPracticeBot()) ? "Practice" : "Main");
     }
   }
 
@@ -92,13 +81,10 @@ public final class Constants {
     public static double ARM_LIMIT;
 
     public static void setOffsets() {
-      if(getChassisConfiguration() == ChassisConfiguration.MAIN) {
+      if(!isPracticeBot()) {
         ARM_OFFSET = 0;
         ARM_LIMIT = 0.4;
-      } else {
-        ARM_OFFSET = 0.176;
-        ARM_LIMIT = 0.78;
-      }
+      } else {}
     }
   }
 
@@ -126,7 +112,6 @@ public final class Constants {
     public static final double kPYController = 2;
     public static final double kPThetaController = 2.5;
 
-    // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(1,1);
   }
 
@@ -157,9 +142,9 @@ public final class Constants {
   public static class PhotonConstants {
     public static final int REFLECTIVE_TAPE_PIPELINE_INDEX = 0;
     public static final int APRILTAG_PIPELINE_INDEX = 1;
-    public static final double CAM_HEIGHT = 0.1524; //replace with actual height of camera in meters 
-    public static final double CAM_ANGLE = Units.degreesToRadians(20); //replace with actual angle of the camera
-    public static final int SERVO_PORT = 6; //change to actual port
+    public static final double CAM_HEIGHT = 0.1524; 
+    public static final double CAM_ANGLE = Units.degreesToRadians(20);
+    public static final int SERVO_PORT = 6;
     public static final int FORWARD_ANGLE =  0;
     public static final int BACKWARD_ANGLE = 135;
   }
@@ -187,7 +172,7 @@ public final class Constants {
   }
 
   public static class AimbotConstants {
-    public static final double kP = 0.25; //try the kp ki kd values above
+    public static final double kP = 0.25;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double speed = 1;

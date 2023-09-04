@@ -38,6 +38,6 @@ public class Aimbot extends PIDCommand {
 
   @Override
   public void end(boolean interrupted) {
-    io.driveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
+    io.driveSubsystem.stop();
   }
 }

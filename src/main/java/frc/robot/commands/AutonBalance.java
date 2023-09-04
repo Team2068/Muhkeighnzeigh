@@ -47,7 +47,7 @@ public class AutonBalance extends SequentialCommandGroup {
     public void end(boolean interrupted) {
       super.end(interrupted);
       System.out.println("Robot Balanced!");
-      driveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
+      driveSubsystem.stop();
     }
   }
 

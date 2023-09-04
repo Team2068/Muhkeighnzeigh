@@ -139,6 +139,8 @@ public class DriveSubsystem extends SubsystemBase {
         this.chassisSpeeds = chassisSpeeds;
     }
 
+    public void stop(){ chassisSpeeds = new ChassisSpeeds();}
+
     private SwerveModulePosition getModulePosition(SwerveModule module) {
         return new SwerveModulePosition(module.getDrivePosition(), Rotation2d.fromRadians(module.getSteerAngle()));
     }

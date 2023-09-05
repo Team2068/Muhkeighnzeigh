@@ -13,6 +13,7 @@ public class TelescopeSubsystem extends SubsystemBase {
     private CANSparkMax telescopeMotor = new CANSparkMax(TelescopeConstants.TELESCOPE_MOTOR, MotorType.kBrushless);
     public TelescopeSubsystem() {
         telescopeMotor.setIdleMode(IdleMode.kBrake);
+        // telescopeMotor.getPIDController().SetP(0.0001);
     }
 
     public void extendTelescope(double speed) {
@@ -24,11 +25,10 @@ public class TelescopeSubsystem extends SubsystemBase {
     }
 
     public void retractTelescope(double speed) {
-        if(getPosition() <= 1) {
+        if(getPosition() <= 1)
             DriverStation.reportWarning("Retract stopped, position <= 0", false);
-            return;
-        }
-        telescopeMotor.set(-speed);
+        else
+            telescopeMotor.set(-speed);
     }
 
     public void retractTelescope() {

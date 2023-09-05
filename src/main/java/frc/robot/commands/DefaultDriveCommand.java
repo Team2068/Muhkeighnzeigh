@@ -39,7 +39,7 @@ public class DefaultDriveCommand extends CommandBase {
         double rotationSpeed = m_rotationSupplier.getAsDouble() * 0.7;
 
         if(driveSubsystem.isFieldOriented())
-            driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, driveSubsystem.getGyroscopeRotation()));
+            driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, driveSubsystem.getRotation()));
         else
             driveSubsystem.drive(new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed));
     }

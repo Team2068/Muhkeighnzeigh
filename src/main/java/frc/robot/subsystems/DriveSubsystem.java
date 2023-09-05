@@ -100,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
                 DriveConstants.BACK_RIGHT_ENCODER_OFFSET);
 
         odometry = new SwerveDriveOdometry(
-                kinematics, getGyroscopeRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
+                kinematics, getRotation(), getModulePositions(), new Pose2d(0, 0, new Rotation2d()));
 
         autoBuilder = new SwerveAutoBuilder(this::getPose, this::resetOdometry, new PIDConstants(AutoConstants.kPXController, 0, 0.01), new PIDConstants(AutoConstants.kPThetaController, 0, 0.01), this::drive, Paths.eventMap, true, this);
 
@@ -126,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
         pigeon2.setYaw(0);
     }
 
-    public Rotation2d getGyroscopeRotation() {
+    public Rotation2d getRotation() {
         return pigeon2.getRotation2d();
     }
 
@@ -166,13 +166,13 @@ public class DriveSubsystem extends SubsystemBase {
     public void resetOdometry() {
         zeroGyro();
         resetPosition();
-        odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), new Pose2d());
+        odometry.resetPosition(getRotation(), getModulePositions(), new Pose2d());
     }
 
     public void resetOdometry(Pose2d pose) {
         zeroGyro();
         resetPosition();
-        odometry.resetPosition(getGyroscopeRotation(), getModulePositions(), pose);
+        odometry.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
@@ -233,14 +233,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void periodic() {
         setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
-        Pose2d pose = odometry.update(getGyroscopeRotation(), getModulePositions());
+        Pose2d pose = odometry.update(getRotation(), getModulePositions());
 
         // TODO: Wrap This Into A List, auto-order it too
         SmartDashboard.putData(pigeon2);
         SmartDashboard.putNumber("X position", pose.getX());
         SmartDashboard.putNumber("Y position", pose.getY());
 
-        SmartDashboard.putNumber("Odometry rotation", getGyroscopeRotation().getDegrees());
+        SmartDashboard.putNumber("Odometry rotation", getRotation().getDegrees());
         SmartDashboard.putNumber("Pigeon Yaw", pigeon2.getYaw());
         SmartDashboard.putNumber("Pigeon Pitch", pigeon2.getPitch());
         SmartDashboard.putNumber("Pigeon Roll", pigeon2.getRoll());

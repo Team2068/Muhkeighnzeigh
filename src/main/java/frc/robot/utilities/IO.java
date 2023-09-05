@@ -51,8 +51,8 @@ public class IO {
         mechController.x().onTrue(General.Instant(() -> armCommand.setAngle(-60)));
         mechController.y().onTrue(General.Instant(() -> armCommand.setAngle(60)));
 
-        mechController.leftBumper().onTrue(General.Instant(claw::closeClaw, () -> leds.setAllLeds(new Color(0, 0, 0.25))));
-        mechController.rightBumper().onTrue(General.Instant(claw::openClaw, () -> leds.setAllLeds(new Color(0.2, 0.15, 0))));
+        mechController.leftBumper().onTrue(General.Instant(claw::closeClaw, leds::setBlue));
+        mechController.rightBumper().onTrue(General.Instant(claw::openClaw, leds::setYellow));
 
         mechController.leftTrigger()
                 .whileTrue(General.Instant(telescope::extendTelescope))
@@ -84,9 +84,9 @@ public class IO {
         driveController.leftBumper().onTrue(General.Instant(armCommand::stop));
         driveController.rightBumper().onTrue(General.Instant(()->armCommand.setAngle(60)));
 
-        driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, () -> leds.setAllLeds(new Color(0, 0, 0.25))));
-        driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, () -> leds.setAllLeds(new Color(0.2, 0.15, 0))));
-    }
+        driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, leds::setBlue));
+        driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, leds::setYellow));
+    } 
 
     public Command runSystemsCheck(){
         driveSubsystem.syncEncoders();

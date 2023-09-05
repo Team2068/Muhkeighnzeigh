@@ -15,10 +15,14 @@ public class LEDSubsystem extends SubsystemBase {
   AddressableLED led = new AddressableLED(LEDConstants.LED_PORT);
   AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_LENGTH);
 
+  private Color Y = new Color(0.2, 0.15, 0);
+  private Color P = new Color(0, 0, 0.25);
+
   public LEDSubsystem() {
     led.setLength(ledBuffer.getLength());
     led.setData(ledBuffer);
     led.start();
+
     setAllLeds(new Color(0, 0, 0.25));
   }
 
@@ -27,10 +31,13 @@ public class LEDSubsystem extends SubsystemBase {
     led.stop();
   }
 
+  public void setBlue(){ setAllLeds(P); }
+
+  public void setYellow(){ setAllLeds(Y); }
+
   public void setAllLeds(/*int r, int g, int b*/ Color color) {
-    for (int i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setLED(i, color);
-    }
+    for (int i = 0; i < ledBuffer.getLength(); i++) ledBuffer.setLED(i, color);
+    
     led.setData(ledBuffer);
   }
 }

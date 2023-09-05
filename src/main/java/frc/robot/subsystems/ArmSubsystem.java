@@ -37,6 +37,8 @@ public class ArmSubsystem extends SubsystemBase {
         arm1Motor.setInverted(true);
         arm2Motor.follow(arm1Motor);
 
+        arm1Motor.getEncoder().setPosition(getArmPosition());
+
         ArmConstants.setOffsets();
     }
 
@@ -85,6 +87,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Arm Relative Position", arm1Motor.getEncoder().getPosition());
         SmartDashboard.putNumber("Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm Abs Position", armEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Arm1 Power", arm1Motor.getBusVoltage());

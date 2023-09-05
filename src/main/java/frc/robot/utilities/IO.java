@@ -94,8 +94,10 @@ public class IO {
 
         return new SequentialCommandGroup(
           new PrintCommand("Starting..."),
+
             // TODO: Extend the drive sys tests to cover moving forward, back, left, right, rotating clock-wise & counter clock-wise
-          General.Instant(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0)),
+          
+            General.Instant(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0)),
                           ()->armCommand.setAngle(60)),
           new WaitCommand(0.5),
           General.Instant(()-> armCommand.setAngle(-60)),

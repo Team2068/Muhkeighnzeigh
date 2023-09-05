@@ -31,7 +31,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.SwerveModule;
 
 public class DriveSubsystem extends SubsystemBase {
-    public static double MAX_VOLTAGE = 4;
+    public static double MAX_VOLTAGE = 7.5;
 
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = (MAX_VELOCITY_METERS_PER_SECOND /
@@ -139,8 +139,10 @@ public class DriveSubsystem extends SubsystemBase {
         this.chassisSpeeds = chassisSpeeds;
     }
 
+    public void stop(){ chassisSpeeds = new ChassisSpeeds();}
+
     private SwerveModulePosition getModulePosition(SwerveModule module) {
-        return new SwerveModulePosition(module.getDrivePosition(), Rotation2d.fromDegrees(module.getSteerAngle()));
+        return new SwerveModulePosition(module.getDrivePosition(), Rotation2d.fromRadians(module.getSteerAngle()));
     }
 
     public SwerveModulePosition[] getModulePositions() {
@@ -233,6 +235,7 @@ public class DriveSubsystem extends SubsystemBase {
         setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
         Pose2d pose = odometry.update(getGyroscopeRotation(), getModulePositions());
 
+        // TODO: Wrap This Into A List, auto-order it too
         SmartDashboard.putData(pigeon2);
         SmartDashboard.putNumber("X position", pose.getX());
         SmartDashboard.putNumber("Y position", pose.getY());

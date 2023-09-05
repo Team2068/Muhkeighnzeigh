@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
+    m_robotContainer.io.driveSubsystem.syncEncoders();
   }
 
   /**
@@ -67,7 +68,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    m_robotContainer.syncEncodersDisabled();
   }
 
   /** This function is called periodically during autonomous. */
@@ -76,14 +76,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-    m_robotContainer.syncEncodersDisabled();
+    if (m_autonomousCommand != null) m_autonomousCommand.cancel();
+    m_robotContainer.io.configTeleop();
   }
 
   /** This function is called periodically during operator control. */
@@ -92,9 +86,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
+    // LiveWindow.disableAllTelemetry(); // NOTE: Heard this being active disables the CommandScheduler
+    CommandScheduler.getInstance().enable(); // NOTE: Heard that the Command Scheduler isn't enabled during TestMode
     CommandScheduler.getInstance().cancelAll();
-    m_robotContainer.runSubsystemTests().schedule();
+    m_robotContainer.io.configTesting();
   }
 
   /** This function is called periodically during test mode. */

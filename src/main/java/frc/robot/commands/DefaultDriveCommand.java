@@ -34,8 +34,8 @@ public class DefaultDriveCommand extends CommandBase {
    
     @Override
     public void execute() {
-        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble()) * ((driveSubsystem.isSlowMode()) ? 0.4 : 1);
-        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble()) * ((driveSubsystem.isSlowMode()) ? 0.4 : 1);
+        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble());
+        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble());
         double rotationSpeed = m_rotationSupplier.getAsDouble() * 0.7;
 
         if(driveSubsystem.isFieldOriented())
@@ -46,6 +46,6 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        driveSubsystem.drive(new ChassisSpeeds());
+        driveSubsystem.stop();
     }
 }

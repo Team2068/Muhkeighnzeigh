@@ -23,7 +23,7 @@ public class Photonvision extends SubsystemBase {
   public PhotonCamera camera;
   public Servo mount = new Servo(PhotonConstants.SERVO_PORT);
 
-  public Photonvision(String camName) {
+  public Photonvision() {
     camera = new PhotonCamera("OV5647");
   }
 

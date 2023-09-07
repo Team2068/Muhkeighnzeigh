@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,45 +11,50 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TelescopeConstants;
 
 public class TelescopeSubsystem extends SubsystemBase {
-    private CANSparkMax telescopeMotor = new CANSparkMax(TelescopeConstants.TELESCOPE_MOTOR, MotorType.kBrushless);
+    CANSparkMax telescope = new CANSparkMax(TelescopeConstants.TELESCOPE_MOTOR, MotorType.kBrushless);
+    
     public TelescopeSubsystem() {
-        telescopeMotor.setIdleMode(IdleMode.kBrake);
-        // telescopeMotor.getPIDController().SetP(0.0001);
+        telescope.setIdleMode(IdleMode.kBrake);
+        telescope.getPIDController().setP(0.03);
     }
 
-    public void extendTelescope(double speed) {
-        telescopeMotor.set(speed);
+    public void extend(double speed) {
+        telescope.set(speed);
     }
 
-    public void extendTelescope() {
-        telescopeMotor.set(TelescopeConstants.TELESCOPE_SPEED);
+    public void extend() {
+        telescope.set(TelescopeConstants.TELESCOPE_SPEED);
     }
 
-    public void retractTelescope(double speed) {
+    public void retract(double speed) {
         if(getPosition() <= 1)
             DriverStation.reportWarning("Retract stopped, position <= 0", false);
         else
-            telescopeMotor.set(-speed);
+            telescope.set(-speed);
     }
 
-    public void retractTelescope() {
-        retractTelescope(TelescopeConstants.TELESCOPE_SPEED);
+    public void retract() {
+        retract(TelescopeConstants.TELESCOPE_SPEED);
     }
 
-    public void stopTelescope() {
-        telescopeMotor.set(0);
+    public void setPosition(double position){
+        if (position > 0) telescope.getPIDController().setReference(position, ControlType.kPosition);
+    }
+
+    public void stop() {
+        telescope.set(0);
     }
 
     public void setVoltage(double voltage) {
-        telescopeMotor.setVoltage(voltage);
+        telescope.setVoltage(voltage);
     }
 
     public double getPosition() {
-        return telescopeMotor.getEncoder().getPosition();
+        return telescope.getEncoder().getPosition();
     }
 
     public void resetPosition() {
-        telescopeMotor.getEncoder().setPosition(0);
+        telescope.getEncoder().setPosition(0);
     }
 
     @Override

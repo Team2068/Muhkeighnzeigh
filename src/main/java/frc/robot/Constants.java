@@ -7,6 +7,15 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.List;
 
+import frc.robot.Constants.Paths;
+import frc.robot.commands.AutonBalance;
+import frc.robot.commands.Score;
+import frc.robot.commands.SetClawPosition;
+import frc.robot.commands.SetTelescopePosition;
+import frc.robot.utilities.General;
+import frc.robot.utilities.IO;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -25,6 +34,23 @@ public final class Constants {
   
   public static boolean isPracticeBot() {
     return System.getenv("PRACTICE_ROBOT") != null;
+  }
+
+  public static void initEventMap(IO io) {
+    Paths.eventMap.put("pickup", new SequentialCommandGroup(
+        General.Instant(io.claw::openClaw),
+        new SetClawPosition(io.claw, ClawConstants.INTAKE_POSITION).withTimeout(1),
+        General.Instant(io.claw::intake)));
+    Paths.eventMap.put("closeclaw", General.Instant(io.claw::closeClaw));
+    Paths.eventMap.put("openclaw", General.Instant(io.claw::openClaw));
+    Paths.eventMap.put("stopintake", General.Instant(io.claw::stopClaw));
+    Paths.eventMap.put("intakeposition",
+        new SetClawPosition(io.claw, ClawConstants.INTAKE_POSITION).withTimeout(1));
+    Paths.eventMap.put("liftarm", new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION).withTimeout(1));
+    Paths.eventMap.put("scorehigh", new Score(io, true)
+        .andThen(new SetTelescopePosition(io.telescope, io.arm, 0)));
+    Paths.eventMap.put("scorelow", new Score(io, false)
+        .andThen(new SetTelescopePosition(io.telescope,io.arm, 0)));
   }
 
   public final static class ControllerConstants {

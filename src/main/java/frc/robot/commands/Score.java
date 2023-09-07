@@ -20,7 +20,7 @@ public class Score extends SequentialCommandGroup {
         armCommand,
         new SequentialCommandGroup(
           new WaitCommand(0.5),
-          new SetTelescopePosition(io.telescope, io.arm, TelescopeConstants.LOW_POSITION),
+          new SetTelescopePosition(io.telescope, io.arm, (high) ? TelescopeConstants.HIGH_POSITION : TelescopeConstants.LOW_POSITION),
           new SetClawPosition(io.claw, -50).withTimeout(0.5),
           General.Instant(io.claw::openClaw),
           General.Instant(() -> {if (high) io.claw.setIntakeSpeed(-0.5);}),

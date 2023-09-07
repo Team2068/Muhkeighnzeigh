@@ -22,7 +22,7 @@ public class SetClawPosition extends CommandBase {
 
     @Override
     public void execute() {
-        double currentClawPosition = clawSubsystem.getClawPosition();
+        double currentClawPosition = clawSubsystem.getPosition();
         double clawPidOutput = clawController.calculate(currentClawPosition);
 
         double velocity = (clawController.getSetpoint() - lastClawPosition) / clawController.getPeriod();

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkMax.ControlType;
 import frc.robot.Constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase {
@@ -29,24 +30,34 @@ public class ClawSubsystem extends SubsystemBase {
         intakeMotor.setIdleMode(IdleMode.kCoast);
         wristMotor.setIdleMode(IdleMode.kBrake);
 
-        // intakeMotor.setOpenLoopRampRate(.4);
         wristMotor.setOpenLoopRampRate(0);
 
-        wristMotor.setSmartCurrentLimit(15  );
-       
+        wristMotor.setSmartCurrentLimit(15);
+
+        wristMotor.getEncoder().setPositionConversionFactor(360/31);
+        // TODO: Set wristMotor's on-board encoder to be the absolute encoder[[[==]]]
+        // wristMotor.getPIDController().setP(0.00001);
+        syncWrist();
+
+
+
         compressor.enableDigital();
     }
 
+    public void syncWrist(){
+        wristMotor.getEncoder().setPosition(getPosition());
+    }
+
     public void setWristVoltage(double voltage) {
-        if((getClawPosition() >= 145  && voltage < 0) || (getClawPosition() <= -67 && voltage > 0)) {
-            wristMotor.setVoltage(0);
+        if((getPosition() >= 145  && voltage < 0) || (getPosition() <= -67 && voltage > 0)) {
             DriverStation.reportWarning("Claw driving into itself!", false);
-            return;
-        }else if (getClawPosition() == -169.5) {
+            wristMotor.setVoltage(0);
+        }else if (getPosition() == -169.5) {
             DriverStation.reportError("CLAW DISCONNECTED", false);
             wristMotor.setVoltage(0);
+        }else{
+            wristMotor.setVoltage(voltage);
         }
-        wristMotor.setVoltage(voltage);
     }
 
     public void setWristSpeed(double speed){
@@ -65,6 +76,11 @@ public class ClawSubsystem extends SubsystemBase {
         intakeMotor.set(0.1);
     }
 
+    // public void setPosition(double position){
+    //     if (position < 145 || position> -18)
+    //         wristMotor.getPIDController().setReference(position, ControlType.kPosition);
+    // }
+
     public void openClaw() {
         clawSolenoid.set(Value.kReverse);
     }
@@ -77,7 +93,7 @@ public class ClawSubsystem extends SubsystemBase {
         intakeMotor.set(0);
     }
 
-    public double getClawPosition() {
+    public double getPosition() {
         double abs = clawEncoder.getAbsolutePosition();
         double deg = (abs - ClawConstants.WRIST_OFFSET) * 360;
         return -((abs > 0.08 && abs < 1) ? (deg - 360) : deg);
@@ -90,7 +106,7 @@ public class ClawSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("Claw State", (clawSolenoid.get() == Value.kReverse) ? "Open" : "Closed");
-        SmartDashboard.putNumber("Claw Position", getClawPosition());
+        SmartDashboard.putNumber("Claw Position", getPosition());
         SmartDashboard.putNumber("Claw Abs Position", clawEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Claw Power", wristMotor.getBusVoltage());
     }

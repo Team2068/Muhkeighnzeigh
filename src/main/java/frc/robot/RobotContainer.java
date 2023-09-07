@@ -26,7 +26,7 @@ public class RobotContainer {
   public IO io = new IO();
 
   public RobotContainer() {
-    initEventMap();
+    Constants.initEventMap(io);
     configureAutonomous();
     io.configGlobal();
     
@@ -73,24 +73,6 @@ public class RobotContainer {
       io.driveSubsystem.followPathGroupWithEvents(Paths.weBall)));
     autonomousSelector.addOption("Loop", io.driveSubsystem.followPath(Paths.loop));
   }
-
-  private void initEventMap() {
-    Paths.eventMap.put("pickup", new SequentialCommandGroup(
-        General.Instant(io.claw::openClaw),
-        new SetClawPosition(io.claw, ClawConstants.INTAKE_POSITION).withTimeout(1),
-        General.Instant(io.claw::intake)));
-    Paths.eventMap.put("closeclaw", General.Instant(io.claw::closeClaw));
-    Paths.eventMap.put("openclaw", General.Instant(io.claw::openClaw));
-    Paths.eventMap.put("stopintake", General.Instant(io.claw::stopClaw));
-    Paths.eventMap.put("intakeposition",
-        new SetClawPosition(io.claw, ClawConstants.INTAKE_POSITION).withTimeout(1));
-    Paths.eventMap.put("liftarm", new SetClawPosition(io.claw, ClawConstants.CARRY_POSITION).withTimeout(1));
-    Paths.eventMap.put("scorehigh", new Score(io, true)
-        .andThen(new SetTelescopePosition(io.telescope, io.arm, 0)));
-    Paths.eventMap.put("scorelow", new Score(io, false)
-        .andThen(new SetTelescopePosition(io.telescope,io.arm, 0)));
-  }
-
 
   public Command getAutonomousCommand() {
     InstantCommand postAutonomous = new InstantCommand(() -> {

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.PhotonConstants;
+import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.SetArmProfiled;
 import frc.robot.subsystems.ArmSubsystem;
@@ -55,11 +56,11 @@ public class IO {
         mechController.rightBumper().onTrue(General.Instant(claw::openClaw, leds::setYellow));
 
         mechController.leftTrigger()
-                .whileTrue(General.Instant(telescope::extendTelescope))
-                .whileFalse(General.Instant(telescope::stopTelescope));
+                .whileTrue(General.Instant(telescope::extend))
+                .whileFalse(General.Instant(telescope::stop));
         mechController.povDown()
-                .whileTrue(General.Instant(telescope::retractTelescope))
-                .whileFalse(General.Instant(telescope::stopTelescope));
+                .whileTrue(General.Instant(telescope::retract))
+                .whileFalse(General.Instant(telescope::stop));
         mechController.povUp().onTrue(General.Instant(telescope::resetPosition));
 
         claw.setDefaultCommand(new InstantCommand(
@@ -77,15 +78,19 @@ public class IO {
         SmartDashboard.putData("Kill LEDs", General.Instant(leds::killLeds));
         PathPlannerServer.startServer(5811);
 
-        driveController.a().onTrue(runSystemsCheck());
-        driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
-        driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
+        // driveController.a().onTrue(General.Instant(claw::syncWrist));
+        // driveController.b().onTrue(General.Instant(() -> claw.setPosition(0)));
+        driveController.x().onTrue(General.Instant(() -> telescope.setPosition(TelescopeConstants.LOW_POSITION)));
+        driveController.y().onTrue(General.Instant(() -> telescope.setPosition(TelescopeConstants.HIGH_POSITION)));
 
         driveController.leftBumper().onTrue(General.Instant(armCommand::stop));
-        driveController.rightBumper().onTrue(General.Instant(()->armCommand.setAngle(60)));
+        driveController.rightBumper().onTrue(General.Instant(() -> armCommand.setAngle(60)));
 
-        driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, leds::setBlue));
-        driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, leds::setYellow));
+        driveController.leftTrigger().onTrue(General.Instant(telescope::retract));
+        driveController.rightTrigger().onTrue(General.Instant(telescope::extend));
+
+        // driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, leds::setBlue));
+        // driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, leds::setYellow));
     } 
 
     public Command runSystemsCheck(){
@@ -102,11 +107,11 @@ public class IO {
           new WaitCommand(0.5),
           General.Instant(()-> armCommand.setAngle(-60)),
           new WaitCommand(0.5),
-          General.Instant(claw::intake, claw::openClaw, telescope::extendTelescope),
+          General.Instant(claw::intake, claw::openClaw, telescope::extend),
           new WaitCommand(0.5),
-          General.Instant(claw::output, claw::closeClaw, telescope::retractTelescope),
+          General.Instant(claw::output, claw::closeClaw, telescope::retract),
           new WaitCommand(0.6),
-          General.Instant(armCommand::stop, claw::stopClaw, telescope::stopTelescope, driveSubsystem::stop)
+          General.Instant(armCommand::stop, claw::stopClaw, telescope::stop, driveSubsystem::stop)
         );
     }
 

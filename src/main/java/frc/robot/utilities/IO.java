@@ -5,6 +5,7 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
@@ -32,6 +33,12 @@ public class IO {
     public final TelescopeSubsystem telescope = new TelescopeSubsystem();
 
     public SetArmProfiled armCommand = new SetArmProfiled(73, arm, telescope, photon::rotateMount, true);
+
+    public IO(SendableChooser<Runnable> bindings){
+        bindings.setDefaultOption("", this::configTeleop);
+        bindings.addOption("Testing", this::configTesting);
+        bindings.addOption("Demo", this::configDemo);
+    }
 
     public void configGlobal() {
         photon.camera.setPipelineIndex(1);
@@ -73,19 +80,22 @@ public class IO {
         driveController.x().onTrue(General.Instant(driveSubsystem::zeroGyro));
     }
 
-    public void configTesting() {
+    public void configTesting(){
         SmartDashboard.putData("Kill LEDs", General.Instant(leds::killLeds));
         PathPlannerServer.startServer(5811);
 
-        driveController.a().onTrue(runSystemsCheck());
-        driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
+        // driveController.a().onTrue(runSystemsCheck());
+        // driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
+    }
+
+    public void configDemo() {
+        driveController.a().onTrue(General.Instant(() -> armCommand.setAngle(60)));
+        driveController.b().onTrue(General.Instant(() -> armCommand.setAngle(-60)));
+        driveController.x().onTrue(General.Instant(armCommand::stop));
         driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
 
-        driveController.leftBumper().onTrue(General.Instant(armCommand::stop));
-        driveController.rightBumper().onTrue(General.Instant(()->armCommand.setAngle(60)));
-
-        driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, () -> leds.setAllLeds(new Color(0, 0, 0.25))));
-        driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, () -> leds.setAllLeds(new Color(0.2, 0.15, 0))));
+        driveController.leftBumper().onTrue(General.Instant(telescope::extendTelescope, () -> leds.setAllLeds(new Color(0, 0, 0.25))));
+        driveController.rightBumper().onTrue(General.Instant(telescope::retractTelescope, () -> leds.setAllLeds(new Color(0.2, 0.15, 0))));
     }
 
     public Command runSystemsCheck(){

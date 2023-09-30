@@ -22,8 +22,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class RobotContainer {
 
   final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
+  final SendableChooser<Runnable> bindingsSelector = new  SendableChooser<Runnable>();
  
-  public IO io = new IO();
+  public IO io = new IO(bindingsSelector);
 
   public RobotContainer() {
     initEventMap();
@@ -104,4 +105,5 @@ public class RobotContainer {
     }, io.driveSubsystem);
     return autonomousSelector.getSelected().andThen(postAutonomous);
   }
+
 }

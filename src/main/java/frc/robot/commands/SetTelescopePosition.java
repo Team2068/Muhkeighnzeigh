@@ -41,6 +41,6 @@ public class SetTelescopePosition extends PIDCommand {
   @Override
   public void end(boolean interrupted) {
     System.out.println("TELESCOPE HAS REACHED POSITION :DDDD");
-    telescopeSubsystem.stopTelescope();
+    // telescopeSubsystem.stopTelescope();
   }
 }

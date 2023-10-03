@@ -7,8 +7,6 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.List;
 
-import frc.robot.Constants.Paths;
-import frc.robot.commands.AutonBalance;
 import frc.robot.commands.Score;
 import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SetTelescopePosition;

@@ -5,8 +5,8 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ClawConstants;
@@ -33,6 +33,12 @@ public class IO {
     public final TelescopeSubsystem telescope = new TelescopeSubsystem();
 
     public SetArmProfiled armCommand = new SetArmProfiled(73, arm, telescope, photon::rotateMount, true);
+
+    public IO(SendableChooser<Runnable> bindings){
+        bindings.setDefaultOption("", this::configTeleop);
+        bindings.addOption("Testing", this::configTesting);
+        bindings.addOption("Demo", this::configDemo);
+    }
 
     public void configGlobal() {
         photon.camera.setPipelineIndex(1);
@@ -74,24 +80,23 @@ public class IO {
         driveController.x().onTrue(General.Instant(driveSubsystem::zeroGyro));
     }
 
-    public void configTesting() {
+    public void configTesting(){
         SmartDashboard.putData("Kill LEDs", General.Instant(leds::killLeds));
         PathPlannerServer.startServer(5811);
 
-        // driveController.a().onTrue(General.Instant(claw::syncWrist));
-        // driveController.b().onTrue(General.Instant(() -> claw.setPosition(0)));
-        driveController.x().onTrue(General.Instant(() -> telescope.setPosition(TelescopeConstants.LOW_POSITION)));
-        driveController.y().onTrue(General.Instant(() -> telescope.setPosition(TelescopeConstants.HIGH_POSITION)));
+        // driveController.a().onTrue(runSystemsCheck());
+        // driveController.b().onTrue(General.Instant(driveSubsystem::syncEncoders));
+    }
 
-        driveController.leftBumper().onTrue(General.Instant(armCommand::stop));
-        driveController.rightBumper().onTrue(General.Instant(() -> armCommand.setAngle(60)));
+    public void configDemo() {
+        driveController.a().onTrue(General.Instant(() -> armCommand.setAngle(60)));
+        driveController.b().onTrue(General.Instant(() -> armCommand.setAngle(-60)));
+        driveController.x().onTrue(General.Instant(armCommand::stop));
+        driveController.y().onTrue(General.Instant(driveSubsystem::resetOdometry));
 
-        driveController.leftTrigger().onTrue(General.Instant(telescope::retract));
-        driveController.rightTrigger().onTrue(General.Instant(telescope::extend));
-
-        // driveController.leftTrigger().onTrue(General.Instant(claw::closeClaw, leds::setBlue));
-        // driveController.rightTrigger().onTrue(General.Instant(claw::openClaw, leds::setYellow));
-    } 
+        driveController.leftBumper().onTrue(General.Instant(() -> telescope.setPosition(TelescopeConstants.HIGH_POSITION), leds::setBlue));
+        driveController.rightBumper().onTrue(General.Instant(() -> telescope.setPosition(1), leds::setYellow));
+    }
 
     public Command runSystemsCheck(){
         driveSubsystem.syncEncoders();
@@ -102,7 +107,7 @@ public class IO {
 
             // TODO: Extend the drive sys tests to cover moving forward, back, left, right, rotating clock-wise & counter clock-wise
           
-            General.Instant(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0)),
+          General.Instant(()->driveSubsystem.drive(new ChassisSpeeds(10,0,0)),
                           ()->armCommand.setAngle(60)),
           new WaitCommand(0.5),
           General.Instant(()-> armCommand.setAngle(-60)),

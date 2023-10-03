@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkMax.ControlType;
 import frc.robot.Constants.ClawConstants;
 
 public class ClawSubsystem extends SubsystemBase {
@@ -35,7 +34,7 @@ public class ClawSubsystem extends SubsystemBase {
         wristMotor.setSmartCurrentLimit(15);
 
         wristMotor.getEncoder().setPositionConversionFactor(360/31);
-        // TODO: Set wristMotor's on-board encoder to be the absolute encoder[[[==]]]
+        // TODO: Set wristMotor's on-board encoder to be the absolute encoder [[[==]]]
         // wristMotor.getPIDController().setP(0.00001);
         syncWrist();
 

@@ -9,7 +9,6 @@ import frc.robot.Constants.Paths;
 import frc.robot.commands.AutonBalance;
 import frc.robot.commands.Score;
 import frc.robot.commands.SetClawPosition;
-import frc.robot.commands.SetTelescopePosition;
 import frc.robot.utilities.General;
 import frc.robot.utilities.IO;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -22,8 +21,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class RobotContainer {
 
   final SendableChooser<Command> autonomousSelector = new SendableChooser<>();
+  final SendableChooser<Runnable> bindingsSelector = new  SendableChooser<Runnable>();
  
-  public IO io = new IO();
+  public IO io = new IO(bindingsSelector);
 
   public RobotContainer() {
     Constants.initEventMap(io);
@@ -31,6 +31,7 @@ public class RobotContainer {
     io.configGlobal();
     
     SmartDashboard.putData("Auto Selector", autonomousSelector);
+    SmartDashboard.putData("Bindings Selector", bindingsSelector);
     CameraServer.startAutomaticCapture();
   }
 
@@ -86,4 +87,5 @@ public class RobotContainer {
     }, io.driveSubsystem);
     return autonomousSelector.getSelected().andThen(postAutonomous);
   }
+
 }

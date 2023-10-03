@@ -77,13 +77,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     if (m_autonomousCommand != null) m_autonomousCommand.cancel();
-    m_robotContainer.io.configTesting();
+    m_robotContainer.bindingsSelector.getSelected().run();
     // m_robotContainer.io.configTeleop();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
